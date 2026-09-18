@@ -18,7 +18,7 @@ import numpy as np
 REPO = Path(__file__).resolve().parents[1]
 TRAIN = REPO / "runs" / "train"
 PHASE0 = REPO / "runs" / "phase0"
-TEACHER_METHODS = {"bc", "bc_ppo", "fixed", "reflexrl"}
+TEACHER_METHODS = {"bc", "bc_ppo", "fixed", "reflexrl", "reflexrl_ft"}
 TARGET_FRAC = 0.8
 SMOOTH = 3
 
