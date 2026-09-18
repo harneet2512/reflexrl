@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+runs/
+*.pt
+*.ckpt
+*.mp4
+*.avi
+.ipynb_checkpoints/
+dist/
+build/

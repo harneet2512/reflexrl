@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["reflexrl*"]
+
+[project]
+name = "reflexrl"
+version = "0.1.0"
+description = "ReflexRL: learned compute allocation during embodied RL"
+requires-python = ">=3.11"
+dependencies = [
+    "gymnasium>=1.0",
+    "vizdoom>=1.2",
+    "numpy>=1.26",
+    "torch>=2.4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.6", "opencv-python>=4.8"]
+gpu = ["transformers>=4.57", "accelerate>=1.0", "sentencepiece", "protobuf"]
+lev = ["LevDoom>=1.0"]
+modal = ["modal>=0.64"]
+plots = ["matplotlib>=3.8"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+markers = [
+    "unit: fast isolated tests",
+    "integration: multi-component tests",
+    "gpu: requires GPU/model weights",
+    "env: requires vizdoom runtime",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]

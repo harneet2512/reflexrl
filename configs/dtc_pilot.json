@@ -1,0 +1,14 @@
+{
+  "scenario": "defend_the_center.cfg",
+  "purpose": "Phase-1 pilot: does the ReflexRL policy learn inside ~0.5M decisions on DTC?",
+  "run": {
+    "tag": "pilot_reflexrl",
+    "total_decisions": 150000,
+    "lam": 0.1,
+    "n_envs": 8,
+    "rollout_steps": 256,
+    "ckpt_at": [10000, 50000, 150000],
+    "seeds": [0]
+  },
+  "budget_note": "~150K decisions; est. $4-6 on T4 at ~40-70ms/decision"
+}
