@@ -1,0 +1,218 @@
+[
+ {
+  "method": "ppo",
+  "scenario": "dtc",
+  "steps": 1000000,
+  "seed": 0
+ },
+ {
+  "method": "bc_ppo",
+  "scenario": "dtc",
+  "steps": 1000000,
+  "seed": 0
+ },
+ {
+  "method": "fixed",
+  "scenario": "dtc",
+  "steps": 1000000,
+  "seed": 0
+ },
+ {
+  "method": "reflexrl",
+  "scenario": "dtc",
+  "steps": 1000000,
+  "seed": 0
+ },
+ {
+  "method": "ppo",
+  "scenario": "hg",
+  "steps": 1000000,
+  "seed": 0
+ },
+ {
+  "method": "bc_ppo",
+  "scenario": "hg",
+  "steps": 1000000,
+  "seed": 0
+ },
+ {
+  "method": "fixed",
+  "scenario": "hg",
+  "steps": 1000000,
+  "seed": 0
+ },
+ {
+  "method": "reflexrl",
+  "scenario": "hg",
+  "steps": 1000000,
+  "seed": 0
+ },
+ {
+  "method": "ppo",
+  "scenario": "dc",
+  "steps": 2000000,
+  "seed": 0
+ },
+ {
+  "method": "bc_ppo",
+  "scenario": "dc",
+  "steps": 2000000,
+  "seed": 0
+ },
+ {
+  "method": "fixed",
+  "scenario": "dc",
+  "steps": 2000000,
+  "seed": 0
+ },
+ {
+  "method": "reflexrl",
+  "scenario": "dc",
+  "steps": 2000000,
+  "seed": 0
+ },
+ {
+  "method": "ppo",
+  "scenario": "dtc",
+  "steps": 1000000,
+  "seed": 1
+ },
+ {
+  "method": "bc_ppo",
+  "scenario": "dtc",
+  "steps": 1000000,
+  "seed": 1
+ },
+ {
+  "method": "fixed",
+  "scenario": "dtc",
+  "steps": 1000000,
+  "seed": 1
+ },
+ {
+  "method": "reflexrl",
+  "scenario": "dtc",
+  "steps": 1000000,
+  "seed": 1
+ },
+ {
+  "method": "ppo",
+  "scenario": "hg",
+  "steps": 1000000,
+  "seed": 1
+ },
+ {
+  "method": "bc_ppo",
+  "scenario": "hg",
+  "steps": 1000000,
+  "seed": 1
+ },
+ {
+  "method": "fixed",
+  "scenario": "hg",
+  "steps": 1000000,
+  "seed": 1
+ },
+ {
+  "method": "reflexrl",
+  "scenario": "hg",
+  "steps": 1000000,
+  "seed": 1
+ },
+ {
+  "method": "ppo",
+  "scenario": "dc",
+  "steps": 2000000,
+  "seed": 1
+ },
+ {
+  "method": "bc_ppo",
+  "scenario": "dc",
+  "steps": 2000000,
+  "seed": 1
+ },
+ {
+  "method": "fixed",
+  "scenario": "dc",
+  "steps": 2000000,
+  "seed": 1
+ },
+ {
+  "method": "reflexrl",
+  "scenario": "dc",
+  "steps": 2000000,
+  "seed": 1
+ },
+ {
+  "method": "ppo",
+  "scenario": "dtc",
+  "steps": 1000000,
+  "seed": 2
+ },
+ {
+  "method": "bc_ppo",
+  "scenario": "dtc",
+  "steps": 1000000,
+  "seed": 2
+ },
+ {
+  "method": "fixed",
+  "scenario": "dtc",
+  "steps": 1000000,
+  "seed": 2
+ },
+ {
+  "method": "reflexrl",
+  "scenario": "dtc",
+  "steps": 1000000,
+  "seed": 2
+ },
+ {
+  "method": "ppo",
+  "scenario": "hg",
+  "steps": 1000000,
+  "seed": 2
+ },
+ {
+  "method": "bc_ppo",
+  "scenario": "hg",
+  "steps": 1000000,
+  "seed": 2
+ },
+ {
+  "method": "fixed",
+  "scenario": "hg",
+  "steps": 1000000,
+  "seed": 2
+ },
+ {
+  "method": "reflexrl",
+  "scenario": "hg",
+  "steps": 1000000,
+  "seed": 2
+ },
+ {
+  "method": "ppo",
+  "scenario": "dc",
+  "steps": 2000000,
+  "seed": 2
+ },
+ {
+  "method": "bc_ppo",
+  "scenario": "dc",
+  "steps": 2000000,
+  "seed": 2
+ },
+ {
+  "method": "fixed",
+  "scenario": "dc",
+  "steps": 2000000,
+  "seed": 2
+ },
+ {
+  "method": "reflexrl",
+  "scenario": "dc",
+  "steps": 2000000,
+  "seed": 2
+ }
+]

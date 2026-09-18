@@ -1,0 +1,20 @@
+[
+ {
+  "method": "ppo",
+  "scenario": "dtc",
+  "steps": 1000000,
+  "seed": 0
+ },
+ {
+  "method": "ppo",
+  "scenario": "hg",
+  "steps": 1000000,
+  "seed": 0
+ },
+ {
+  "method": "ppo",
+  "scenario": "dc",
+  "steps": 2000000,
+  "seed": 0
+ }
+]
