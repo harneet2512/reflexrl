@@ -1,0 +1,18 @@
+{
+  "purpose": "Phase 0 teacher gate: is Qwen3-VL a better-than-random Doom controller? Pre-registered before any teacher episode was run (2026-09-18).",
+  "protocol": {
+    "episodes_per_scenario": 30,
+    "scenarios": ["defend_the_center", "health_gathering", "deadly_corridor"],
+    "teacher_action": "sampled from pi_T (softmax over answer-letter logits), frame_skip 4, sync mode so latency cannot affect score",
+    "teacher_input": "last 2 full-res RGB frames (320x180) + scenario briefing + lettered action list",
+    "random_baseline": "uniform over the same action set, same number of episodes, same env seeds",
+    "episode_allocation": "exactly N episodes started per scenario; in-flight episodes run to completion (no early-finish selection bias)"
+  },
+  "pass_rule_per_scenario": "teacher mean return > random mean return AND one-sided Welch t-test p < 0.05 AND Cohen's d >= 0.5",
+  "decision": {
+    "pass_on_>=2_scenarios": "proceed: Qwen action teacher on passing scenarios",
+    "pass_on_<2_scenarios": "load-bearing decision for the user: (a) larger teacher (4B/8B) on Modal, (b) perception-label teacher, (c) report negative",
+    "per_scenario_fail": "scenario stays in the suite; ReflexRL there is reported with the teacher's measured (weak) quality"
+  },
+  "models": {"primary": "Qwen/Qwen3-VL-2B-Instruct (local RTX 2060, $0)", "optional_escalation": ["Qwen/Qwen3-VL-4B-Instruct", "Qwen/Qwen3-VL-8B-Instruct"]}
+}

@@ -1,0 +1,48 @@
+{
+  "cap_usd": 20.0,
+  "spent_usd": 0.7172,
+  "events": [
+    {
+      "t": 1789686256.9915085,
+      "label": "run_tests",
+      "seconds": 18.6,
+      "usd": 0.0031
+    },
+    {
+      "t": 1789686997.5210545,
+      "label": "probe_hidden",
+      "seconds": 23.9,
+      "usd": 0.008
+    },
+    {
+      "t": 1789687045.2625432,
+      "label": "probe_hidden",
+      "seconds": 22.2,
+      "usd": 0.0074
+    },
+    {
+      "t": 1789687098.926787,
+      "label": "probe_hidden",
+      "seconds": 19.3,
+      "usd": 0.0064
+    },
+    {
+      "t": 1789687401.5601182,
+      "label": "e2e_qwen",
+      "seconds": 177.9,
+      "usd": 0.0593
+    },
+    {
+      "t": 1789687543.4498806,
+      "label": "e2e_qwen",
+      "seconds": 103.9,
+      "usd": 0.0346
+    },
+    {
+      "t": 1789697683.373625,
+      "label": "train_cnn:cnn",
+      "seconds": 1795.3,
+      "usd": 0.5984
+    }
+  ]
+}

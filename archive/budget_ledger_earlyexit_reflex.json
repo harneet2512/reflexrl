@@ -1,0 +1,72 @@
+{
+  "cap_usd": 10.0,
+  "spent_usd": 5.3758,
+  "events": [
+    {
+      "t": 1789697540.499824,
+      "label": "profile:T4",
+      "seconds": 99.6,
+      "usd": 0.0166
+    },
+    {
+      "t": 1789703537.2300231,
+      "label": "demo",
+      "seconds": 38.2,
+      "usd": 0.0064
+    },
+    {
+      "t": 1789706878.352779,
+      "label": "train:pilot_reflexrl",
+      "seconds": 9225.4,
+      "usd": 1.5376
+    },
+    {
+      "t": 1789708370.2256472,
+      "label": "evaluate:router",
+      "seconds": 186.5,
+      "usd": 0.0311
+    },
+    {
+      "t": 1789708697.051693,
+      "label": "evaluate:0",
+      "seconds": 307.9,
+      "usd": 0.0513
+    },
+    {
+      "t": 1789709028.584198,
+      "label": "evaluate:1",
+      "seconds": 310.1,
+      "usd": 0.0517
+    },
+    {
+      "t": 1789709161.0140572,
+      "label": "evaluate:2",
+      "seconds": 117.0,
+      "usd": 0.0195
+    },
+    {
+      "t": 1789709480.4753926,
+      "label": "evaluate:random",
+      "seconds": 302.6,
+      "usd": 0.0504
+    },
+    {
+      "t": 1789710003.6984267,
+      "label": "evaluate:confidence",
+      "seconds": 155.4,
+      "usd": 0.0259
+    },
+    {
+      "t": 1789718900.5304866,
+      "label": "train:deep_baseline",
+      "seconds": 9070.2,
+      "usd": 1.5117
+    },
+    {
+      "t": 1789720462.9663546,
+      "label": "train:v2_spinal",
+      "seconds": 12441.3,
+      "usd": 2.0736
+    }
+  ]
+}
