@@ -59,6 +59,8 @@ def run_scenario(scenario: str, policy: str, episodes: int, n_envs: int, teacher
             if term or trunc:
                 returns.append(info["episode"]["r"])
                 lengths.append(info["episode"]["l"])
+                print(f"  {spec.name} ep {len(returns)}/{episodes}: return "
+                      f"{returns[-1]:.1f} len {lengths[-1]} ({time.time() - t0:.0f}s)", flush=True)
                 if started < episodes:
                     obs[i] = envs[i].reset()[0]
                     ep_ids[i] = started
@@ -92,7 +94,7 @@ def main() -> None:
     p.add_argument("--model", default="Qwen/Qwen3-VL-2B-Instruct")
     p.add_argument("--scenarios", nargs="+", default=["dtc", "hg", "dc"])
     p.add_argument("--episodes", type=int, default=30)
-    p.add_argument("--n-envs", type=int, default=8)
+    p.add_argument("--n-envs", type=int, default=4)
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--out", default="runs/phase0")
     args = p.parse_args()
@@ -106,8 +108,17 @@ def main() -> None:
         teacher = QwenTeacher(args.model)
     rng = np.random.default_rng(args.seed)
 
-    results = {"meta": run_metadata(vars(args)), "scenarios": {}}
+    res_path = out_dir / "gate_results.json"
+    results = (json.loads(res_path.read_text()) if res_path.exists()
+               else {"meta": run_metadata(vars(args)), "scenarios": {}})
+    from reflexrl.env.scenarios import get_scenario
     for sc in args.scenarios:
+        if get_scenario(sc).name in results["scenarios"]:
+            print(f"skip {sc}: already in {res_path}", flush=True)
+            continue
+        label_dir = out_dir / "labels" / get_scenario(sc).name
+        for stale in label_dir.glob("shard_*.npz"):
+            stale.unlink()  # a partial scenario is rerun from scratch
         res = run_scenario(sc, args.policy, args.episodes, args.n_envs, teacher, rng, out_dir)
         results["scenarios"][res["scenario"]] = res
         (out_dir / "gate_results.json").write_text(json.dumps(results, indent=2))

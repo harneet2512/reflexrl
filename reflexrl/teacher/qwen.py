@@ -28,7 +28,7 @@ def default_dtype(device: str) -> torch.dtype:
 
 class QwenTeacher:
     def __init__(self, model_id: str = DEFAULT_MODEL, device: str = "cuda",
-                 dtype: torch.dtype | None = None):
+                 dtype: torch.dtype | None = None, attn_implementation: str = "eager"):
         from transformers import AutoProcessor, Qwen3VLForConditionalGeneration
 
         self.model_id = model_id
@@ -37,7 +37,8 @@ class QwenTeacher:
         self.processor = AutoProcessor.from_pretrained(model_id)
         self.processor.tokenizer.padding_side = "left"  # last position = answer slot
         self.model = Qwen3VLForConditionalGeneration.from_pretrained(
-            model_id, dtype=self.dtype, device_map=device)
+            model_id, dtype=self.dtype, device_map=device,
+            attn_implementation=attn_implementation)
         self.model.eval()
         self._prompt_cache: dict[tuple[str, int], str] = {}
         self._letter_ids_cache: dict[str, torch.Tensor] = {}

@@ -10,7 +10,7 @@ from pathlib import Path
 
 import numpy as np
 
-SHARD_SIZE = 2000
+SHARD_SIZE = 500
 
 
 class LabelWriter:

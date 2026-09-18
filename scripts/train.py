@@ -49,6 +49,9 @@ def main() -> None:
     p.add_argument("--teachers", default="runs/teachers")
     p.add_argument("--out", default="runs/train")
     p.add_argument("--device", default="cuda")
+    p.add_argument("--init-ckpt", default=None,
+                   help="start the student from this checkpoint (held-out adaptation)")
+    p.add_argument("--tag", default=None, help="run-name override, e.g. ppo_ft")
     args = p.parse_args()
 
     spec = get_scenario(args.scenario)
@@ -67,7 +70,12 @@ def main() -> None:
             schedule = (FixedSchedule(horizon) if args.method == "fixed" else
                         AdaptiveSchedule(teacher_return=tinfo["bc_eval"]["return_mean"],
                                          horizon=horizon))
-    workdir = Path(args.out) / spec.name / f"{args.method}_s{args.seed}"
+    if args.init_ckpt:
+        if policy is not None:
+            raise SystemExit("--init-ckpt cannot be combined with bc_ppo")
+        policy = ActorCritic(n_act)
+        policy.load_state_dict(torch.load(args.init_ckpt, map_location="cpu"))
+    workdir = Path(args.out) / spec.name / f"{args.tag or args.method}_s{args.seed}"
     train(cfg, workdir, teacher=teacher, schedule=schedule, policy=policy,
           meta=run_metadata(vars(args)))
     if isinstance(schedule, AdaptiveSchedule):

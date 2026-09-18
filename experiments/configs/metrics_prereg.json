@@ -1,0 +1,13 @@
+{
+  "written": "2026-09-18, before any guided (bc_ppo/fixed/reflexrl) run existed",
+  "performance_signal": "student-only evaluation return (no teacher, no intervention), 16 episodes per eval point on seeds 900000+, every 50K env steps",
+  "target_R_star": "R* = random_mean + 0.8 * (ppo_final_mean - random_mean), where ppo_final_mean is the mean over seeds of PPO-from-scratch final eval, and random_mean comes from runs/phase0/random",
+  "steps_to_target": "per seed: first eval step whose 3-point trailing mean >= R*; runs that never reach it are censored at total_steps and reported as '>total'",
+  "interaction_accounting": "teacher methods (bc, bc_ppo, fixed, reflexrl) are charged the env steps used to collect their Qwen labels (phase-0 teacher episodes for that scenario) on top of training steps. X is reported both with and without this charge; the charged number is the headline.",
+  "X_sample_efficiency": "median over seeds of N_ppo(R*) / median over seeds of N_method(R*)",
+  "W_retention": "method final eval mean / ppo final eval mean * 100, plus absolute returns for method, ppo, qwen and random",
+  "Y_speed": "Qwen mean latency / reflex mean latency, batch 1, same GPU, end-to-end frame->action; P95 reported alongside",
+  "Z_cost": "Qwen usd per 10K decisions / reflex usd per 10K decisions at one hourly price applied to both on the same GPU; reflex-on-1-CPU-core cost reported separately",
+  "seeds": "3 per method per scenario (0,1,2)",
+  "uncertainty": "mean +- standard error across seeds for curves; per-seed values listed in the results table"
+}
