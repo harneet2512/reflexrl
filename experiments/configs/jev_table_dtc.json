@@ -1,0 +1,154 @@
+{
+  "model": "typesafe/jev-1.13",
+  "actions": [
+    "TURN_LEFT",
+    "TURN_RIGHT",
+    "FIRE",
+    "TURN_LEFT_FIRE",
+    "TURN_RIGHT_FIRE"
+  ],
+  "table": {
+    "left": [
+      0.08,
+      0.0,
+      0.0,
+      0.92,
+      0.0
+    ],
+    "center": [
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    "right": [
+      0.0,
+      0.06,
+      0.0,
+      0.0,
+      0.9400000000000001
+    ],
+    "none": [
+      0.68,
+      0.31,
+      0.0,
+      0.01,
+      0.0
+    ]
+  },
+  "raw": {
+    "left": {
+      "state": "Doom, scenario 'defend_the_center'. You stand in the center of a circular room and cannot move, only turn. Monsters approach from all sides. Turn to face a monster and shoot it before it reaches you. Ammo is limited, so only shoot when a monster is in front of you. Perception of the current frame: The nearest monster is on the left side of the screen.",
+      "response": {
+        "model": "typesafe/jev-1.13-20260917",
+        "answers": {
+          "action": {
+            "type": "choice",
+            "choice": "TURN_LEFT_FIRE",
+            "probabilities": {
+              "TURN_LEFT": 0.08,
+              "TURN_LEFT_FIRE": 0.92,
+              "TURN_RIGHT_FIRE": 0,
+              "TURN_RIGHT": 0,
+              "FIRE": 0
+            },
+            "confidence": 0.9
+          }
+        },
+        "usage": {
+          "input_tokens": 462,
+          "output_tokens": 61,
+          "cost": 1.9404e-05
+        },
+        "id": "gen-dec-1789851154-GedrVmbntTNOJgM4Sqjo",
+        "provider": "TypeSafe",
+        "latency_s": 0.38437870000780094
+      }
+    },
+    "center": {
+      "state": "Doom, scenario 'defend_the_center'. You stand in the center of a circular room and cannot move, only turn. Monsters approach from all sides. Turn to face a monster and shoot it before it reaches you. Ammo is limited, so only shoot when a monster is in front of you. Perception of the current frame: The nearest monster is in the center of the screen, straight ahead.",
+      "response": {
+        "model": "typesafe/jev-1.13-20260917",
+        "answers": {
+          "action": {
+            "type": "choice",
+            "choice": "FIRE",
+            "probabilities": {
+              "TURN_LEFT_FIRE": 0,
+              "FIRE": 1,
+              "TURN_RIGHT": 0,
+              "TURN_LEFT": 0,
+              "TURN_RIGHT_FIRE": 0
+            },
+            "confidence": 1
+          }
+        },
+        "usage": {
+          "input_tokens": 464,
+          "output_tokens": 60,
+          "cost": 1.9488e-05
+        },
+        "id": "gen-dec-1789851154-jGbXdQbRvBThsStjTO4G",
+        "provider": "TypeSafe",
+        "latency_s": 0.24566909999703057
+      }
+    },
+    "right": {
+      "state": "Doom, scenario 'defend_the_center'. You stand in the center of a circular room and cannot move, only turn. Monsters approach from all sides. Turn to face a monster and shoot it before it reaches you. Ammo is limited, so only shoot when a monster is in front of you. Perception of the current frame: The nearest monster is on the right side of the screen.",
+      "response": {
+        "model": "typesafe/jev-1.13-20260917",
+        "answers": {
+          "action": {
+            "type": "choice",
+            "choice": "TURN_RIGHT_FIRE",
+            "probabilities": {
+              "FIRE": 0,
+              "TURN_RIGHT_FIRE": 0.9400000000000001,
+              "TURN_RIGHT": 0.06,
+              "TURN_LEFT_FIRE": 0,
+              "TURN_LEFT": 0
+            },
+            "confidence": 0.92
+          }
+        },
+        "usage": {
+          "input_tokens": 462,
+          "output_tokens": 61,
+          "cost": 1.9404e-05
+        },
+        "id": "gen-dec-1789851154-6NxIsxln1VPVG686U6qr",
+        "provider": "TypeSafe",
+        "latency_s": 0.26098999999521766
+      }
+    },
+    "none": {
+      "state": "Doom, scenario 'defend_the_center'. You stand in the center of a circular room and cannot move, only turn. Monsters approach from all sides. Turn to face a monster and shoot it before it reaches you. Ammo is limited, so only shoot when a monster is in front of you. Perception of the current frame: No monster is visible on the screen.",
+      "response": {
+        "model": "typesafe/jev-1.13-20260917",
+        "answers": {
+          "action": {
+            "type": "choice",
+            "choice": "TURN_LEFT",
+            "probabilities": {
+              "TURN_LEFT_FIRE": 0.01,
+              "FIRE": 0,
+              "TURN_RIGHT": 0.31,
+              "TURN_LEFT": 0.68,
+              "TURN_RIGHT_FIRE": 0
+            },
+            "confidence": 0.6
+          }
+        },
+        "usage": {
+          "input_tokens": 458,
+          "output_tokens": 60,
+          "cost": 1.9236e-05
+        },
+        "id": "gen-dec-1789851155-4JEx7Fj1WnKyO3spCIZa",
+        "provider": "TypeSafe",
+        "latency_s": 0.3584312000020873
+      }
+    }
+  }
+}

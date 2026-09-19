@@ -1,0 +1,28 @@
+{
+  "scenario": "defend_the_center.cfg",
+  "n_envs": 8,
+  "rollout_steps": 256,
+  "total_decisions": 150000,
+  "frame_skip": 4,
+  "frame_stack": 2,
+  "seed": 0,
+  "lam": 0.0,
+  "warmup_decisions": 20000,
+  "lr": 0.0003,
+  "gamma": 0.99,
+  "gae_lambda": 0.95,
+  "clip": 0.2,
+  "epochs": 4,
+  "minibatch_size": 512,
+  "vf_coef": 0.5,
+  "ent_coef": 0.01,
+  "forced_d": null,
+  "random_depth": false,
+  "ckpt_at": [
+    10000,
+    50000,
+    150000
+  ],
+  "device": "cpu",
+  "tag": "cnn"
+}

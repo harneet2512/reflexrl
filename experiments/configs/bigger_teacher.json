@@ -18,5 +18,13 @@
     "written": "2026-09-19 after 8B-NF4-fp32 passed stage 1 (synthetic 1.0, letter mass 1.0, probe C 0.66 >= 0.63); before any 8B gate episode",
     "protocol": "DTC, calibrated variant, 30 episodes split 15+15 over two T4s (lane 0 env seeds 50000+, lane 1 50100+); same pass rule vs the 30-episode random baseline, plus the >= 3.0 mean-return bar for guided RL",
     "note": "lane-1 seeds differ from the random baseline's seeds; episodes are exchangeable draws so the Welch test is unaffected"
+  },
+  "scope_change_jev": {
+    "written": "2026-09-19, user decision; before any Jev-teacher query",
+    "note": "frozen spec section 23 said 'No Jev dependency'; the user changed scope to include TypeSafe Jev 1.13",
+    "teacher": "pi_T(a|o) = sum_c q(c|o) * J(a|c): q = Qwen3-VL-8B (NF4 weights, fp32 compute) perception over {left, center, right, none} for the nearest monster, averaged over 4 option permutations (the probe-validated perception question, DTC accuracy 0.73 vs majority 0.31); J = Jev 1.13 (OpenRouter /api/alpha/decisions) choice distribution over the 5 DTC actions given each perception class stated as certain",
+    "caching": "Jev is called once per perception class (4 calls), responses stored in experiments/configs/jev_table_dtc.json (spec section 8: cache teacher calls)",
+    "gate": "DTC, 30 episodes (15+15 on 2xT4), same pass rule vs random, and the >= 3.0 bar for guided RL",
+    "cost": "Jev ~$0.00002/call; Qwen-8B T4 time ~2-3 h"
   }
 }

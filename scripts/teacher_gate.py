@@ -104,13 +104,16 @@ def main() -> None:
     p.add_argument("--model-dtype", choices=["auto", "fp32"], default="auto")
     p.add_argument("--nf4", action="store_true", help="4-bit NF4 weights (compute stays fp32)")
     p.add_argument("--seed-offset", type=int, default=0, help="env seed offset for split runs")
-    p.add_argument("--variant", choices=["raw", "calibrated"], default="calibrated",
+    p.add_argument("--jev-table", default="experiments/configs/jev_table_dtc.json")
+    p.add_argument("--variant", choices=["raw", "calibrated", "perception_jev"], default="calibrated",
                    help="calibrated = probe-validated variant C (debias_probe.json)")
     args = p.parse_args()
 
     tag = args.policy if args.policy == "random" else args.model.split("/")[-1]
     if args.policy == "qwen" and args.variant == "calibrated":
         tag += "_cal"
+    if args.policy == "qwen" and args.variant == "perception_jev":
+        tag += "_pjev"
     out_dir = Path(args.out) / tag
     out_dir.mkdir(parents=True, exist_ok=True)
     teacher = None
@@ -122,6 +125,9 @@ def main() -> None:
         if args.variant == "calibrated":
             from reflexrl.teacher.qwen import CalibratedQwenTeacher
             teacher = CalibratedQwenTeacher(teacher)
+        elif args.variant == "perception_jev":
+            from reflexrl.teacher.perception_jev import PerceptionJevTeacher
+            teacher = PerceptionJevTeacher(teacher, args.jev_table)
     rng = np.random.default_rng(args.seed)
 
     res_path = out_dir / "gate_results.json"
