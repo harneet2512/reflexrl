@@ -22,5 +22,11 @@
     "motivation": "at 320x180 a frame is ~66 image tokens; distant targets are smaller than one merged 32px patch",
     "change": "same frames, same oracle, same variants and decision rule; frames upscaled 2x (640x360) and 3x (960x540) with bicubic interpolation before Qwen sees them",
     "decision": "if either scale passes the original rule on both scenarios, that scale is used for the teacher; otherwise the negative stands"
+  },
+  "addendum_fp32_rerun": {
+    "written": "2026-09-19, after the diagnosis job showed fp16 inference is corrupted (synthetic control 25% fp16 vs 100% fp32; letter mass 0.0003 vs 1.0); before any fp32 probe query",
+    "status_of_earlier_results": "all fp16 gate/probe results are invalid (the model was not answering); kept in results/ as the record of the bug",
+    "change": "identical probe (1x, same frames, variants, oracle, decision rule), model in fp32; letter mass reported",
+    "decision": "original decision_rule applies unchanged"
   }
 }

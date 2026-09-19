@@ -1,0 +1,3836 @@
+{
+  "fp16": {
+    "H1_synthetic_accuracy": 0.25,
+    "H1_rows": [
+      [
+        "left",
+        "A",
+        0.0001
+      ],
+      [
+        "left",
+        "A",
+        0.0002
+      ],
+      [
+        "left",
+        "A",
+        0.0002
+      ],
+      [
+        "left",
+        "A",
+        0.0002
+      ],
+      [
+        "left",
+        "A",
+        0.0002
+      ],
+      [
+        "left",
+        "A",
+        0.0002
+      ],
+      [
+        "left",
+        "A",
+        0.0002
+      ],
+      [
+        "left",
+        "A",
+        0.0002
+      ],
+      [
+        "center",
+        "A",
+        0.0003
+      ],
+      [
+        "center",
+        "A",
+        0.0002
+      ],
+      [
+        "center",
+        "A",
+        0.0002
+      ],
+      [
+        "center",
+        "A",
+        0.0003
+      ],
+      [
+        "center",
+        "A",
+        0.0003
+      ],
+      [
+        "center",
+        "A",
+        0.0002
+      ],
+      [
+        "center",
+        "A",
+        0.0002
+      ],
+      [
+        "center",
+        "A",
+        0.0002
+      ],
+      [
+        "right",
+        "A",
+        0.0002
+      ],
+      [
+        "right",
+        "A",
+        0.0002
+      ],
+      [
+        "right",
+        "A",
+        0.0002
+      ],
+      [
+        "right",
+        "A",
+        0.0002
+      ],
+      [
+        "right",
+        "A",
+        0.0002
+      ],
+      [
+        "right",
+        "A",
+        0.0002
+      ],
+      [
+        "right",
+        "A",
+        0.0002
+      ],
+      [
+        "right",
+        "A",
+        0.0003
+      ],
+      [
+        null,
+        "A",
+        0.0001
+      ],
+      [
+        null,
+        "A",
+        0.0001
+      ],
+      [
+        null,
+        "A",
+        0.0001
+      ],
+      [
+        null,
+        "A",
+        0.0001
+      ],
+      [
+        null,
+        "A",
+        0.0001
+      ],
+      [
+        null,
+        "A",
+        0.0001
+      ],
+      [
+        null,
+        "A",
+        0.0001
+      ],
+      [
+        null,
+        "A",
+        0.0001
+      ]
+    ],
+    "H1_example_generation": "col 1, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9",
+    "doom": {
+      "defend_the_center": [
+        {
+          "oracle": "center",
+          "describe_1frame": ")  \\h, \\h, \\h, \\h, \\h, \\h, \\h, \\h, \\h, \\h, \\h, \\h, \\h, \\h, \\h, \\",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.9842
+              ],
+              [
+                "answer",
+                0.0106
+              ],
+              [
+                "<|im_end|>",
+                0.0028
+              ],
+              [
+                "The",
+                0.0003
+              ],
+              [
+                "A",
+                0.0003
+              ],
+              [
+                "I",
+                0.0002
+              ],
+              [
+                "answers",
+                0.0001
+              ],
+              [
+                "###",
+                0.0001
+              ],
+              [
+                "Answers",
+                0.0001
+              ],
+              [
+                "\u7b54\u6848",
+                0.0001
+              ]
+            ],
+            "letter_mass": 0.0003,
+            "letters": {
+              "A": 0.0003175201127305627,
+              "B": 3.904397999576759e-06,
+              "C": 1.1451562613729038e-06,
+              "D": 2.856518904081895e-06
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.9971
+              ],
+              [
+                "answer",
+                0.002
+              ],
+              [
+                "<|im_end|>",
+                0.0004
+              ],
+              [
+                "The",
+                0.0001
+              ],
+              [
+                "A",
+                0.0001
+              ],
+              [
+                "answers",
+                0.0
+              ],
+              [
+                "I",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0001,
+            "letters": {
+              "A": 5.1699462346732616e-05,
+              "B": 4.369265411696688e-07,
+              "C": 1.2038591989949055e-07,
+              "D": 2.3755283962145768e-07
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "left",
+          "describe_1frame": ")  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.9898
+              ],
+              [
+                "answer",
+                0.0052
+              ],
+              [
+                "<|im_end|>",
+                0.0018
+              ],
+              [
+                "A",
+                0.0006
+              ],
+              [
+                "The",
+                0.0004
+              ],
+              [
+                "I",
+                0.0004
+              ],
+              [
+                "answers",
+                0.0001
+              ],
+              [
+                "Answers",
+                0.0001
+              ],
+              [
+                "There",
+                0.0001
+              ],
+              [
+                "###",
+                0.0001
+              ]
+            ],
+            "letter_mass": 0.0007,
+            "letters": {
+              "A": 0.0006203351658768952,
+              "B": 1.4250935237214435e-05,
+              "C": 3.0341993806359824e-06,
+              "D": 1.3179959751141723e-05
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.9982
+              ],
+              [
+                "answer",
+                0.0012
+              ],
+              [
+                "<|im_end|>",
+                0.0002
+              ],
+              [
+                "The",
+                0.0001
+              ],
+              [
+                "A",
+                0.0001
+              ],
+              [
+                "I",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0001,
+            "letters": {
+              "A": 5.216327917878516e-05,
+              "B": 5.572820782617782e-07,
+              "C": 1.465159158442475e-07,
+              "D": 2.891141548388987e-07
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "left",
+          "describe_1frame": ")  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.9912
+              ],
+              [
+                "answer",
+                0.0058
+              ],
+              [
+                "<|im_end|>",
+                0.0016
+              ],
+              [
+                "A",
+                0.0002
+              ],
+              [
+                "The",
+                0.0002
+              ],
+              [
+                "answers",
+                0.0001
+              ],
+              [
+                "###",
+                0.0001
+              ],
+              [
+                "I",
+                0.0001
+              ],
+              [
+                "Answers",
+                0.0001
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0003,
+            "letters": {
+              "A": 0.00024709946592338383,
+              "B": 2.2579972664971137e-06,
+              "C": 5.576860075962031e-07,
+              "D": 1.5640691799490014e-06
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.9979
+              ],
+              [
+                "answer",
+                0.0015
+              ],
+              [
+                "<|im_end|>",
+                0.0002
+              ],
+              [
+                "The",
+                0.0001
+              ],
+              [
+                "A",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "I",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0,
+            "letters": {
+              "A": 4.061176150571555e-05,
+              "B": 3.2750409673099057e-07,
+              "C": 9.383149546238201e-08,
+              "D": 1.780608727131039e-07
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "left",
+          "describe_1frame": "dor) 10000000000000000000000000000000000000000000",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.992
+              ],
+              [
+                "answer",
+                0.0058
+              ],
+              [
+                "<|im_end|>",
+                0.0012
+              ],
+              [
+                "A",
+                0.0002
+              ],
+              [
+                "The",
+                0.0001
+              ],
+              [
+                "answers",
+                0.0001
+              ],
+              [
+                "I",
+                0.0001
+              ],
+              [
+                "###",
+                0.0001
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0002,
+            "letters": {
+              "A": 0.00017811785801313818,
+              "B": 1.403116016263084e-06,
+              "C": 3.411725231217133e-07,
+              "D": 9.795328423933825e-07
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.9979
+              ],
+              [
+                "answer",
+                0.0015
+              ],
+              [
+                "<|im_end|>",
+                0.0003
+              ],
+              [
+                "The",
+                0.0001
+              ],
+              [
+                "answers",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "A",
+                0.0
+              ],
+              [
+                "I",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0,
+            "letters": {
+              "A": 2.79109208349837e-05,
+              "B": 2.59066752050785e-07,
+              "C": 7.364625531636193e-08,
+              "D": 1.365185937629576e-07
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "right",
+          "describe_1frame": ")  \\h,  \\n,  \\n,  \\n,  \\n,  \\n,  \\n,  \\n,  \\n,  \\n,  \\n,  \\n",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.9829
+              ],
+              [
+                "answer",
+                0.0106
+              ],
+              [
+                "<|im_end|>",
+                0.0028
+              ],
+              [
+                "A",
+                0.0006
+              ],
+              [
+                "The",
+                0.0006
+              ],
+              [
+                "I",
+                0.0003
+              ],
+              [
+                "answers",
+                0.0002
+              ],
+              [
+                "###",
+                0.0001
+              ],
+              [
+                "There",
+                0.0001
+              ],
+              [
+                "Answers",
+                0.0001
+              ]
+            ],
+            "letter_mass": 0.0007,
+            "letters": {
+              "A": 0.0006257035420276225,
+              "B": 1.2391387826937716e-05,
+              "C": 2.658970970514929e-06,
+              "D": 9.426871656614821e-06
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.9978
+              ],
+              [
+                "answer",
+                0.0015
+              ],
+              [
+                "<|im_end|>",
+                0.0003
+              ],
+              [
+                "The",
+                0.0001
+              ],
+              [
+                "A",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "I",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0,
+            "letters": {
+              "A": 4.822108894586563e-05,
+              "B": 6.070139306757483e-07,
+              "C": 1.2236264979037514e-07,
+              "D": 2.651847523793549e-07
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "left",
+          "describe_1frame": ")  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.9903
+              ],
+              [
+                "answer",
+                0.0049
+              ],
+              [
+                "<|im_end|>",
+                0.002
+              ],
+              [
+                "A",
+                0.0006
+              ],
+              [
+                "The",
+                0.0003
+              ],
+              [
+                "I",
+                0.0003
+              ],
+              [
+                "answers",
+                0.0001
+              ],
+              [
+                "Answers",
+                0.0001
+              ],
+              [
+                "There",
+                0.0001
+              ],
+              [
+                "One",
+                0.0001
+              ]
+            ],
+            "letter_mass": 0.0006,
+            "letters": {
+              "A": 0.0005739863845519722,
+              "B": 1.0931715223705396e-05,
+              "C": 2.3457512270397274e-06,
+              "D": 1.2880707799922675e-05
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.9985
+              ],
+              [
+                "answer",
+                0.0011
+              ],
+              [
+                "<|im_end|>",
+                0.0002
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "A",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ],
+              [
+                "I",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0,
+            "letters": {
+              "A": 2.623714681249112e-05,
+              "B": 1.6737621422180382e-07,
+              "C": 4.795408514723931e-08,
+              "D": 1.0231502045598972e-07
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "none",
+          "describe_1frame": ")  \\h,  \\h,  \\h,  \\h,  \\h,  \\h,  \\h,  \\h,  \\h,  \\h,  \\h,  \\h",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.977
+              ],
+              [
+                "answer",
+                0.0153
+              ],
+              [
+                "<|im_end|>",
+                0.0041
+              ],
+              [
+                "The",
+                0.0005
+              ],
+              [
+                "A",
+                0.0005
+              ],
+              [
+                "I",
+                0.0002
+              ],
+              [
+                "answers",
+                0.0002
+              ],
+              [
+                "###",
+                0.0001
+              ],
+              [
+                "\u7b54\u6848",
+                0.0001
+              ],
+              [
+                "Answers",
+                0.0001
+              ]
+            ],
+            "letter_mass": 0.0005,
+            "letters": {
+              "A": 0.0004731813969556242,
+              "B": 8.078178325376939e-06,
+              "C": 2.0746476820932003e-06,
+              "D": 5.29779799762764e-06
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.9943
+              ],
+              [
+                "answer",
+                0.0044
+              ],
+              [
+                "<|im_end|>",
+                0.0005
+              ],
+              [
+                "The",
+                0.0002
+              ],
+              [
+                "A",
+                0.0001
+              ],
+              [
+                "answers",
+                0.0001
+              ],
+              [
+                "I",
+                0.0001
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "https",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0001,
+            "letters": {
+              "A": 7.384581113001332e-05,
+              "B": 9.666117648521322e-07,
+              "C": 2.3320598074860754e-07,
+              "D": 3.2887311363083427e-07
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "none",
+          "describe_1frame": ")  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\  \\",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.9899
+              ],
+              [
+                "answer",
+                0.0053
+              ],
+              [
+                "<|im_end|>",
+                0.0018
+              ],
+              [
+                "A",
+                0.0006
+              ],
+              [
+                "The",
+                0.0004
+              ],
+              [
+                "I",
+                0.0003
+              ],
+              [
+                "answers",
+                0.0001
+              ],
+              [
+                "Answers",
+                0.0001
+              ],
+              [
+                "There",
+                0.0001
+              ],
+              [
+                "###",
+                0.0001
+              ]
+            ],
+            "letter_mass": 0.0006,
+            "letters": {
+              "A": 0.0005919684190303087,
+              "B": 1.3921763638791163e-05,
+              "C": 2.7413580028223805e-06,
+              "D": 1.3078286428935826e-05
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.9983
+              ],
+              [
+                "answer",
+                0.0009
+              ],
+              [
+                "<|im_end|>",
+                0.0002
+              ],
+              [
+                "The",
+                0.0001
+              ],
+              [
+                "A",
+                0.0001
+              ],
+              [
+                "I",
+                0.0001
+              ],
+              [
+                "answers",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                "One",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0001,
+            "letters": {
+              "A": 8.080035331659019e-05,
+              "B": 1.7437603219150333e-06,
+              "C": 2.891437986818346e-07,
+              "D": 8.172839329745329e-07
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        }
+      ],
+      "health_gathering": [
+        {
+          "oracle": "left",
+          "describe_1frame": "is the world of 3d, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.9968
+              ],
+              [
+                "answer",
+                0.0019
+              ],
+              [
+                "<|im_end|>",
+                0.0008
+              ],
+              [
+                "A",
+                0.0001
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                "###",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0001,
+            "letters": {
+              "A": 0.00010198335803579539,
+              "B": 7.429954393955995e-07,
+              "C": 1.893320700219192e-07,
+              "D": 5.146579269421636e-07
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.9988
+              ],
+              [
+                "answer",
+                0.0006
+              ],
+              [
+                "<|im_end|>",
+                0.0002
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "A",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "I",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0,
+            "letters": {
+              "A": 3.6437835660763085e-05,
+              "B": 3.055498325466033e-07,
+              "C": 7.605737550875347e-08,
+              "D": 1.4660442104741378e-07
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "left",
+          "describe_1frame": "is the one of the world, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.9929
+              ],
+              [
+                "answer",
+                0.0033
+              ],
+              [
+                "<|im_end|>",
+                0.0023
+              ],
+              [
+                "A",
+                0.0003
+              ],
+              [
+                "The",
+                0.0001
+              ],
+              [
+                "###",
+                0.0001
+              ],
+              [
+                "Answers",
+                0.0001
+              ],
+              [
+                "I",
+                0.0001
+              ],
+              [
+                "answers",
+                0.0001
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0003,
+            "letters": {
+              "A": 0.000271849799901247,
+              "B": 3.877728886436671e-06,
+              "C": 9.577314585840213e-07,
+              "D": 3.448923507676227e-06
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.9988
+              ],
+              [
+                "answer",
+                0.0007
+              ],
+              [
+                "<|im_end|>",
+                0.0003
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "A",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "I",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0,
+            "letters": {
+              "A": 4.0015500417212024e-05,
+              "B": 4.2417553913765005e-07,
+              "C": 1.007505190386837e-07,
+              "D": 2.0511788534349762e-07
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "left",
+          "describe_1frame": "is the one, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.9928
+              ],
+              [
+                "answer",
+                0.0036
+              ],
+              [
+                "<|im_end|>",
+                0.0021
+              ],
+              [
+                "A",
+                0.0003
+              ],
+              [
+                "The",
+                0.0001
+              ],
+              [
+                "Answers",
+                0.0001
+              ],
+              [
+                "###",
+                0.0001
+              ],
+              [
+                "I",
+                0.0001
+              ],
+              [
+                "answers",
+                0.0001
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0003,
+            "letters": {
+              "A": 0.0002848732110578567,
+              "B": 3.81730342269293e-06,
+              "C": 9.281905590796669e-07,
+              "D": 3.3951798741327366e-06
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.999
+              ],
+              [
+                "answer",
+                0.0005
+              ],
+              [
+                "<|im_end|>",
+                0.0002
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "A",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "I",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0,
+            "letters": {
+              "A": 3.068964360863902e-05,
+              "B": 2.7394585799811466e-07,
+              "C": 6.819051634465723e-08,
+              "D": 1.5366970274044434e-07
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "center",
+          "describe_1frame": "is one of the world, 2020, 2020, 2020, 2020, 2020, 2020, 2020,",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.9966
+              ],
+              [
+                "answer",
+                0.0018
+              ],
+              [
+                "<|im_end|>",
+                0.001
+              ],
+              [
+                "A",
+                0.0001
+              ],
+              [
+                "The",
+                0.0001
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                "###",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0001,
+            "letters": {
+              "A": 0.00012108730152249336,
+              "B": 9.613413567421958e-07,
+              "C": 2.3743456267766305e-07,
+              "D": 7.545654625573661e-07
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.9991
+              ],
+              [
+                "answer",
+                0.0005
+              ],
+              [
+                "<|im_end|>",
+                0.0002
+              ],
+              [
+                "A",
+                0.0
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "I",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0,
+            "letters": {
+              "A": 3.477937571005896e-05,
+              "B": 2.455878700402536e-07,
+              "C": 6.065592117465712e-08,
+              "D": 1.64879907060822e-07
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "right",
+          "describe_1frame": "is one of the segments of the world.  \\n\\nis one of the segments of the world.  \\n\\nis one of the segments of the world.  \\n\\nis one of the segments of the world.",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.9946
+              ],
+              [
+                "answer",
+                0.0027
+              ],
+              [
+                "<|im_end|>",
+                0.0018
+              ],
+              [
+                "A",
+                0.0002
+              ],
+              [
+                "The",
+                0.0001
+              ],
+              [
+                "###",
+                0.0001
+              ],
+              [
+                "Answers",
+                0.0001
+              ],
+              [
+                "answers",
+                0.0
+              ],
+              [
+                "I",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0002,
+            "letters": {
+              "A": 0.00018425619055051357,
+              "B": 1.9079218418482924e-06,
+              "C": 4.749193180941802e-07,
+              "D": 1.7371827425449737e-06
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.9991
+              ],
+              [
+                "answer",
+                0.0005
+              ],
+              [
+                "<|im_end|>",
+                0.0002
+              ],
+              [
+                "A",
+                0.0
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ],
+              [
+                "I",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0,
+            "letters": {
+              "A": 3.423907401156612e-05,
+              "B": 2.5938416570170375e-07,
+              "C": 6.713784017620128e-08,
+              "D": 1.782719607490435e-07
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "right",
+          "describe_1frame": "col, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.9905
+              ],
+              [
+                "answer",
+                0.0047
+              ],
+              [
+                "<|im_end|>",
+                0.003
+              ],
+              [
+                "A",
+                0.0004
+              ],
+              [
+                "The",
+                0.0002
+              ],
+              [
+                "###",
+                0.0001
+              ],
+              [
+                "Answers",
+                0.0001
+              ],
+              [
+                "I",
+                0.0001
+              ],
+              [
+                "answers",
+                0.0001
+              ],
+              [
+                "\u7b54\u6848",
+                0.0001
+              ]
+            ],
+            "letter_mass": 0.0004,
+            "letters": {
+              "A": 0.00037066778168082237,
+              "B": 5.898400104342727e-06,
+              "C": 1.3578888911069953e-06,
+              "D": 3.467490614639246e-06
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.9986
+              ],
+              [
+                "answer",
+                0.0008
+              ],
+              [
+                "<|im_end|>",
+                0.0003
+              ],
+              [
+                "A",
+                0.0001
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "I",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0001,
+            "letters": {
+              "A": 5.8210476709064096e-05,
+              "B": 5.036193329033267e-07,
+              "C": 1.3876172033633338e-07,
+              "D": 2.1324584054127627e-07
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "none",
+          "describe_1frame": "colisn, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d,",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.9969
+              ],
+              [
+                "answer",
+                0.0017
+              ],
+              [
+                "<|im_end|>",
+                0.0009
+              ],
+              [
+                "A",
+                0.0001
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "###",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0001,
+            "letters": {
+              "A": 0.00011557045218069106,
+              "B": 8.097276804619469e-07,
+              "C": 2.2485326667265326e-07,
+              "D": 6.257091058614606e-07
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.9988
+              ],
+              [
+                "answer",
+                0.0007
+              ],
+              [
+                "<|im_end|>",
+                0.0002
+              ],
+              [
+                "A",
+                0.0
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "I",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0,
+            "letters": {
+              "A": 4.827090378967114e-05,
+              "B": 3.802520041062962e-07,
+              "C": 1.0979848497072453e-07,
+              "D": 2.217990271446979e-07
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "none",
+          "describe_1frame": "is one single time to see this one single time to see this one single time to see this one single time to see this one single time to see this one single time to see this one single time to see this one single time to see",
+          "is_there": "",
+          "pos_1frame": {
+            "top": [
+              [
+                "Answer",
+                0.9958
+              ],
+              [
+                "answer",
+                0.0015
+              ],
+              [
+                "<|im_end|>",
+                0.0012
+              ],
+              [
+                "A",
+                0.0004
+              ],
+              [
+                "The",
+                0.0001
+              ],
+              [
+                "Answers",
+                0.0001
+              ],
+              [
+                "I",
+                0.0001
+              ],
+              [
+                "###",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ],
+              [
+                "There",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0004,
+            "letters": {
+              "A": 0.0003500677121337503,
+              "B": 7.4377180681040045e-06,
+              "C": 1.6595793113083346e-06,
+              "D": 1.0821816431416664e-05
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "Answer",
+                0.9994
+              ],
+              [
+                "answer",
+                0.0002
+              ],
+              [
+                "<|im_end|>",
+                0.0001
+              ],
+              [
+                "A",
+                0.0
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "Answers",
+                0.0
+              ],
+              [
+                "I",
+                0.0
+              ],
+              [
+                " Answer",
+                0.0
+              ],
+              [
+                "\u7b54\u6848",
+                0.0
+              ],
+              [
+                "answers",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.0,
+            "letters": {
+              "A": 4.2623527406249195e-05,
+              "B": 6.997945547482232e-07,
+              "C": 1.4441076245930162e-07,
+              "D": 6.032605597283691e-07
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        }
+      ]
+    },
+    "H6_batch_max_abs_diff": 0.0005097389221191406
+  },
+  "fp32": {
+    "H1_synthetic_accuracy": 1.0,
+    "H1_rows": [
+      [
+        "left",
+        "A",
+        1.0
+      ],
+      [
+        "left",
+        "A",
+        1.0
+      ],
+      [
+        "left",
+        "A",
+        1.0
+      ],
+      [
+        "left",
+        "A",
+        1.0
+      ],
+      [
+        "left",
+        "A",
+        1.0
+      ],
+      [
+        "left",
+        "A",
+        1.0
+      ],
+      [
+        "left",
+        "A",
+        1.0
+      ],
+      [
+        "left",
+        "A",
+        1.0
+      ],
+      [
+        "center",
+        "B",
+        1.0
+      ],
+      [
+        "center",
+        "B",
+        1.0
+      ],
+      [
+        "center",
+        "B",
+        1.0
+      ],
+      [
+        "center",
+        "B",
+        1.0
+      ],
+      [
+        "center",
+        "B",
+        1.0
+      ],
+      [
+        "center",
+        "B",
+        1.0
+      ],
+      [
+        "center",
+        "B",
+        1.0
+      ],
+      [
+        "center",
+        "B",
+        1.0
+      ],
+      [
+        "right",
+        "C",
+        1.0
+      ],
+      [
+        "right",
+        "C",
+        1.0
+      ],
+      [
+        "right",
+        "C",
+        1.0
+      ],
+      [
+        "right",
+        "C",
+        1.0
+      ],
+      [
+        "right",
+        "C",
+        1.0
+      ],
+      [
+        "right",
+        "C",
+        1.0
+      ],
+      [
+        "right",
+        "C",
+        1.0
+      ],
+      [
+        "right",
+        "C",
+        1.0
+      ],
+      [
+        null,
+        "D",
+        1.0
+      ],
+      [
+        null,
+        "D",
+        1.0
+      ],
+      [
+        null,
+        "D",
+        1.0
+      ],
+      [
+        null,
+        "D",
+        1.0
+      ],
+      [
+        null,
+        "D",
+        1.0
+      ],
+      [
+        null,
+        "D",
+        1.0
+      ],
+      [
+        null,
+        "D",
+        1.0
+      ],
+      [
+        null,
+        "D",
+        1.0
+      ]
+    ],
+    "H1_example_generation": "A solid red circle is positioned on the left side of a plain gray background.",
+    "doom": {
+      "defend_the_center": [
+        {
+          "oracle": "center",
+          "describe_1frame": "A first-person view from a video game shows a hand holding a pistol in a vast, empty, tiled room with a dark sky above.",
+          "is_there": "No, there is no monster in this image.",
+          "pos_1frame": {
+            "top": [
+              [
+                "B",
+                0.9853
+              ],
+              [
+                "C",
+                0.0124
+              ],
+              [
+                "D",
+                0.0021
+              ],
+              [
+                "A",
+                0.0002
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                " B",
+                0.0
+              ],
+              [
+                "Based",
+                0.0
+              ],
+              [
+                "To",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 0.00017696032591629773,
+              "B": 0.9853347539901733,
+              "C": 0.01240367628633976,
+              "D": 0.00207785377278924
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "B",
+                0.9673
+              ],
+              [
+                "D",
+                0.0195
+              ],
+              [
+                "C",
+                0.0111
+              ],
+              [
+                "The",
+                0.0009
+              ],
+              [
+                "A",
+                0.0005
+              ],
+              [
+                "To",
+                0.0003
+              ],
+              [
+                "Based",
+                0.0003
+              ],
+              [
+                "In",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "There",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.9984,
+            "letters": {
+              "A": 0.00048038086970336735,
+              "B": 0.9673188924789429,
+              "C": 0.011084433645009995,
+              "D": 0.019473090767860413
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "left",
+          "describe_1frame": "A first-person view from a video game shows a hand holding a flaming pistol, aiming at a red creature in a barren, grid-patterned landscape under a dark sky.",
+          "is_there": "Yes, there is a monster in this image. It is located on the left side of the image, near the center of the screen.",
+          "pos_1frame": {
+            "top": [
+              [
+                "A",
+                0.9999
+              ],
+              [
+                "C",
+                0.0001
+              ],
+              [
+                "B",
+                0.0
+              ],
+              [
+                "D",
+                0.0
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "Based",
+                0.0
+              ],
+              [
+                "To",
+                0.0
+              ],
+              [
+                " A",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 0.9999309778213501,
+              "B": 1.1223279216210358e-05,
+              "C": 5.331560896593146e-05,
+              "D": 4.008016730949748e-06
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "A",
+                0.9038
+              ],
+              [
+                "C",
+                0.0875
+              ],
+              [
+                "B",
+                0.0048
+              ],
+              [
+                "D",
+                0.0026
+              ],
+              [
+                "The",
+                0.0007
+              ],
+              [
+                "To",
+                0.0003
+              ],
+              [
+                "Based",
+                0.0002
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "In",
+                0.0
+              ],
+              [
+                "There",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.9987,
+            "letters": {
+              "A": 0.903847336769104,
+              "B": 0.004765653051435947,
+              "C": 0.08746509999036789,
+              "D": 0.002639771904796362
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "left",
+          "describe_1frame": "A first-person view from a video game shows a player holding a pistol in a desert-like environment with two small figures in the distance.",
+          "is_there": "Yes, there is a monster in this image. It is located on the left side of the image, near the center of the screen.",
+          "pos_1frame": {
+            "top": [
+              [
+                "A",
+                0.855
+              ],
+              [
+                "C",
+                0.1442
+              ],
+              [
+                "B",
+                0.0007
+              ],
+              [
+                "D",
+                0.0002
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ],
+              [
+                "To",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                " A",
+                0.0
+              ],
+              [
+                "Based",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 0.8549607992172241,
+              "B": 0.0006813380750827491,
+              "C": 0.14419128000736237,
+              "D": 0.00016207137377932668
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "A",
+                0.9001
+              ],
+              [
+                "C",
+                0.0748
+              ],
+              [
+                "D",
+                0.0172
+              ],
+              [
+                "B",
+                0.0056
+              ],
+              [
+                "The",
+                0.0012
+              ],
+              [
+                "To",
+                0.0005
+              ],
+              [
+                "Based",
+                0.0003
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "In",
+                0.0
+              ],
+              [
+                "There",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.9977,
+            "letters": {
+              "A": 0.9000865817070007,
+              "B": 0.005649053957313299,
+              "C": 0.07477933168411255,
+              "D": 0.017234038561582565
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "left",
+          "describe_1frame": "A first-person view from a video game shows a hand holding a pistol in a vast, empty, and flat desert-like environment with a dark sky.",
+          "is_there": "No, there is no monster in this image.",
+          "pos_1frame": {
+            "top": [
+              [
+                "B",
+                0.9912
+              ],
+              [
+                "A",
+                0.0042
+              ],
+              [
+                "C",
+                0.0023
+              ],
+              [
+                "D",
+                0.0022
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                " B",
+                0.0
+              ],
+              [
+                "Based",
+                0.0
+              ],
+              [
+                "To",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 0.004202255513519049,
+              "B": 0.9912245869636536,
+              "C": 0.0023257483262568712,
+              "D": 0.002240972127765417
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "B",
+                0.9606
+              ],
+              [
+                "C",
+                0.0262
+              ],
+              [
+                "D",
+                0.0095
+              ],
+              [
+                "A",
+                0.0017
+              ],
+              [
+                "The",
+                0.0009
+              ],
+              [
+                "To",
+                0.0004
+              ],
+              [
+                "Based",
+                0.0003
+              ],
+              [
+                "In",
+                0.0001
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "There",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.9981,
+            "letters": {
+              "A": 0.0017215862171724439,
+              "B": 0.9606460332870483,
+              "C": 0.02623855322599411,
+              "D": 0.009518012404441833
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "right",
+          "describe_1frame": "A first-person view from a video game shows a hand holding a pistol in a vast, empty, desert-like environment with two small figures in the distance.",
+          "is_there": "No, there is no monster in this image.",
+          "pos_1frame": {
+            "top": [
+              [
+                "C",
+                0.9609
+              ],
+              [
+                "A",
+                0.0255
+              ],
+              [
+                "D",
+                0.0124
+              ],
+              [
+                "B",
+                0.0012
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ],
+              [
+                "To",
+                0.0
+              ],
+              [
+                "Based",
+                0.0
+              ],
+              [
+                "c",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 0.02545854263007641,
+              "B": 0.0012003048323094845,
+              "C": 0.9609405994415283,
+              "D": 0.012383575551211834
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "D",
+                0.8253
+              ],
+              [
+                "C",
+                0.1589
+              ],
+              [
+                "A",
+                0.0076
+              ],
+              [
+                "B",
+                0.0034
+              ],
+              [
+                "The",
+                0.0025
+              ],
+              [
+                "Based",
+                0.0009
+              ],
+              [
+                "To",
+                0.0005
+              ],
+              [
+                "There",
+                0.0003
+              ],
+              [
+                "In",
+                0.0002
+              ],
+              [
+                "This",
+                0.0002
+              ]
+            ],
+            "letter_mass": 0.9952,
+            "letters": {
+              "A": 0.007552184164524078,
+              "B": 0.003418291686102748,
+              "C": 0.15888665616512299,
+              "D": 0.825320839881897
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "left",
+          "describe_1frame": "A first-person view from a video game shows a player holding a pistol in a vast, empty, and curved desert-like environment with a distant figure.",
+          "is_there": "No, there is no monster in this image.",
+          "pos_1frame": {
+            "top": [
+              [
+                "B",
+                0.8026
+              ],
+              [
+                "A",
+                0.1423
+              ],
+              [
+                "C",
+                0.0331
+              ],
+              [
+                "D",
+                0.022
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ],
+              [
+                " B",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "To",
+                0.0
+              ],
+              [
+                "Based",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 0.14227256178855896,
+              "B": 0.80259108543396,
+              "C": 0.03312291204929352,
+              "D": 0.02199045941233635
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "D",
+                0.4658
+              ],
+              [
+                "B",
+                0.4244
+              ],
+              [
+                "A",
+                0.0657
+              ],
+              [
+                "C",
+                0.0383
+              ],
+              [
+                "The",
+                0.0035
+              ],
+              [
+                "Based",
+                0.0009
+              ],
+              [
+                "To",
+                0.0008
+              ],
+              [
+                "There",
+                0.0001
+              ],
+              [
+                "This",
+                0.0001
+              ],
+              [
+                "In",
+                0.0001
+              ]
+            ],
+            "letter_mass": 0.9942,
+            "letters": {
+              "A": 0.06574802845716476,
+              "B": 0.42441239953041077,
+              "C": 0.03830377385020256,
+              "D": 0.465785413980484
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "none",
+          "describe_1frame": "A first-person view from a video game shows a hand holding a pistol in a simple, blocky environment with a dark sky and a flat, tiled ground.",
+          "is_there": "No, there is no monster in this image.",
+          "pos_1frame": {
+            "top": [
+              [
+                "D",
+                0.9981
+              ],
+              [
+                "A",
+                0.0009
+              ],
+              [
+                "C",
+                0.0006
+              ],
+              [
+                "B",
+                0.0004
+              ],
+              [
+                "There",
+                0.0
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                " D",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ],
+              [
+                "d",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 0.0008967159665189683,
+              "B": 0.00039954428211785853,
+              "C": 0.0006428764900192618,
+              "D": 0.9980562925338745
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "D",
+                0.9265
+              ],
+              [
+                "A",
+                0.0288
+              ],
+              [
+                "C",
+                0.0213
+              ],
+              [
+                "B",
+                0.0191
+              ],
+              [
+                "The",
+                0.0024
+              ],
+              [
+                "Based",
+                0.0007
+              ],
+              [
+                "To",
+                0.0004
+              ],
+              [
+                "There",
+                0.0003
+              ],
+              [
+                "In",
+                0.0001
+              ],
+              [
+                "This",
+                0.0001
+              ]
+            ],
+            "letter_mass": 0.9958,
+            "letters": {
+              "A": 0.02883329428732395,
+              "B": 0.01914803870022297,
+              "C": 0.021266665309667587,
+              "D": 0.9265297055244446
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "none",
+          "describe_1frame": "A first-person view from a video game shows a hand holding a pistol with a glowing orange muzzle, aiming at a red target in a dark, pixelated desert landscape.",
+          "is_there": "No, there is no monster in this image.",
+          "pos_1frame": {
+            "top": [
+              [
+                "C",
+                0.9996
+              ],
+              [
+                "B",
+                0.0003
+              ],
+              [
+                "D",
+                0.0001
+              ],
+              [
+                "A",
+                0.0001
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "Based",
+                0.0
+              ],
+              [
+                " C",
+                0.0
+              ],
+              [
+                "c",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 6.448622298194095e-05,
+              "B": 0.00028220415697433054,
+              "C": 0.999576985836029,
+              "D": 7.434744475176558e-05
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "C",
+                0.9982
+              ],
+              [
+                "B",
+                0.0008
+              ],
+              [
+                "D",
+                0.0003
+              ],
+              [
+                "The",
+                0.0003
+              ],
+              [
+                "A",
+                0.0002
+              ],
+              [
+                "Based",
+                0.0001
+              ],
+              [
+                "To",
+                0.0001
+              ],
+              [
+                "In",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "There",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.9995,
+            "letters": {
+              "A": 0.00019318527483846992,
+              "B": 0.0008384498069062829,
+              "C": 0.9981704950332642,
+              "D": 0.00030199825414456427
+            },
+            "prompt_tail": "'here is no monster\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        }
+      ],
+      "health_gathering": [
+        {
+          "oracle": "left",
+          "describe_1frame": "A dark, nighttime scene depicts a grassy field with a stone wall in the background, illuminated by a faint, glowing green light.",
+          "is_there": "No, there is no medkit in this image.",
+          "pos_1frame": {
+            "top": [
+              [
+                "A",
+                0.4559
+              ],
+              [
+                "D",
+                0.3567
+              ],
+              [
+                "B",
+                0.1164
+              ],
+              [
+                "C",
+                0.071
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ],
+              [
+                "There",
+                0.0
+              ],
+              [
+                "None",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                " A",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 0.455915242433548,
+              "B": 0.11638244986534119,
+              "C": 0.07096576690673828,
+              "D": 0.3566996455192566
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "D",
+                0.6723
+              ],
+              [
+                "A",
+                0.2703
+              ],
+              [
+                "C",
+                0.0416
+              ],
+              [
+                "B",
+                0.0141
+              ],
+              [
+                "The",
+                0.001
+              ],
+              [
+                "Based",
+                0.0002
+              ],
+              [
+                "To",
+                0.0002
+              ],
+              [
+                "There",
+                0.0001
+              ],
+              [
+                "This",
+                0.0001
+              ],
+              [
+                "In",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.9983,
+            "letters": {
+              "A": 0.27031415700912476,
+              "B": 0.014084127731621265,
+              "C": 0.04158952832221985,
+              "D": 0.6723100543022156
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "left",
+          "describe_1frame": "A dark, nighttime scene from a video game, featuring a stone wall and a green, textured ground with glowing white lights.",
+          "is_there": "No, there is no medkit in this image.",
+          "pos_1frame": {
+            "top": [
+              [
+                "D",
+                0.5499
+              ],
+              [
+                "A",
+                0.233
+              ],
+              [
+                "C",
+                0.1172
+              ],
+              [
+                "B",
+                0.0999
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ],
+              [
+                "There",
+                0.0
+              ],
+              [
+                "None",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "d",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 0.23299621045589447,
+              "B": 0.09986104816198349,
+              "C": 0.11715718358755112,
+              "D": 0.5499392151832581
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "A",
+                0.8777
+              ],
+              [
+                "D",
+                0.115
+              ],
+              [
+                "C",
+                0.0045
+              ],
+              [
+                "B",
+                0.002
+              ],
+              [
+                "The",
+                0.0005
+              ],
+              [
+                "To",
+                0.0001
+              ],
+              [
+                "Based",
+                0.0001
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "There",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.9993,
+            "letters": {
+              "A": 0.8777216672897339,
+              "B": 0.0020336501765996218,
+              "C": 0.004508177284151316,
+              "D": 0.11501504480838776
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "left",
+          "describe_1frame": "A dark, nighttime scene in a video game, featuring a green, textured ground with glowing white particles and a stone wall under a black sky.",
+          "is_there": "No, there is no medkit in this image.",
+          "pos_1frame": {
+            "top": [
+              [
+                "D",
+                0.7478
+              ],
+              [
+                "B",
+                0.1144
+              ],
+              [
+                "A",
+                0.0744
+              ],
+              [
+                "C",
+                0.0634
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ],
+              [
+                "There",
+                0.0
+              ],
+              [
+                "None",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                " D",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.9999,
+            "letters": {
+              "A": 0.07440787553787231,
+              "B": 0.1143585816025734,
+              "C": 0.06335798650979996,
+              "D": 0.74782395362854
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "D",
+                0.9842
+              ],
+              [
+                "C",
+                0.0064
+              ],
+              [
+                "A",
+                0.0063
+              ],
+              [
+                "B",
+                0.0026
+              ],
+              [
+                "The",
+                0.0003
+              ],
+              [
+                "There",
+                0.0001
+              ],
+              [
+                "Based",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "To",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.9994,
+            "letters": {
+              "A": 0.006341460160911083,
+              "B": 0.002576840342953801,
+              "C": 0.006357640027999878,
+              "D": 0.984169602394104
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "center",
+          "describe_1frame": "A dark, pixelated scene depicts a green, wavy surface in front of a stone wall under a black sky, with a small glowing green object near the center.",
+          "is_there": "No, there is no medkit in this image.",
+          "pos_1frame": {
+            "top": [
+              [
+                "B",
+                0.9801
+              ],
+              [
+                "C",
+                0.0114
+              ],
+              [
+                "D",
+                0.0078
+              ],
+              [
+                "A",
+                0.0006
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                " B",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ],
+              [
+                "b",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "H",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 0.0005823412793688476,
+              "B": 0.9801402688026428,
+              "C": 0.011439532041549683,
+              "D": 0.007829359732568264
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "B",
+                0.6458
+              ],
+              [
+                "D",
+                0.3274
+              ],
+              [
+                "C",
+                0.0218
+              ],
+              [
+                "A",
+                0.003
+              ],
+              [
+                "The",
+                0.0013
+              ],
+              [
+                "Based",
+                0.0002
+              ],
+              [
+                "To",
+                0.0002
+              ],
+              [
+                "There",
+                0.0001
+              ],
+              [
+                "This",
+                0.0001
+              ],
+              [
+                "In",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.9979,
+            "letters": {
+              "A": 0.002951060188934207,
+              "B": 0.6457626819610596,
+              "C": 0.02183859795331955,
+              "D": 0.32738828659057617
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "right",
+          "describe_1frame": "A small, glowing green orb rests on a wet, green, rippling surface in front of a stone wall under a dark night sky.",
+          "is_there": "Yes, there is a medkit in this image. It is located on the ground, near the center of the image, in front of the stone wall.",
+          "pos_1frame": {
+            "top": [
+              [
+                "C",
+                0.9967
+              ],
+              [
+                "B",
+                0.0032
+              ],
+              [
+                "D",
+                0.0
+              ],
+              [
+                "A",
+                0.0
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                " C",
+                0.0
+              ],
+              [
+                "c",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "Based",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 3.9238679164554924e-05,
+              "B": 0.003211250761523843,
+              "C": 0.9966997504234314,
+              "D": 4.75208398711402e-05
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "C",
+                0.983
+              ],
+              [
+                "B",
+                0.0084
+              ],
+              [
+                "D",
+                0.0073
+              ],
+              [
+                "A",
+                0.0006
+              ],
+              [
+                "The",
+                0.0004
+              ],
+              [
+                "To",
+                0.0001
+              ],
+              [
+                "Based",
+                0.0001
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "In",
+                0.0
+              ],
+              [
+                "There",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.9993,
+            "letters": {
+              "A": 0.00061882782028988,
+              "B": 0.008412474766373634,
+              "C": 0.9829601049423218,
+              "D": 0.0073169744573533535
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "right",
+          "describe_1frame": "A stone wall with a green, watery floor and a green and white bottle in the corner.",
+          "is_there": "Yes, there is a medkit in the image. It is located on the right side of the image, on the green, watery surface.",
+          "pos_1frame": {
+            "top": [
+              [
+                "C",
+                1.0
+              ],
+              [
+                "A",
+                0.0
+              ],
+              [
+                "D",
+                0.0
+              ],
+              [
+                "B",
+                0.0
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "c",
+                0.0
+              ],
+              [
+                " C",
+                0.0
+              ],
+              [
+                "Based",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "To",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 3.722605583789118e-07,
+              "B": 1.6470448827021755e-07,
+              "C": 0.9999990463256836,
+              "D": 2.2756742623641912e-07
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "C",
+                0.9999
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "To",
+                0.0
+              ],
+              [
+                "A",
+                0.0
+              ],
+              [
+                "Based",
+                0.0
+              ],
+              [
+                "B",
+                0.0
+              ],
+              [
+                "D",
+                0.0
+              ],
+              [
+                "In",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "Let",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 4.083511157659814e-06,
+              "B": 3.564087137419847e-06,
+              "C": 0.9999492168426514,
+              "D": 1.958834445758839e-06
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "none",
+          "describe_1frame": "A first-person view from a pixelated, blocky video game shows a narrow, stone-walled corridor with green water on the floor, set against a dark night sky.",
+          "is_there": "No, there is no medkit in this image.",
+          "pos_1frame": {
+            "top": [
+              [
+                "D",
+                0.9645
+              ],
+              [
+                "A",
+                0.0172
+              ],
+              [
+                "C",
+                0.0142
+              ],
+              [
+                "B",
+                0.0041
+              ],
+              [
+                "There",
+                0.0
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ],
+              [
+                "None",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                " D",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 0.017189301550388336,
+              "B": 0.004076273180544376,
+              "C": 0.01421590056270361,
+              "D": 0.9644945859909058
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "D",
+                0.9934
+              ],
+              [
+                "A",
+                0.0027
+              ],
+              [
+                "C",
+                0.0024
+              ],
+              [
+                "B",
+                0.0007
+              ],
+              [
+                "The",
+                0.0004
+              ],
+              [
+                "There",
+                0.0003
+              ],
+              [
+                "Based",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "None",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.9992,
+            "letters": {
+              "A": 0.0026880588848143816,
+              "B": 0.0006867953925393522,
+              "C": 0.002445862628519535,
+              "D": 0.9933974742889404
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        },
+        {
+          "oracle": "none",
+          "describe_1frame": "A close-up, pixelated view of a weathered, moss-covered stone wall with a distinct green and brown color palette.",
+          "is_there": "No, there is no medkit in this image.",
+          "pos_1frame": {
+            "top": [
+              [
+                "D",
+                0.9834
+              ],
+              [
+                "C",
+                0.0121
+              ],
+              [
+                "A",
+                0.0025
+              ],
+              [
+                "B",
+                0.002
+              ],
+              [
+                "There",
+                0.0
+              ],
+              [
+                "The",
+                0.0
+              ],
+              [
+                " D",
+                0.0
+              ],
+              [
+                "E",
+                0.0
+              ],
+              [
+                "None",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ]
+            ],
+            "letter_mass": 1.0,
+            "letters": {
+              "A": 0.0024921628646552563,
+              "B": 0.002042877720668912,
+              "C": 0.012080338783562183,
+              "D": 0.9833758473396301
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          },
+          "pos_2frame": {
+            "top": [
+              [
+                "D",
+                0.9948
+              ],
+              [
+                "C",
+                0.0028
+              ],
+              [
+                "A",
+                0.0011
+              ],
+              [
+                "B",
+                0.0008
+              ],
+              [
+                "The",
+                0.0002
+              ],
+              [
+                "There",
+                0.0002
+              ],
+              [
+                "Based",
+                0.0
+              ],
+              [
+                "This",
+                0.0
+              ],
+              [
+                "To",
+                0.0
+              ],
+              [
+                "None",
+                0.0
+              ]
+            ],
+            "letter_mass": 0.9995,
+            "letters": {
+              "A": 0.001118195941671729,
+              "B": 0.0008417852222919464,
+              "C": 0.00278237066231668,
+              "D": 0.9947959780693054
+            },
+            "prompt_tail": "'there is no medkit\\nAnswer with a single letter.<|im_end|>\\n<|im_start|>assistant\\n'"
+          }
+        }
+      ]
+    },
+    "H6_batch_max_abs_diff": 2.0265579223632812e-06
+  }
+}

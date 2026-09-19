@@ -16,6 +16,9 @@ from reflexrl.env.scenarios import Scenario
 from reflexrl.teacher.prompts import action_letters, build_messages
 
 DEFAULT_MODEL = "Qwen/Qwen3-VL-2B-Instruct"
+# Below this total next-token probability on the answer letters the model is
+# not answering the question, and a letter-renormalised distribution is noise.
+MIN_LETTER_MASS = 0.5
 FP32_ATTN = "fp32_eager"
 
 
@@ -48,8 +51,10 @@ def default_dtype(device: str) -> torch.dtype:
     if not device.startswith("cuda"):
         return torch.float32
     major, _ = torch.cuda.get_device_capability()
-    # Turing (sm75: RTX 20xx, T4) has no bf16 tensor cores.
-    return torch.bfloat16 if major >= 8 else torch.float16
+    # No bf16 before Ampere. fp16 is NOT a fallback: Qwen3-VL's ~1.5e4
+    # residual activations wreck it (gibberish generations, ~0.03% mass on
+    # the answer letters; see results/teacher_diagnosis). Use fp32 instead.
+    return torch.bfloat16 if major >= 8 else torch.float32
 
 
 class QwenTeacher:
@@ -76,6 +81,7 @@ class QwenTeacher:
         self.samples = 0
         self.seconds = 0.0
         self.nonfinite_retries = 0
+        self.letter_mass_sum = 0.0
 
     def _prompt(self, scenario: Scenario, n_frames: int) -> str:
         key = (scenario.name, n_frames)
@@ -112,11 +118,15 @@ class QwenTeacher:
         batch = self.processor(text=[prompt] * len(frames), images=images,
                                return_tensors="pt", padding=True)
         batch = {k: v.to(self.device) if hasattr(v, "to") else v for k, v in batch.items()}
-        logits = self.model(**batch).logits[:, -1, :].index_select(
-            1, torch.tensor(ids, device=self.device)).float()
+        logits = self.model(**batch).logits[:, -1, :].float()
         if not torch.isfinite(logits).all():
             raise FloatingPointError("teacher produced non-finite logits")
-        return torch.softmax(logits, -1).cpu().numpy().astype(np.float32)
+        full = torch.softmax(logits, -1).index_select(1, torch.tensor(ids, device=self.device))
+        mass = full.sum(-1)
+        self.letter_mass_sum += float(mass.sum())
+        if float(mass.min()) < MIN_LETTER_MASS:
+            raise RuntimeError(f"teacher is not answering: letter mass {float(mass.min()):.4f}")
+        return (full / mass[:, None]).cpu().numpy().astype(np.float32)
 
     def action_probs(self, frames: list[list[np.ndarray]], scenario: Scenario,
                      retries: int = 3) -> np.ndarray:
@@ -142,11 +152,16 @@ class QwenTeacher:
         t0 = time.perf_counter()
         batch = self.processor(text=text, images=images, return_tensors="pt", padding=True)
         batch = {k: v.to(self.device) if hasattr(v, "to") else v for k, v in batch.items()}
-        logits = self.model(**batch).logits[:, -1, :]
-        letter_logits = logits.index_select(1, self._letter_ids(scenario)).float()
-        if not torch.isfinite(letter_logits).all():
+        logits = self.model(**batch).logits[:, -1, :].float()
+        if not torch.isfinite(logits).all():
             raise FloatingPointError("teacher produced non-finite logits")
-        probs = torch.softmax(letter_logits, dim=-1).cpu().numpy()
+        full = torch.softmax(logits, dim=-1).index_select(1, self._letter_ids(scenario))
+        mass = full.sum(-1)
+        self.letter_mass_sum += float(mass.sum())
+        if float(mass.min()) < MIN_LETTER_MASS:
+            raise RuntimeError(f"teacher is not answering: letter mass {float(mass.min()):.4f} "
+                               f"< {MIN_LETTER_MASS} (check dtype/prompt)")
+        probs = (full / mass[:, None]).cpu().numpy()
         if self.device.startswith("cuda"):
             torch.cuda.synchronize()
         self.seconds += time.perf_counter() - t0

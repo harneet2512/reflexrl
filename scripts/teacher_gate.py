@@ -84,6 +84,8 @@ def run_scenario(scenario: str, policy: str, episodes: int, n_envs: int, teacher
     if teacher is not None:
         out["teacher_s_per_decision"] = teacher.seconds / max(teacher.samples, 1)
         out["teacher_nonfinite_retries"] = teacher.nonfinite_retries
+        out["teacher_dtype"] = str(teacher.dtype)
+        out["teacher_mean_letter_mass"] = teacher.letter_mass_sum / max(teacher.samples, 1)
     print(f"[{policy}] {spec.name}: {out['return_mean']:.2f} +- {out['return_se']:.2f} "
           f"(n={len(r)}, len {out['len_mean']:.0f}, {out['wall_s']}s)", flush=True)
     return out

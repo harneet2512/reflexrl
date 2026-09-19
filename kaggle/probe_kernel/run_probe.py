@@ -16,7 +16,7 @@ assert src, "code dataset not mounted"
 shutil.copytree(os.path.dirname(os.path.dirname(src[0])), "/kaggle/working/repo", dirs_exist_ok=True)
 os.chdir("/kaggle/working/repo")
 rc = 0
-for k in (2, 3):
+for k in (1,):
     rc |= sh(f"{sys.executable} -u scripts/debias_probe.py --frames 150 --upscale {k} "
              "--out /kaggle/working/probe")
 os.chdir("/kaggle/working")
