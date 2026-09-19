@@ -1,0 +1,20 @@
+{
+  "written": "2026-09-18, after the phase-0 gate showed Qwen3-VL-2B collapsing to answer 'A' (argmax share 1.00 on dtc and hg); before any probe query was run",
+  "question": "Does Qwen3-VL-2B carry usable visual signal once option-position bias is removed?",
+  "frames": "~150 per scenario (defend_the_center, health_gathering) sampled from uniform-random play; oracle target class from the eval-only labels buffer (nearest target by on-screen bbox height; left < 0.4 < center < 0.6 < right of screen width; 'none' if no target)",
+  "variants": {
+    "A_original": "the gate prompt, fixed option order",
+    "B_permuted": "same prompt, 4 random option orders, probabilities mapped back to actions and averaged",
+    "C_calibrated": "B divided by the model's B-distribution on a blank black image (contextual calibration), renormalised",
+    "D_perception": "'where is the nearest monster/medkit' with options left/center/right/none, 4 permutations averaged"
+  },
+  "metrics": {
+    "action variants (A,B,C)": "on frames with a visible target: mean probability mass on the oracle-correct action set, and argmax-in-set rate; compared with a uniform policy",
+    "perception (D)": "4-way accuracy vs oracle class, compared with the majority-class rate"
+  },
+  "decision_rule": {
+    "use_debiased_action_teacher": "best of B/C has argmax-in-set rate >= uniform-set rate + 0.15 on BOTH dtc and hg -> rerun the gate with that variant",
+    "use_perception_teacher": "else if D accuracy >= majority rate + 0.20 on both -> perception-label teacher",
+    "negative": "else report that the 2B VLM carries no usable visual signal for these tasks"
+  }
+}

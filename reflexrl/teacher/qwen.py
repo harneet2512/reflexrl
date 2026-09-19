@@ -96,6 +96,28 @@ class QwenTeacher:
             self._letter_ids_cache[scenario.name] = torch.tensor(ids, device=self.device)
         return self._letter_ids_cache[scenario.name]
 
+    @torch.no_grad()
+    def choice_probs(self, frames: list[list[np.ndarray]], question: str,
+                     n_options: int) -> np.ndarray:
+        """Generic lettered multiple choice: frames + question -> (B, n_options) probs."""
+        content = [{"type": "image"} for _ in range(len(frames[0]))]
+        content.append({"type": "text", "text": question})
+        prompt = self.processor.apply_chat_template(
+            [{"role": "user", "content": content}], tokenize=False, add_generation_prompt=True)
+        ids = []
+        for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[:n_options]:
+            tok = self.processor.tokenizer.encode(letter, add_special_tokens=False)
+            ids.append(tok[0])
+        images = [Image.fromarray(f) for obs in frames for f in obs]
+        batch = self.processor(text=[prompt] * len(frames), images=images,
+                               return_tensors="pt", padding=True)
+        batch = {k: v.to(self.device) if hasattr(v, "to") else v for k, v in batch.items()}
+        logits = self.model(**batch).logits[:, -1, :].index_select(
+            1, torch.tensor(ids, device=self.device)).float()
+        if not torch.isfinite(logits).all():
+            raise FloatingPointError("teacher produced non-finite logits")
+        return torch.softmax(logits, -1).cpu().numpy().astype(np.float32)
+
     def action_probs(self, frames: list[list[np.ndarray]], scenario: Scenario,
                      retries: int = 3) -> np.ndarray:
         """frames: B lists of full-res RGB frames (oldest first) -> (B, A) float32 probs.

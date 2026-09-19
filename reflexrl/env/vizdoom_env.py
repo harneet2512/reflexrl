@@ -41,7 +41,7 @@ class DoomEnv(gym.Env):
     metadata = {"render_modes": []}
 
     def __init__(self, scenario: str = "dtc", frame_skip: int = 4, seed: int | None = None,
-                 keep_full_frames: bool = False):
+                 keep_full_frames: bool = False, eval_labels: bool = False):
         super().__init__()
         self.scenario = get_scenario(scenario)
         self.game = vzd.DoomGame()
@@ -50,7 +50,9 @@ class DoomEnv(gym.Env):
         self.game.set_screen_resolution(vzd.ScreenResolution.RES_320X180)
         self.game.set_screen_format(vzd.ScreenFormat.RGB24)
         self.game.set_depth_buffer_enabled(False)
-        self.game.set_labels_buffer_enabled(False)
+        # Labels are privileged: only the offline teacher probe may enable them,
+        # to score Qwen against ground truth. No policy ever reads them.
+        self.game.set_labels_buffer_enabled(eval_labels)
         self.game.set_automap_buffer_enabled(False)
         self.game.set_mode(vzd.Mode.PLAYER)
         if seed is not None:
