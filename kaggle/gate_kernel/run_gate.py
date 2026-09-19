@@ -30,7 +30,7 @@ def lane_cmd(i, scen):
             f"--scenarios {' '.join(scen)} --episodes 30 --n-envs 8 --out /kaggle/working/runs/phase0/lane{i}")
     # up to 4 attempts; the gate resumes at the first unfinished scenario
     return (f"export CUDA_VISIBLE_DEVICES={i if n_gpu >= 2 else 0}; "
-            f"for a in 1 2 3 4; do {gate} > /kaggle/working/lane{i}.log 2>&1 && break; done")
+            f"for a in 1 2 3 4; do {gate} >> /kaggle/working/lane{i}.log 2>&1 && break; done")
 
 procs = [subprocess.Popen(lane_cmd(i, scen), shell=True) for i, scen in enumerate(lanes)]
 rcs = [p.wait() for p in procs]

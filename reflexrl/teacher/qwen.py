@@ -199,12 +199,9 @@ class CalibratedQwenTeacher:
     def _question(self, scenario: Scenario, perm: np.ndarray) -> str:
         from reflexrl.teacher.prompts import LETTERS, build_prompt_text
         base = build_prompt_text(scenario)
-        options = "
-".join(f"{LETTERS[k]}. {scenario.action_names[i]}" for k, i in enumerate(perm))
+        options = "\n".join(f"{LETTERS[k]}. {scenario.action_names[i]}" for k, i in enumerate(perm))
         return (base[: base.index("Choose the best action")]
-                + f"Choose the best action right now:
-{options}
-Answer with a single letter.")
+                + f"Choose the best action right now:\n{options}\nAnswer with a single letter.")
 
     def _averaged(self, frames: list[list[np.ndarray]], scenario: Scenario) -> np.ndarray:
         n = len(scenario.actions)
