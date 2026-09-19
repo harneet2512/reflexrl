@@ -1,0 +1,144 @@
+{
+  "meta": {
+    "config": {
+      "frames": 150,
+      "out": "/kaggle/working/probe",
+      "upscale": 2
+    },
+    "git_commit": "unknown",
+    "host": "8520d419e565",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "torch": "2.10.0+cu128",
+    "cuda_device": "Tesla T4",
+    "started_unix": 1789785176.7060566
+  },
+  "scenarios": {
+    "defend_the_center": {
+      "oracle_counts": {
+        "left": 25,
+        "center": 47,
+        "right": 40,
+        "none": 38
+      },
+      "blank_prior": [
+        0.4885492445901036,
+        0.0037256306677591056,
+        0.25039610906969756,
+        0.012898237619083375,
+        0.24443079706543358
+      ],
+      "A_original": {
+        "n": 112,
+        "mass_on_correct": 0.2504979424801214,
+        "argmax_in_set": 0.22321428571428573,
+        "uniform_set_rate": 0.48392857142857143
+      },
+      "B_permuted": {
+        "n": 112,
+        "mass_on_correct": 0.42674914825771076,
+        "argmax_in_set": 0.22321428571428573,
+        "uniform_set_rate": 0.48392857142857143
+      },
+      "C_calibrated": {
+        "n": 112,
+        "mass_on_correct": 0.49271871305603027,
+        "argmax_in_set": 0.4732142857142857,
+        "uniform_set_rate": 0.48392857142857143
+      },
+      "D_perception": {
+        "accuracy": 0.22666666666666666,
+        "majority_rate": 0.31333333333333335,
+        "confusion": {
+          "left": {
+            "left": 7,
+            "center": 0,
+            "right": 18,
+            "none": 0
+          },
+          "center": {
+            "left": 19,
+            "center": 0,
+            "right": 28,
+            "none": 0
+          },
+          "right": {
+            "left": 13,
+            "center": 0,
+            "right": 27,
+            "none": 0
+          },
+          "none": {
+            "left": 10,
+            "center": 0,
+            "right": 28,
+            "none": 0
+          }
+        }
+      }
+    },
+    "health_gathering": {
+      "oracle_counts": {
+        "left": 14,
+        "center": 5,
+        "right": 35,
+        "none": 96
+      },
+      "blank_prior": [
+        0.25184463954064995,
+        0.004759550123708323,
+        0.24839273828547448,
+        0.25275567453354597,
+        0.2422474055128987
+      ],
+      "A_original": {
+        "n": 54,
+        "mass_on_correct": 0.1044326036105674,
+        "argmax_in_set": 0.09259259259259259,
+        "uniform_set_rate": 0.3814814814814813
+      },
+      "B_permuted": {
+        "n": 54,
+        "mass_on_correct": 0.4053596435200975,
+        "argmax_in_set": 0.25925925925925924,
+        "uniform_set_rate": 0.3814814814814813
+      },
+      "C_calibrated": {
+        "n": 54,
+        "mass_on_correct": 0.35784319775685985,
+        "argmax_in_set": 0.25925925925925924,
+        "uniform_set_rate": 0.3814814814814813
+      },
+      "D_perception": {
+        "accuracy": 0.25333333333333335,
+        "majority_rate": 0.64,
+        "confusion": {
+          "left": {
+            "left": 2,
+            "center": 0,
+            "right": 0,
+            "none": 12
+          },
+          "center": {
+            "left": 0,
+            "center": 0,
+            "right": 0,
+            "none": 5
+          },
+          "right": {
+            "left": 13,
+            "center": 0,
+            "right": 0,
+            "none": 22
+          },
+          "none": {
+            "left": 60,
+            "center": 0,
+            "right": 0,
+            "none": 36
+          }
+        }
+      }
+    }
+  }
+}
