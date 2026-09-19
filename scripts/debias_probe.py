@@ -50,7 +50,7 @@ def oracle(env: DoomEnv, scenario: str) -> tuple[str, list[str]]:
     if not objs:
         return "none", names
     near = max(objs, key=lambda lab: lab.height)
-    cx = (near.x + near.width / 2) / state.screen_width
+    cx = (near.x + near.width / 2) / env.game.get_screen_width()
     return ("left" if cx < 0.4 else "right" if cx > 0.6 else "center"), names
 
 
