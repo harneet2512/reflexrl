@@ -126,6 +126,7 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--frames", type=int, default=150)
     p.add_argument("--out", default="runs/probe")
+    p.add_argument("--upscale", type=int, default=1, help="bicubic upscale factor for Qwen frames")
     args = p.parse_args()
     from reflexrl.teacher.qwen import QwenTeacher
     teacher = QwenTeacher()
@@ -134,6 +135,10 @@ def main() -> None:
     for sc in ("dtc", "hg"):
         spec = get_scenario(sc)
         frames, classes, seen = collect(spec.name, args.frames, seed=777)
+        if args.upscale > 1:
+            import cv2
+            frames = [[cv2.resize(f, None, fx=args.upscale, fy=args.upscale,
+                                  interpolation=cv2.INTER_CUBIC) for f in fr] for fr in frames]
         counts = {c: classes.count(c) for c in CLASSES}
         print(spec.name, "oracle classes", counts, "objects seen", dict(sorted(seen.items())), flush=True)
         assert counts["none"] < len(classes), "oracle found no targets: check object names"
@@ -159,7 +164,8 @@ def main() -> None:
         out["scenarios"][spec.name] = res
         print(json.dumps({k: v for k, v in res.items() if k != "blank_prior"}, indent=1), flush=True)
         Path(args.out).mkdir(parents=True, exist_ok=True)
-        (Path(args.out) / "probe_results.json").write_text(json.dumps(out, indent=2))
+        name = "probe_results.json" if args.upscale == 1 else f"probe_results_x{args.upscale}.json"
+        (Path(args.out) / name).write_text(json.dumps(out, indent=2))
 
 
 if __name__ == "__main__":

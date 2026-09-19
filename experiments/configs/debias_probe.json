@@ -16,5 +16,11 @@
     "use_debiased_action_teacher": "best of B/C has argmax-in-set rate >= uniform-set rate + 0.15 on BOTH dtc and hg -> rerun the gate with that variant",
     "use_perception_teacher": "else if D accuracy >= majority rate + 0.20 on both -> perception-label teacher",
     "negative": "else report that the 2B VLM carries no usable visual signal for these tasks"
+  },
+  "addendum_resolution_check": {
+    "written": "2026-09-18, after the 1x probe failed every variant; before any upscaled query",
+    "motivation": "at 320x180 a frame is ~66 image tokens; distant targets are smaller than one merged 32px patch",
+    "change": "same frames, same oracle, same variants and decision rule; frames upscaled 2x (640x360) and 3x (960x540) with bicubic interpolation before Qwen sees them",
+    "decision": "if either scale passes the original rule on both scenarios, that scale is used for the teacher; otherwise the negative stands"
   }
 }
