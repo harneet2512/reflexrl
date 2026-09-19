@@ -1,0 +1,46 @@
+[
+ {
+  "method": "ppo",
+  "scenario": "hgs",
+  "steps": 750000,
+  "seed": 0
+ },
+ {
+  "method": "ppo",
+  "scenario": "hgs",
+  "steps": 750000,
+  "seed": 0,
+  "tag": "ppo_ft",
+  "init_ckpt": "runs/train/health_gathering/ppo_s0/ckpt_final.pt"
+ },
+ {
+  "method": "reflexrl",
+  "scenario": "hgs",
+  "steps": 750000,
+  "seed": 0,
+  "tag": "reflexrl_ft",
+  "init_ckpt": "runs/train/health_gathering/reflexrl_s0/ckpt_final.pt"
+ },
+ {
+  "method": "ppo",
+  "scenario": "hgs",
+  "steps": 750000,
+  "seed": 1
+ },
+ {
+  "method": "ppo",
+  "scenario": "hgs",
+  "steps": 750000,
+  "seed": 1,
+  "tag": "ppo_ft",
+  "init_ckpt": "runs/train/health_gathering/ppo_s1/ckpt_final.pt"
+ },
+ {
+  "method": "reflexrl",
+  "scenario": "hgs",
+  "steps": 750000,
+  "seed": 1,
+  "tag": "reflexrl_ft",
+  "init_ckpt": "runs/train/health_gathering/reflexrl_s1/ckpt_final.pt"
+ }
+]
