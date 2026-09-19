@@ -1,0 +1,14 @@
+[
+ {
+  "method": "reflexrl",
+  "scenario": "dtc",
+  "steps": 500000,
+  "seed": 0
+ },
+ {
+  "method": "bc_ppo",
+  "scenario": "dtc",
+  "steps": 500000,
+  "seed": 0
+ }
+]
