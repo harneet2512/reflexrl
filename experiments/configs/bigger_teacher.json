@@ -7,5 +7,11 @@
   },
   "stage1_small_check": "synthetic red-disc localisation (32 images) must be >= 0.9 accurate with mean answer-letter mass >= 0.9; then the pre-registered debias probe on 150 DTC frames must pass (best of A/B/C argmax-in-set >= uniform + 0.15)",
   "stage2_gate": "30-episode DTC gate with the passing model(s)",
-  "stage3_bar": "guided RL proceeds only if the teacher's DTC gate mean return >= 3.0 (~PPO from scratch at 50K steps); otherwise ship the reflex policy + negative teacher finding"
+  "stage3_bar": "guided RL proceeds only if the teacher's DTC gate mean return >= 3.0 (~PPO from scratch at 50K steps); otherwise ship the reflex policy + negative teacher finding",
+  "addendum_nf4": {
+    "written": "2026-09-19, after 4B fp32 missed the probe bar by 0.01 and 8B fp16 (split over 2 GPUs) failed the synthetic check; before any NF4 query",
+    "correction": "8B fp16 result confounds fp16 with 2-GPU splitting; not attributed to fp16 alone",
+    "candidate": "Qwen/Qwen3-VL-8B-Instruct, 4-bit NF4 weights with fp32 compute, single T4",
+    "rule": "same stage1 criteria (synthetic >= 0.9 with letter mass >= 0.9, then probe best-of-A/B/C >= uniform + 0.15), then the >= 3.0 gate bar"
+  }
 }

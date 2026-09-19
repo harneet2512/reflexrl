@@ -28,13 +28,14 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--model", required=True)
     p.add_argument("--dtype", choices=["fp16", "fp32"], required=True)
+    p.add_argument("--nf4", action="store_true", help="4-bit NF4 weights, compute in --dtype")
     p.add_argument("--frames", type=int, default=150)
     p.add_argument("--out", default="runs/size_check")
     args = p.parse_args()
     from reflexrl.teacher.qwen import QwenTeacher
     dtype = {"fp16": torch.float16, "fp32": torch.float32}[args.dtype]
-    teacher = QwenTeacher(args.model, dtype=dtype, device_map="auto")
-    res = {"model": args.model, "dtype": args.dtype}
+    teacher = QwenTeacher(args.model, dtype=dtype, device_map="auto", load_4bit=args.nf4)
+    res = {"model": args.model, "dtype": args.dtype, "nf4": args.nf4}
 
     rng = np.random.default_rng(0)
     correct, masses = 0, []
@@ -70,7 +71,7 @@ def main() -> None:
         best = max(res["probe"][v]["argmax_in_set"] for v in "ABC")
         res["stage1_probe_pass"] = best >= res["probe"]["A"]["uniform_set_rate"] + 0.15
     Path(args.out).mkdir(parents=True, exist_ok=True)
-    tag = args.model.split("/")[-1] + "_" + args.dtype
+    tag = args.model.split("/")[-1] + "_" + args.dtype + ("_nf4" if args.nf4 else "")
     (Path(args.out) / f"{tag}.json").write_text(json.dumps(res, indent=2))
     print(json.dumps({k: v for k, v in res.items() if k != "synthetic_generation"}, indent=1), flush=True)
 

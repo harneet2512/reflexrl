@@ -60,7 +60,7 @@ def default_dtype(device: str) -> torch.dtype:
 class QwenTeacher:
     def __init__(self, model_id: str = DEFAULT_MODEL, device: str = "cuda",
                  dtype: torch.dtype | None = None, attn_implementation: str | None = None,
-                 device_map: str | None = None):
+                 device_map: str | None = None, load_4bit: bool = False):
         from transformers import AutoProcessor, Qwen3VLForConditionalGeneration
 
         self.model_id = model_id
@@ -72,9 +72,17 @@ class QwenTeacher:
             _register_fp32_attention()
         self.processor = AutoProcessor.from_pretrained(model_id)
         self.processor.tokenizer.padding_side = "left"  # last position = answer slot
+        quant = None
+        if load_4bit:
+            # 4-bit NF4 weights, fp32 compute: fits an 8B model on one T4 without
+            # ever doing the fp16 arithmetic that corrupts Qwen3-VL.
+            from transformers import BitsAndBytesConfig
+            quant = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
+                                       bnb_4bit_compute_dtype=self.dtype,
+                                       bnb_4bit_use_double_quant=True)
         self.model = Qwen3VLForConditionalGeneration.from_pretrained(
             model_id, dtype=self.dtype, device_map=device_map or device,
-            attn_implementation=attn_implementation)
+            attn_implementation=attn_implementation, quantization_config=quant)
         self.model.eval()
         self._prompt_cache: dict[tuple[str, int], str] = {}
         self._letter_ids_cache: dict[str, torch.Tensor] = {}
