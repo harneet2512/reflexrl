@@ -1,0 +1,8 @@
+{
+  "model": "Qwen/Qwen3-VL-8B-Instruct",
+  "dtype": "fp16",
+  "synthetic_accuracy": 0.25,
+  "mean_letter_mass": 0.756803125,
+  "synthetic_generation": "",
+  "stage1_synthetic_pass": false
+}

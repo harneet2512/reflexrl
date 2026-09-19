@@ -1,0 +1,30 @@
+{
+  "model": "Qwen/Qwen3-VL-4B-Instruct",
+  "dtype": "fp32",
+  "synthetic_accuracy": 1.0,
+  "mean_letter_mass": 1.0,
+  "synthetic_generation": "A simple image featuring a single, solid red circle positioned on the left side of a plain gray background.",
+  "stage1_synthetic_pass": true,
+  "probe": {
+    "A": {
+      "n": 112,
+      "mass_on_correct": 0.495850781241046,
+      "argmax_in_set": 0.48214285714285715,
+      "uniform_set_rate": 0.48392857142857143
+    },
+    "B": {
+      "n": 112,
+      "mass_on_correct": 0.5230756968664156,
+      "argmax_in_set": 0.48214285714285715,
+      "uniform_set_rate": 0.48392857142857143
+    },
+    "C": {
+      "n": 112,
+      "mass_on_correct": 0.5823882005042992,
+      "argmax_in_set": 0.6160714285714286,
+      "uniform_set_rate": 0.48392857142857143
+    },
+    "perception_accuracy": 0.74
+  },
+  "stage1_probe_pass": false
+}
