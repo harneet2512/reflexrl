@@ -15,3 +15,4 @@ dist/
 build/
 runs/
 scratch_*
+kaggle/**/output/
