@@ -100,15 +100,22 @@ def main() -> None:
     p.add_argument("--n-envs", type=int, default=4)
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--out", default="runs/phase0")
+    p.add_argument("--variant", choices=["raw", "calibrated"], default="calibrated",
+                   help="calibrated = probe-validated variant C (debias_probe.json)")
     args = p.parse_args()
 
     tag = args.policy if args.policy == "random" else args.model.split("/")[-1]
+    if args.policy == "qwen" and args.variant == "calibrated":
+        tag += "_cal"
     out_dir = Path(args.out) / tag
     out_dir.mkdir(parents=True, exist_ok=True)
     teacher = None
     if args.policy == "qwen":
         from reflexrl.teacher.qwen import QwenTeacher
         teacher = QwenTeacher(args.model)
+        if args.variant == "calibrated":
+            from reflexrl.teacher.qwen import CalibratedQwenTeacher
+            teacher = CalibratedQwenTeacher(teacher)
     rng = np.random.default_rng(args.seed)
 
     res_path = out_dir / "gate_results.json"

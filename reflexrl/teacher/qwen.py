@@ -168,3 +168,59 @@ class QwenTeacher:
         self.calls += 1
         self.samples += len(frames)
         return probs.astype(np.float32)
+
+
+class CalibratedQwenTeacher:
+    """The probe-validated teacher (variant C): permutation-averaged, blank-calibrated.
+
+    Each decision scores the action list in ``n_perm`` option orders (batched
+    into one forward), maps probabilities back to canonical actions, averages
+    them, divides by the same quantity measured on a blank frame (the model's
+    prior over actions), and renormalises.
+    """
+
+    def __init__(self, teacher: QwenTeacher, n_perm: int = 4, seed: int = 0):
+        self.teacher = teacher
+        self.n_perm = n_perm
+        self.seed = seed
+        self._perms: dict[str, list[np.ndarray]] = {}
+        self._prior: dict[str, np.ndarray] = {}
+
+    def __getattr__(self, name):  # expose counters (calls, samples, seconds, ...)
+        return getattr(self.teacher, name)
+
+    def _perm_list(self, scenario: Scenario) -> list[np.ndarray]:
+        if scenario.name not in self._perms:
+            rng = np.random.default_rng(self.seed)
+            n = len(scenario.actions)
+            self._perms[scenario.name] = [np.arange(n)] + [rng.permutation(n) for _ in range(self.n_perm - 1)]
+        return self._perms[scenario.name]
+
+    def _question(self, scenario: Scenario, perm: np.ndarray) -> str:
+        from reflexrl.teacher.prompts import LETTERS, build_prompt_text
+        base = build_prompt_text(scenario)
+        options = "
+".join(f"{LETTERS[k]}. {scenario.action_names[i]}" for k, i in enumerate(perm))
+        return (base[: base.index("Choose the best action")]
+                + f"Choose the best action right now:
+{options}
+Answer with a single letter.")
+
+    def _averaged(self, frames: list[list[np.ndarray]], scenario: Scenario) -> np.ndarray:
+        n = len(scenario.actions)
+        total = np.zeros((len(frames), n), np.float64)
+        t0 = time.perf_counter()
+        for perm in self._perm_list(scenario):
+            p = self.teacher.choice_probs(frames, self._question(scenario, perm), n)
+            total[:, perm] += p
+        self.teacher.seconds += time.perf_counter() - t0
+        return total / self.n_perm
+
+    def action_probs(self, frames: list[list[np.ndarray]], scenario: Scenario) -> np.ndarray:
+        if scenario.name not in self._prior:
+            blank = [[np.zeros_like(f) for f in frames[0]]]
+            self._prior[scenario.name] = self._averaged(blank, scenario)[0]
+        p = self._averaged(frames, scenario) / self._prior[scenario.name]
+        self.teacher.calls += 1
+        self.teacher.samples += len(frames)
+        return (p / p.sum(1, keepdims=True)).astype(np.float32)
