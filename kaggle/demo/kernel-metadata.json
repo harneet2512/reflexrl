@@ -1,0 +1,14 @@
+{
+  "id": "harneetb/reflexrl-demo",
+  "title": "reflexrl-demo",
+  "code_file": "run_demo.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": ["harneetb/reflexrl-code"],
+  "competition_sources": [],
+  "kernel_sources": ["harneetb/reflexrl-train-ppo"]
+}

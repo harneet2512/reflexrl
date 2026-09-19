@@ -114,8 +114,11 @@ def training_segment(metrics_path: Path, seconds: float, title: str) -> list[np.
         for s in ax.spines.values():
             s.set_color("#444")
         fig.text(0.08, 0.92, title, color="#eee", fontsize=22)
-        fig.text(0.74, 0.84, "QWEN GUIDANCE", color="#ff78b4", fontsize=18)
-        for i, level in enumerate((1.0, 0.5, 0.25, 0.1, 0.0)):
+        guided = bool(pt.max() > 0)
+        if not guided:
+            fig.text(0.74, 0.84, "NO TEACHER", color="#ff78b4", fontsize=18)
+            fig.text(0.74, 0.78, "pixels + reward only", color="#aaa", fontsize=13)
+        for i, level in enumerate((1.0, 0.5, 0.25, 0.1, 0.0) if guided else ()):
             y = 0.74 - i * 0.075
             cur = pt[k - 1]
             fig.text(0.74, y, f"{int(level * 100):>3d}%", color="#aaa", fontsize=14, family="monospace")
@@ -123,7 +126,8 @@ def training_segment(metrics_path: Path, seconds: float, title: str) -> list[np.
             bar.barh([0], [level], color="#ff78b4" if abs(cur - level) < 1e-6 else "#44343c")
             bar.set_xlim(0, 1)
             bar.axis("off")
-        fig.text(0.74, 0.30, f"now: {pt[k - 1] * 100:.0f}% of actions from Qwen", color="#eee", fontsize=13)
+        if guided:
+            fig.text(0.74, 0.30, f"now: {pt[k - 1] * 100:.0f}% of actions from Qwen", color="#eee", fontsize=13)
         fig.text(0.08, 0.22, f"step {steps[k - 1]:.2f}M   score {ret[k - 1]:.1f}", color="#ffc850", fontsize=16)
         buf = io.BytesIO()
         fig.savefig(buf, format="png", facecolor=fig.get_facecolor())
