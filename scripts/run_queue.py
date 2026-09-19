@@ -21,8 +21,13 @@ from reflexrl_paths import REPO, run_dir  # noqa: F401  (local helper below)
 def main() -> None:
     plan = json.loads(Path(sys.argv[1]).read_text())
     extra = sys.argv[2:]
+    import os
+    deadline = float(os.environ.get("REFLEXRL_DEADLINE", "inf"))
     for i, r in enumerate(plan):
         wd = run_dir(r)
+        if time.time() > deadline:
+            print("session deadline reached; stopping queue", flush=True)
+            return
         if (wd / "done.json").exists():
             print(f"[{i + 1}/{len(plan)}] skip {wd} (done)", flush=True)
             continue
@@ -32,13 +37,16 @@ def main() -> None:
         for key in ("init_ckpt", "tag"):
             if r.get(key):
                 cmd += [f"--{key.replace('_', '-')}", str(r[key])]
-        if (wd / "metrics.jsonl").exists():
-            (wd / "metrics.jsonl").unlink()  # restart the interrupted run cleanly
+        if (wd / "metrics.jsonl").exists() and not (wd / "resume.pt").exists():
+            (wd / "metrics.jsonl").unlink()  # no saved state: restart cleanly
         print(f"[{i + 1}/{len(plan)}] start {wd}", flush=True)
         t0 = time.time()
         wd.mkdir(parents=True, exist_ok=True)
         with (wd / "stdout.log").open("w") as fh:
             rc = subprocess.run(cmd, cwd=REPO, stdout=fh, stderr=subprocess.STDOUT).returncode
+        if rc == 75:  # PAUSED_EXIT_CODE: session deadline, state saved
+            print(f"[{i + 1}/{len(plan)}] paused {wd} (deadline); stopping queue", flush=True)
+            return
         status = "ok" if rc == 0 else f"FAILED rc={rc}"
         print(f"[{i + 1}/{len(plan)}] {status} {wd} in {(time.time() - t0) / 60:.1f} min",
               flush=True)

@@ -10,6 +10,7 @@ where b is the behaviour distribution that actually chose the action.
 from __future__ import annotations
 
 import json
+import os
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -46,6 +47,19 @@ class PPOConfig:
     intervene: bool = False
     distill: bool = False
     alpha0: float = 1.0  # distillation weight at p = 1
+
+
+PAUSED_EXIT_CODE = 75  # run saved its state and stopped at the session deadline
+SAVE_EVERY_S = 600.0
+
+
+class Paused(Exception):
+    """Raised when the session deadline is reached; state has been saved."""
+
+
+def _deadline() -> float:
+    """Unix time after which a run must checkpoint and stop (Kaggle 12 h cap)."""
+    return float(os.environ.get("REFLEXRL_DEADLINE", "inf"))
 
 
 class RunningStd:
@@ -111,6 +125,35 @@ def train(cfg: PPOConfig, workdir: Path, teacher=None, schedule=None,
     step, next_eval, next_ckpt, t0 = 0, 0, cfg.ckpt_every, time.time()
     recent, teacher_steps = [], 0
     use_teacher = teacher is not None and (cfg.intervene or cfg.distill)
+    resume_path = workdir / "resume.pt"
+    if resume_path.exists():
+        st = torch.load(resume_path, map_location=dev, weights_only=False)
+        policy.load_state_dict(st["policy"])
+        opt.load_state_dict(st["opt"])
+        step, next_eval, next_ckpt = st["step"], st["next_eval"], st["next_ckpt"]
+        recent, teacher_steps = st["recent"], st["teacher_steps"]
+        scaler.__dict__.update(st["scaler"])
+        if schedule is not None:
+            schedule.__dict__.update(st["schedule"])
+        torch.set_rng_state(st["torch_rng"])
+        rng.bit_generator.state = st["np_rng"]
+        log.close()
+        with (workdir / "metrics.jsonl").open("r+") as fh:  # drop rows logged after the save
+            fh.truncate(st["log_bytes"])
+        log = (workdir / "metrics.jsonl").open("a")
+        print(f"[{cfg.scenario} s{cfg.seed}] resumed at step {step:,}", flush=True)
+    last_save, deadline = time.time(), _deadline()
+
+    def save_state():
+        log.flush()
+        torch.save({"policy": policy.state_dict(), "opt": opt.state_dict(), "step": step,
+                    "next_eval": next_eval, "next_ckpt": next_ckpt, "recent": recent[-200:],
+                    "teacher_steps": teacher_steps, "scaler": dict(scaler.__dict__),
+                    "schedule": dict(schedule.__dict__) if schedule is not None else None,
+                    "torch_rng": torch.get_rng_state(), "np_rng": rng.bit_generator.state,
+                    "log_bytes": (workdir / "metrics.jsonl").stat().st_size},
+                   workdir / "resume.tmp")
+        os.replace(workdir / "resume.tmp", resume_path)  # atomic: never a half-written state
 
     while step < cfg.total_steps:
         if step >= next_eval:
@@ -173,12 +216,20 @@ def train(cfg: PPOConfig, workdir: Path, teacher=None, schedule=None,
         if step >= next_ckpt:
             torch.save(policy.state_dict(), workdir / f"ckpt_{step}.pt")
             next_ckpt += cfg.ckpt_every
+        if time.time() - last_save > SAVE_EVERY_S or time.time() > deadline:
+            save_state()
+            last_save = time.time()
+            if time.time() > deadline:
+                log.close()
+                envs.close()
+                raise Paused(f"deadline reached at step {step}")
 
     ev = evaluate_policy(policy, cfg.scenario, cfg.eval_episodes * 2, cfg.device)
     log.write(json.dumps({"kind": "eval", "step": step, "final": True, "p_teacher": 0.0,
                           "teacher_steps": teacher_steps, **ev}) + "\n")
     log.close()
     torch.save(policy.state_dict(), workdir / "ckpt_final.pt")
+    resume_path.unlink(missing_ok=True)
     (workdir / "done.json").write_text(json.dumps(
         {"steps": step, "final_eval": ev["return_mean"], "wall_s": time.time() - t0,
          "teacher_steps": teacher_steps}))

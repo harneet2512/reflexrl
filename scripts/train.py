@@ -24,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from reflexrl.baselines.bc import ProxyTeacher  # noqa: E402
 from reflexrl.env.scenarios import get_scenario  # noqa: E402
 from reflexrl.policy.actor_critic import ActorCritic  # noqa: E402
-from reflexrl.rl.ppo import PPOConfig, train  # noqa: E402
+from reflexrl.rl.ppo import PAUSED_EXIT_CODE, Paused, PPOConfig, train  # noqa: E402
 from reflexrl.rl.teacher_guidance import AdaptiveSchedule, FixedSchedule  # noqa: E402
 from reflexrl.runinfo import run_metadata  # noqa: E402
 
@@ -76,8 +76,12 @@ def main() -> None:
         policy = ActorCritic(n_act)
         policy.load_state_dict(torch.load(args.init_ckpt, map_location="cpu"))
     workdir = Path(args.out) / spec.name / f"{args.tag or args.method}_s{args.seed}"
-    train(cfg, workdir, teacher=teacher, schedule=schedule, policy=policy,
-          meta=run_metadata(vars(args)))
+    try:
+        train(cfg, workdir, teacher=teacher, schedule=schedule, policy=policy,
+              meta=run_metadata(vars(args)))
+    except Paused as e:
+        print(f"paused: {e}", flush=True)
+        sys.exit(PAUSED_EXIT_CODE)
     if isinstance(schedule, AdaptiveSchedule):
         (workdir / "handover.json").write_text(json.dumps(schedule.history))
     print(f"done -> {workdir}", flush=True)
