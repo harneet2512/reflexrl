@@ -27,8 +27,9 @@ SEED_BASE = 50_000  # env seeds shared by teacher and random runs
 
 
 def run_scenario(scenario: str, policy: str, episodes: int, n_envs: int, teacher,
-                 rng: np.random.Generator, out_dir: Path) -> dict:
-    envs = [DoomEnv(scenario, seed=SEED_BASE + i, keep_full_frames=True) for i in range(n_envs)]
+                 rng: np.random.Generator, out_dir: Path, seed_offset: int = 0) -> dict:
+    envs = [DoomEnv(scenario, seed=SEED_BASE + seed_offset + i, keep_full_frames=True)
+            for i in range(n_envs)]
     spec = envs[0].scenario
     n_actions = len(spec.actions)
     writer = LabelWriter(out_dir / "labels" / spec.name) if teacher is not None else None
@@ -100,6 +101,9 @@ def main() -> None:
     p.add_argument("--n-envs", type=int, default=4)
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--out", default="runs/phase0")
+    p.add_argument("--model-dtype", choices=["auto", "fp32"], default="auto")
+    p.add_argument("--nf4", action="store_true", help="4-bit NF4 weights (compute stays fp32)")
+    p.add_argument("--seed-offset", type=int, default=0, help="env seed offset for split runs")
     p.add_argument("--variant", choices=["raw", "calibrated"], default="calibrated",
                    help="calibrated = probe-validated variant C (debias_probe.json)")
     args = p.parse_args()
@@ -112,7 +116,9 @@ def main() -> None:
     teacher = None
     if args.policy == "qwen":
         from reflexrl.teacher.qwen import QwenTeacher
-        teacher = QwenTeacher(args.model)
+        import torch
+        teacher = QwenTeacher(args.model, load_4bit=args.nf4,
+                              dtype=torch.float32 if (args.nf4 or args.model_dtype == "fp32") else None)
         if args.variant == "calibrated":
             from reflexrl.teacher.qwen import CalibratedQwenTeacher
             teacher = CalibratedQwenTeacher(teacher)
@@ -129,7 +135,8 @@ def main() -> None:
         label_dir = out_dir / "labels" / get_scenario(sc).name
         for stale in label_dir.glob("shard_*.npz"):
             stale.unlink()  # a partial scenario is rerun from scratch
-        res = run_scenario(sc, args.policy, args.episodes, args.n_envs, teacher, rng, out_dir)
+        res = run_scenario(sc, args.policy, args.episodes, args.n_envs, teacher, rng, out_dir,
+                           seed_offset=args.seed_offset)
         results["scenarios"][res["scenario"]] = res
         (out_dir / "gate_results.json").write_text(json.dumps(results, indent=2))
     print(f"wrote {out_dir / 'gate_results.json'}")

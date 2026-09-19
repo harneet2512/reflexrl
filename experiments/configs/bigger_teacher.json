@@ -13,5 +13,10 @@
     "correction": "8B fp16 result confounds fp16 with 2-GPU splitting; not attributed to fp16 alone",
     "candidate": "Qwen/Qwen3-VL-8B-Instruct, 4-bit NF4 weights with fp32 compute, single T4",
     "rule": "same stage1 criteria (synthetic >= 0.9 with letter mass >= 0.9, then probe best-of-A/B/C >= uniform + 0.15), then the >= 3.0 gate bar"
+  },
+  "stage2_8b_gate": {
+    "written": "2026-09-19 after 8B-NF4-fp32 passed stage 1 (synthetic 1.0, letter mass 1.0, probe C 0.66 >= 0.63); before any 8B gate episode",
+    "protocol": "DTC, calibrated variant, 30 episodes split 15+15 over two T4s (lane 0 env seeds 50000+, lane 1 50100+); same pass rule vs the 30-episode random baseline, plus the >= 3.0 mean-return bar for guided RL",
+    "note": "lane-1 seeds differ from the random baseline's seeds; episodes are exchangeable draws so the Welch test is unaffected"
   }
 }

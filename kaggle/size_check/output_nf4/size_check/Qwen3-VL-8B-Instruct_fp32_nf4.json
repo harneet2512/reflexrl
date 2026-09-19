@@ -1,0 +1,31 @@
+{
+  "model": "Qwen/Qwen3-VL-8B-Instruct",
+  "dtype": "fp32",
+  "nf4": true,
+  "synthetic_accuracy": 1.0,
+  "mean_letter_mass": 1.0,
+  "synthetic_generation": "A simple graphic featuring a single red circle on a plain gray background.",
+  "stage1_synthetic_pass": true,
+  "probe": {
+    "A": {
+      "n": 112,
+      "mass_on_correct": 0.4241825639927969,
+      "argmax_in_set": 0.41964285714285715,
+      "uniform_set_rate": 0.48392857142857143
+    },
+    "B": {
+      "n": 112,
+      "mass_on_correct": 0.4645195171053632,
+      "argmax_in_set": 0.41964285714285715,
+      "uniform_set_rate": 0.48392857142857143
+    },
+    "C": {
+      "n": 112,
+      "mass_on_correct": 0.555296396171587,
+      "argmax_in_set": 0.6607142857142857,
+      "uniform_set_rate": 0.48392857142857143
+    },
+    "perception_accuracy": 0.7333333333333333
+  },
+  "stage1_probe_pass": true
+}
