@@ -57,9 +57,19 @@ class PerceptionJevProxy:
         return (q @ self.J).cpu().numpy()
 
 
-def train_perception_bc(labels: dict, J: np.ndarray, device: str = "cuda", epochs: int = 30,
+def mirror(obs: torch.Tensor, q: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+    """Defend-the-Center is left-right symmetric: flipping a frame swaps left and right.
+
+    obs is (B, K*3, H, W) stacked frames; flipping the width axis mirrors every frame.
+    """
+    swap = [CLASSES.index(c) for c in ("right", "center", "left", "none")]
+    return obs.flip(-1), q[:, swap]
+
+
+def train_perception_bc(labels: dict, J: np.ndarray, device: str = "cuda", epochs: int = 40,
                         batch: int = 128, lr: float = 3e-4, seed: int = 0,
-                        holdout_frac: float = 0.15) -> tuple[PerceptionNet, dict]:
+                        holdout_frac: float = 0.15, augment: bool = True,
+                        balance: bool = True) -> tuple[PerceptionNet, dict]:
     torch.manual_seed(seed)
     obs = torch.as_tensor(labels["obs"])
     q = torch.as_tensor(recover_perception(labels["probs"].astype(np.float32), J), dtype=torch.float32)
@@ -68,14 +78,22 @@ def train_perception_bc(labels: dict, J: np.ndarray, device: str = "cuda", epoch
     net = PerceptionNet().to(device)
     opt = torch.optim.Adam(net.parameters(), lr=lr)
     rng = np.random.default_rng(seed)
+    # Inverse-frequency class weights: "center" is 54% of frames, so without this
+    # the student can score well by always guessing it.
+    freq = q[torch.as_tensor(tr_idx)].mean(0).clamp_min(1e-3)
+    w = ((1.0 / freq) / (1.0 / freq).sum() * len(CLASSES)).to(device) if balance         else torch.ones(len(CLASSES), device=device)
     best, best_state = -1.0, None
-    for ep in range(epochs):
+    for _ in range(epochs):
         net.train()
         rng.shuffle(tr_idx)
         for k in range(0, len(tr_idx), batch):
             j = tr_idx[k:k + batch]
-            logp = torch.log_softmax(net(obs[j].to(device)), -1)
-            loss = -(q[j].to(device) * logp).sum(-1).mean()
+            ob, tgt = obs[j].to(device), q[j].to(device)
+            if augment:
+                ob_m, tgt_m = mirror(ob, tgt)
+                ob, tgt = torch.cat([ob, ob_m]), torch.cat([tgt, tgt_m])
+            logp = torch.log_softmax(net(ob), -1)
+            loss = -(w * tgt * logp).sum(-1).mean()
             opt.zero_grad(set_to_none=True)
             loss.backward()
             opt.step()
@@ -84,6 +102,7 @@ def train_perception_bc(labels: dict, J: np.ndarray, device: str = "cuda", epoch
             best, best_state = acc, {k: v.detach().clone() for k, v in net.state_dict().items()}
     net.load_state_dict(best_state)
     return net, {"val_top1_agree": float(best), "epochs": epochs,
+                 "augment": augment, "balance": balance,
                  "n_train": int(len(tr_idx)), "n_val": int(len(va_idx)),
                  "class_prior": q[torch.as_tensor(tr_idx)].mean(0).tolist()}
 

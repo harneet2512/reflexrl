@@ -16,3 +16,15 @@ def test_recover_perception_inverts_the_jev_table():
     q = rng.dirichlet(np.ones(4), size=200)
     recovered = recover_perception((q @ J).astype(np.float32), J)
     np.testing.assert_allclose(recovered, q, atol=1e-3)
+
+
+def test_mirror_swaps_left_and_right():
+    import torch
+
+    from reflexrl.baselines.perception_bc import mirror
+    obs = torch.zeros((1, 12, 4, 6))
+    obs[0, :, :, 0] = 1.0  # a marker on the left edge
+    q = torch.tensor([[0.7, 0.2, 0.1, 0.0]])  # left, center, right, none
+    obs_m, q_m = mirror(obs, q)
+    assert obs_m[0, 0, 0, -1] == 1.0 and obs_m[0, 0, 0, 0] == 0.0
+    assert torch.allclose(q_m, torch.tensor([[0.1, 0.2, 0.7, 0.0]]))
