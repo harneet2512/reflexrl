@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "config": {
+      "policy": "qwen",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "scenarios": [
+        "dtc"
+      ],
+      "episodes": 15,
+      "n_envs": 8,
+      "seed": 0,
+      "out": "/kaggle/working/runs/phase0/lane0",
+      "model_dtype": "auto",
+      "nf4": true,
+      "seed_offset": 0,
+      "jev_table": "experiments/configs/jev_table_dtc.json",
+      "variant": "perception_jev"
+    },
+    "git_commit": "unknown",
+    "host": "b3983e6d0e9d",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "torch": "2.10.0+cu128",
+    "cuda_device": "Tesla T4",
+    "started_unix": 1789851523.1946278
+  },
+  "scenarios": {
+    "defend_the_center": {
+      "scenario": "defend_the_center",
+      "policy": "qwen",
+      "episodes": 15,
+      "return_mean": 4.8,
+      "return_std": 1.4735767952260144,
+      "return_se": 0.38047589248453667,
+      "len_mean": 126.33333333333333,
+      "returns": [
+        1.0,
+        4.0,
+        6.0,
+        5.0,
+        4.0,
+        6.0,
+        5.0,
+        7.0,
+        3.0,
+        5.0,
+        6.0,
+        4.0,
+        5.0,
+        5.0,
+        6.0
+      ],
+      "lengths": [
+        64,
+        115,
+        118,
+        130,
+        132,
+        136,
+        138,
+        168,
+        106,
+        114,
+        121,
+        122,
+        132,
+        143,
+        156
+      ],
+      "decisions": 1895,
+      "wall_s": 9745.2,
+      "teacher_s_per_decision": 5.137855833711347,
+      "teacher_nonfinite_retries": 0,
+      "teacher_dtype": "torch.float32",
+      "teacher_mean_letter_mass": 3.9993635740317894
+    }
+  }
+}
