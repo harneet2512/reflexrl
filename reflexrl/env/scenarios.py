@@ -18,6 +18,7 @@ class Scenario:
     actions: tuple[tuple[str, tuple[str, ...]], ...]  # (name, pressed buttons)
     briefing: str  # one-paragraph task description for the teacher prompt
     split: str  # "train" or "heldout"
+    episode_timeout: int | None = None  # tics; None keeps the .cfg value
 
     @property
     def action_names(self) -> list[str]:
@@ -105,14 +106,33 @@ HEALTH_GATHERING_SUPREME = Scenario(
     split="heldout",
 )
 
+# Held-out world for the Defend-the-Center policy: same three buttons, different
+# map and enemy layout (a line of enemies ahead). Its .cfg has no timeout, so it
+# gets DTC's 2100-tic cap to keep returns comparable.
+DEFEND_THE_LINE = Scenario(
+    name="defend_the_line",
+    cfg="defend_the_line.cfg",
+    buttons=DEFEND_THE_CENTER.buttons,
+    actions=DEFEND_THE_CENTER.actions,
+    briefing=(
+        "You stand at one end of a room and cannot move, only turn. A line of "
+        "monsters faces you from the other side and they keep respawning. Turn to "
+        "face a monster and shoot it. Ammo is limited, so only shoot when a "
+        "monster is in front of you."
+    ),
+    split="heldout",
+    episode_timeout=2100,
+)
+
 SCENARIOS: dict[str, Scenario] = {
     s.name: s for s in (DEFEND_THE_CENTER, HEALTH_GATHERING, DEADLY_CORRIDOR,
-                        HEALTH_GATHERING_SUPREME)
+                        HEALTH_GATHERING_SUPREME, DEFEND_THE_LINE)
 }
 
 # Short aliases for CLIs and run tags.
 ALIASES = {"dtc": "defend_the_center", "hg": "health_gathering",
-           "dc": "deadly_corridor", "hgs": "health_gathering_supreme"}
+           "dc": "deadly_corridor", "hgs": "health_gathering_supreme",
+           "dtl": "defend_the_line"}
 
 
 def get_scenario(name: str) -> Scenario:

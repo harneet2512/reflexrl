@@ -55,6 +55,8 @@ class DoomEnv(gym.Env):
         self.game.set_labels_buffer_enabled(eval_labels)
         self.game.set_automap_buffer_enabled(False)
         self.game.set_mode(vzd.Mode.PLAYER)
+        if self.scenario.episode_timeout is not None:
+            self.game.set_episode_timeout(self.scenario.episode_timeout)
         if seed is not None:
             self.game.set_seed(int(seed))
         self.game.init()

@@ -1,0 +1,67 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/625 [00:00<?, ?it/s]Loading weights:   0%|          | 1/625 [00:02<23:53,  2.30s/it]Loading weights:  18%|█▊        | 114/625 [00:02<00:07, 66.01it/s]Loading weights:  28%|██▊       | 173/625 [00:03<00:05, 76.36it/s]Loading weights:  34%|███▎      | 210/625 [00:03<00:05, 78.91it/s]Loading weights:  38%|███▊      | 236/625 [00:03<00:05, 70.45it/s]Loading weights:  41%|████      | 254/625 [00:04<00:04, 77.88it/s]Loading weights:  44%|████▎     | 272/625 [00:04<00:04, 72.14it/s]Loading weights:  46%|████▌     | 286/625 [00:04<00:04, 78.42it/s]Loading weights:  48%|████▊     | 300/625 [00:04<00:04, 70.41it/s]Loading weights:  51%|█████     | 318/625 [00:04<00:03, 84.44it/s]Loading weights:  59%|█████▊    | 366/625 [00:05<00:01, 138.28it/s]Loading weights:  66%|██████▌   | 412/625 [00:05<00:01, 192.01it/s]Loading weights:  73%|███████▎  | 458/625 [00:05<00:00, 244.01it/s]Loading weights:  79%|███████▉  | 496/625 [00:05<00:00, 273.19it/s]Loading weights:  85%|████████▌ | 534/625 [00:05<00:00, 290.64it/s]Loading weights:  93%|█████████▎| 580/625 [00:05<00:00, 326.08it/s]Loading weights:  99%|█████████▊| 617/625 [00:05<00:00, 215.89it/s]Loading weights: 100%|██████████| 625/625 [00:05<00:00, 106.03it/s]
+/usr/local/lib/python3.12/dist-packages/transformers/models/qwen3_vl/modeling_qwen3_vl.py:1058: UserWarning: Specified kernel cache directory could not be created! This disables kernel caching. Specified directory is /root/.cache/torch/kernels. This warning will appear only once per process. (Triggered internally at /pytorch/aten/src/ATen/native/cuda/jit_utils.cpp:1487.)
+  split_sizes = (image_grid_thw.prod(-1) // self.visual.spatial_merge_size**2).tolist()
+  health_gathering ep 1/30: return 284.0 len 96 (1388s)
+  health_gathering ep 2/30: return 284.0 len 96 (1388s)
+  health_gathering ep 3/30: return 380.0 len 120 (1737s)
+  health_gathering ep 4/30: return 412.0 len 128 (1856s)
+  health_gathering ep 5/30: return 508.0 len 152 (2203s)
+  health_gathering ep 6/30: return 604.0 len 176 (2551s)
+  health_gathering ep 7/30: return 636.0 len 184 (2668s)
+  health_gathering ep 8/30: return 316.0 len 104 (2902s)
+  health_gathering ep 9/30: return 476.0 len 144 (3482s)
+  health_gathering ep 10/30: return 380.0 len 120 (3599s)
+  health_gathering ep 11/30: return 380.0 len 120 (3948s)
+  health_gathering ep 12/30: return 572.0 len 168 (4180s)
+  health_gathering ep 13/30: return 380.0 len 120 (4297s)
+  health_gathering ep 14/30: return 380.0 len 120 (4413s)
+  health_gathering ep 15/30: return 380.0 len 120 (4647s)
+  health_gathering ep 16/30: return 348.0 len 112 (5228s)
+  health_gathering ep 17/30: return 380.0 len 120 (5228s)
+  health_gathering ep 18/30: return 284.0 len 96 (5810s)
+  health_gathering ep 19/30: return 1564.0 len 416 (6042s)
+  health_gathering ep 20/30: return 476.0 len 144 (6042s)
+  health_gathering ep 21/30: return 380.0 len 120 (6042s)
+  health_gathering ep 22/30: return 476.0 len 144 (6274s)
+  health_gathering ep 23/30: return 284.0 len 96 (6625s)
+  health_gathering ep 24/30: return 284.0 len 96 (6625s)
+  health_gathering ep 25/30: return 380.0 len 120 (7333s)
+  health_gathering ep 26/30: return 380.0 len 120 (7486s)
+  health_gathering ep 27/30: return 828.0 len 232 (7612s)
+  health_gathering ep 28/30: return 476.0 len 144 (7659s)
+  health_gathering ep 29/30: return 636.0 len 184 (7819s)
+  health_gathering ep 30/30: return 700.0 len 200 (7891s)
+[qwen] health_gathering: 474.93 +- 44.95 (n=30, len 144, 7892.2s)
+  health_gathering_supreme ep 1/30: return 284.0 len 96 (1403s)
+  health_gathering_supreme ep 2/30: return 284.0 len 96 (1403s)
+  health_gathering_supreme ep 3/30: return 348.0 len 112 (1636s)
+  health_gathering_supreme ep 4/30: return 348.0 len 112 (1636s)
+  health_gathering_supreme ep 5/30: return 508.0 len 152 (2221s)
+  health_gathering_supreme ep 6/30: return 508.0 len 152 (2221s)
+  health_gathering_supreme ep 7/30: return 508.0 len 152 (2221s)
+  health_gathering_supreme ep 8/30: return 508.0 len 152 (2221s)
+  health_gathering_supreme ep 9/30: return 156.0 len 64 (3155s)
+  health_gathering_supreme ep 10/30: return 444.0 len 136 (3388s)
+  health_gathering_supreme ep 11/30: return 284.0 len 96 (3621s)
+  health_gathering_supreme ep 12/30: return 284.0 len 96 (3621s)
+  health_gathering_supreme ep 13/30: return 284.0 len 96 (3621s)
+  health_gathering_supreme ep 14/30: return 508.0 len 152 (3856s)
+  health_gathering_supreme ep 15/30: return 508.0 len 152 (3856s)
+  health_gathering_supreme ep 16/30: return 604.0 len 176 (3973s)
+  health_gathering_supreme ep 17/30: return 284.0 len 96 (4556s)
+  health_gathering_supreme ep 18/30: return 284.0 len 96 (4792s)
+  health_gathering_supreme ep 19/30: return 284.0 len 96 (5025s)
+  health_gathering_supreme ep 20/30: return 316.0 len 104 (5143s)
+  health_gathering_supreme ep 21/30: return 284.0 len 96 (5259s)
+  health_gathering_supreme ep 22/30: return 284.0 len 96 (5259s)
+  health_gathering_supreme ep 23/30: return 284.0 len 96 (5376s)
+  health_gathering_supreme ep 24/30: return 412.0 len 128 (5476s)
+  health_gathering_supreme ep 25/30: return 284.0 len 96 (5832s)
+  health_gathering_supreme ep 26/30: return 284.0 len 96 (5985s)
+  health_gathering_supreme ep 27/30: return 284.0 len 96 (6236s)
+  health_gathering_supreme ep 28/30: return 348.0 len 112 (6283s)
+  health_gathering_supreme ep 29/30: return 316.0 len 104 (6283s)
+  health_gathering_supreme ep 30/30: return 491.0 len 148 (6347s)
+[qwen] health_gathering_supreme: 360.23 +- 19.90 (n=30, len 115, 6347.8s)
+wrote /kaggle/working/runs/phase0/lane1/Qwen3-VL-2B-Instruct_cal/gate_results.json

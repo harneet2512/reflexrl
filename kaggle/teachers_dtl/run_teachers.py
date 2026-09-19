@@ -21,7 +21,7 @@ for d in glob.glob("/kaggle/input/**/Qwen3-VL-2B-Instruct_cal/labels/*", recursi
         os.symlink(d, dst)
 print("label dirs:", sorted(os.listdir(labels)), flush=True)
 rc = 0
-for s in ("dtc",):
+for s in ("dtl",):
     rc |= sh(f"{sys.executable} -u scripts/build_teacher.py --scenario {s} --labels {labels} "
              "--out /kaggle/working/runs/teachers")
 os.chdir("/kaggle/working")

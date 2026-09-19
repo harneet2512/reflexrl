@@ -2,7 +2,11 @@
   "purpose": "Phase 0 teacher gate: is Qwen3-VL a better-than-random Doom controller? Pre-registered before any teacher episode was run (2026-09-18).",
   "protocol": {
     "episodes_per_scenario": 30,
-    "scenarios": ["defend_the_center", "health_gathering", "deadly_corridor"],
+    "scenarios": [
+      "defend_the_center",
+      "health_gathering",
+      "deadly_corridor"
+    ],
     "teacher_action": "sampled from pi_T (softmax over answer-letter logits), frame_skip 4, sync mode so latency cannot affect score",
     "teacher_input": "last 2 full-res RGB frames (320x180) + scenario briefing + lettered action list",
     "random_baseline": "uniform over the same action set, same number of episodes, same env seeds",
@@ -14,5 +18,16 @@
     "pass_on_<2_scenarios": "load-bearing decision for the user: (a) larger teacher (4B/8B) on Modal, (b) perception-label teacher, (c) report negative",
     "per_scenario_fail": "scenario stays in the suite; ReflexRL there is reported with the teacher's measured (weak) quality"
   },
-  "models": {"primary": "Qwen/Qwen3-VL-2B-Instruct (local RTX 2060, $0)", "optional_escalation": ["Qwen/Qwen3-VL-4B-Instruct", "Qwen/Qwen3-VL-8B-Instruct"]}
+  "models": {
+    "primary": "Qwen/Qwen3-VL-2B-Instruct (local RTX 2060, $0)",
+    "optional_escalation": [
+      "Qwen/Qwen3-VL-4B-Instruct",
+      "Qwen/Qwen3-VL-8B-Instruct"
+    ]
+  },
+  "addendum_2026_09_19": {
+    "result": "fp32 calibrated Qwen3-VL-2B passes on defend_the_center only (1.73 vs 0.57, p=7e-4, d=0.87); health_gathering, deadly_corridor, health_gathering_supreme ~ random -> dropped from teacher experiments (user decision: a random-level teacher is useless)",
+    "heldout_replacement": "defend_the_line (same 3 buttons as DTC, different map; 2100-tic cap added) replaces health_gathering_supreme as the held-out world",
+    "dtl_gate": "same protocol (30 episodes, random vs calibrated fp32 teacher, same pass rule). If it fails, held-out reports transfer only (scratch vs PPO fine-tune vs ReflexRL-trained-on-DTC fine-tuned WITHOUT teacher guidance)."
+  }
 }

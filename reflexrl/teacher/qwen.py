@@ -59,7 +59,8 @@ def default_dtype(device: str) -> torch.dtype:
 
 class QwenTeacher:
     def __init__(self, model_id: str = DEFAULT_MODEL, device: str = "cuda",
-                 dtype: torch.dtype | None = None, attn_implementation: str | None = None):
+                 dtype: torch.dtype | None = None, attn_implementation: str | None = None,
+                 device_map: str | None = None):
         from transformers import AutoProcessor, Qwen3VLForConditionalGeneration
 
         self.model_id = model_id
@@ -72,7 +73,7 @@ class QwenTeacher:
         self.processor = AutoProcessor.from_pretrained(model_id)
         self.processor.tokenizer.padding_side = "left"  # last position = answer slot
         self.model = Qwen3VLForConditionalGeneration.from_pretrained(
-            model_id, dtype=self.dtype, device_map=device,
+            model_id, dtype=self.dtype, device_map=device_map or device,
             attn_implementation=attn_implementation)
         self.model.eval()
         self._prompt_cache: dict[tuple[str, int], str] = {}
@@ -121,7 +122,7 @@ class QwenTeacher:
         logits = self.model(**batch).logits[:, -1, :].float()
         if not torch.isfinite(logits).all():
             raise FloatingPointError("teacher produced non-finite logits")
-        full = torch.softmax(logits, -1).index_select(1, torch.tensor(ids, device=self.device))
+        full = torch.softmax(logits, -1).index_select(1, torch.tensor(ids, device=logits.device))
         mass = full.sum(-1)
         self.letter_mass_sum += float(mass.sum())
         if float(mass.min()) < MIN_LETTER_MASS:
@@ -155,7 +156,7 @@ class QwenTeacher:
         logits = self.model(**batch).logits[:, -1, :].float()
         if not torch.isfinite(logits).all():
             raise FloatingPointError("teacher produced non-finite logits")
-        full = torch.softmax(logits, dim=-1).index_select(1, self._letter_ids(scenario))
+        full = torch.softmax(logits, dim=-1).index_select(1, self._letter_ids(scenario).to(logits.device))
         mass = full.sum(-1)
         self.letter_mass_sum += float(mass.sum())
         if float(mass.min()) < MIN_LETTER_MASS:

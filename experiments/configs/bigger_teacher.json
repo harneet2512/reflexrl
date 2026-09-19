@@ -1,0 +1,11 @@
+{
+  "written": "2026-09-19, before any 4B/8B query; user chose option 4 (bigger teacher)",
+  "why": "the fixed 2B teacher scores 1.73 on DTC, below PPO-from-scratch at 50K steps (~3.1), so it cannot accelerate RL beyond the first ~50K steps",
+  "candidates": {
+    "Qwen/Qwen3-VL-4B-Instruct": "fp32, split over 2xT4",
+    "Qwen/Qwen3-VL-8B-Instruct": "fp16, split over 2xT4 (fp32 needs ~35 GB > 32 GB)"
+  },
+  "stage1_small_check": "synthetic red-disc localisation (32 images) must be >= 0.9 accurate with mean answer-letter mass >= 0.9; then the pre-registered debias probe on 150 DTC frames must pass (best of A/B/C argmax-in-set >= uniform + 0.15)",
+  "stage2_gate": "30-episode DTC gate with the passing model(s)",
+  "stage3_bar": "guided RL proceeds only if the teacher's DTC gate mean return >= 3.0 (~PPO from scratch at 50K steps); otherwise ship the reflex policy + negative teacher finding"
+}

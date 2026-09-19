@@ -1,0 +1,65 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/625 [00:00<?, ?it/s]Loading weights:   0%|          | 1/625 [00:02<24:37,  2.37s/it]Loading weights:  20%|█▉        | 124/625 [00:02<00:07, 68.55it/s]Loading weights:  28%|██▊       | 174/625 [00:03<00:06, 70.09it/s]Loading weights:  33%|███▎      | 205/625 [00:03<00:06, 67.88it/s]Loading weights:  36%|███▌      | 226/625 [00:04<00:05, 68.23it/s]Loading weights:  39%|███▉      | 245/625 [00:04<00:05, 71.62it/s]Loading weights:  41%|████▏     | 259/625 [00:04<00:05, 71.28it/s]Loading weights:  43%|████▎     | 271/625 [00:04<00:05, 69.92it/s]Loading weights:  45%|████▍     | 281/625 [00:04<00:04, 71.47it/s]Loading weights:  47%|████▋     | 291/625 [00:04<00:04, 73.69it/s]Loading weights:  48%|████▊     | 301/625 [00:04<00:04, 76.40it/s]Loading weights:  54%|█████▍    | 340/625 [00:05<00:02, 135.86it/s]Loading weights:  60%|██████    | 376/625 [00:05<00:01, 183.15it/s]Loading weights:  66%|██████▌   | 414/625 [00:05<00:00, 224.43it/s]Loading weights:  72%|███████▏  | 448/625 [00:05<00:00, 247.94it/s]Loading weights:  78%|███████▊  | 486/625 [00:05<00:00, 277.79it/s]Loading weights:  83%|████████▎ | 520/625 [00:05<00:00, 288.79it/s]Loading weights:  89%|████████▉ | 558/625 [00:05<00:00, 311.11it/s]Loading weights:  96%|█████████▌| 600/625 [00:05<00:00, 267.68it/s]Loading weights: 100%|██████████| 625/625 [00:06<00:00, 103.49it/s]
+  defend_the_center ep 1/30: return -1.0 len 55 (702s)
+  defend_the_center ep 2/30: return 0.0 len 74 (946s)
+  defend_the_center ep 3/30: return 1.0 len 92 (1175s)
+  defend_the_center ep 4/30: return 4.0 len 104 (1328s)
+  defend_the_center ep 5/30: return 2.0 len 106 (1353s)
+  defend_the_center ep 6/30: return 2.0 len 108 (1379s)
+  defend_the_center ep 7/30: return 3.0 len 108 (1379s)
+  defend_the_center ep 8/30: return 4.0 len 130 (1661s)
+  defend_the_center ep 9/30: return 1.0 len 96 (2169s)
+  defend_the_center ep 10/30: return 1.0 len 64 (2194s)
+  defend_the_center ep 11/30: return 2.0 len 106 (2526s)
+  defend_the_center ep 12/30: return 2.0 len 106 (2679s)
+  defend_the_center ep 13/30: return 1.0 len 104 (2679s)
+  defend_the_center ep 14/30: return 5.0 len 158 (2717s)
+  defend_the_center ep 15/30: return 1.0 len 117 (2869s)
+  defend_the_center ep 16/30: return 2.0 len 99 (2920s)
+  defend_the_center ep 17/30: return 3.0 len 106 (3519s)
+  defend_the_center ep 18/30: return 2.0 len 111 (3608s)
+  defend_the_center ep 19/30: return 0.0 len 74 (3659s)
+  defend_the_center ep 20/30: return 3.0 len 82 (3723s)
+  defend_the_center ep 21/30: return 2.0 len 84 (3748s)
+  defend_the_center ep 22/30: return 0.0 len 71 (3824s)
+  defend_the_center ep 23/30: return 3.0 len 120 (4055s)
+  defend_the_center ep 24/30: return 3.0 len 121 (4366s)
+  defend_the_center ep 25/30: return -1.0 len 63 (4455s)
+  defend_the_center ep 26/30: return 0.0 len 70 (4582s)
+  defend_the_center ep 27/30: return 2.0 len 95 (4589s)
+  defend_the_center ep 28/30: return 0.0 len 90 (4620s)
+  defend_the_center ep 29/30: return 2.0 len 106 (4702s)
+  defend_the_center ep 30/30: return 3.0 len 119 (4706s)
+[qwen] defend_the_center: 1.73 +- 0.27 (n=30, len 98, 4707.2s)
+  deadly_corridor ep 1/30: return -81.0 len 13 (181s)
+  deadly_corridor ep 2/30: return -77.8 len 19 (263s)
+  deadly_corridor ep 3/30: return -106.3 len 20 (277s)
+  deadly_corridor ep 4/30: return -115.9 len 21 (290s)
+  deadly_corridor ep 5/30: return -93.5 len 25 (345s)
+  deadly_corridor ep 6/30: return -19.3 len 30 (414s)
+  deadly_corridor ep 7/30: return -86.6 len 21 (469s)
+  deadly_corridor ep 8/30: return -112.8 len 20 (566s)
+  deadly_corridor ep 9/30: return -116.0 len 20 (621s)
+  deadly_corridor ep 10/30: return -116.0 len 30 (676s)
+  deadly_corridor ep 11/30: return -88.5 len 20 (841s)
+  deadly_corridor ep 12/30: return -74.7 len 65 (899s)
+  deadly_corridor ep 13/30: return -72.2 len 21 (968s)
+  deadly_corridor ep 14/30: return 5.6 len 72 (995s)
+  deadly_corridor ep 15/30: return -54.3 len 28 (1009s)
+  deadly_corridor ep 16/30: return -31.8 len 42 (1050s)
+  deadly_corridor ep 17/30: return -113.0 len 20 (1119s)
+  deadly_corridor ep 18/30: return -116.0 len 11 (1147s)
+  deadly_corridor ep 19/30: return -110.7 len 29 (1298s)
+  deadly_corridor ep 20/30: return -115.9 len 21 (1340s)
+  deadly_corridor ep 21/30: return -109.4 len 79 (1367s)
+  deadly_corridor ep 22/30: return -96.3 len 30 (1381s)
+  deadly_corridor ep 23/30: return -69.6 len 12 (1463s)
+  deadly_corridor ep 24/30: return -66.0 len 20 (1633s)
+  deadly_corridor ep 25/30: return -95.8 len 27 (1671s)
+  deadly_corridor ep 26/30: return -48.2 len 41 (1671s)
+  deadly_corridor ep 27/30: return 7.6 len 57 (1715s)
+  deadly_corridor ep 28/30: return -98.3 len 37 (1748s)
+  deadly_corridor ep 29/30: return -98.8 len 65 (1782s)
+  deadly_corridor ep 30/30: return 260.8 len 178 (1908s)
+[qwen] deadly_corridor: -70.36 +- 13.09 (n=30, len 36, 1909.1s)
+wrote /kaggle/working/runs/phase0/lane0/Qwen3-VL-2B-Instruct_cal/gate_results.json
