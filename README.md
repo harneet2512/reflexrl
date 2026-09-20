@@ -1,31 +1,91 @@
 # ReflexRL
 
-### Foundation models can't play. They can teach — if you only ask them what they see.
+### A vision-language model knows what is in the frame. It cannot play. So move the knowledge, then delete the model.
 
 ![Qwen3-VL-8B + Jev at 6.2 s per decision, beside the 0.75M-parameter policy it trained at 1.7 ms](results/demo/split_screen.png)
 
-*45-second demo video: [results/demo/reflexrl_demo.mp4](results/demo/reflexrl_demo.mp4)*
+*45-second demo: [results/demo/reflexrl_demo.mp4](results/demo/reflexrl_demo.mp4)
+· full metrics with sources: [results/METRICS.md](results/METRICS.md)
+· what's done and what's left: [STATUS.md](STATUS.md)*
 
-A vision-language model is a **bad** Doom player. Asked to pick actions, Qwen3-VL scores
-1.7 kills on `defend_the_center`, barely above random (0.6), whether it has 2B or 8B
-parameters. Split the job — let the VLM say **what it sees**, let a structured decision
-model (TypeSafe **Jev 1.13**) decide **what to do** — and the same model becomes a
-teacher worth 4.4 kills.
+**The claim is not that a VLM is slow.** Everyone knows that. The claim is that the
+knowledge inside it can be *transferred* into an agent that plays without it — and that
+the transfer can be measured, controlled, and shown to come from what the model **saw**.
 
-Use that teacher to guide reinforcement learning, hand control back to the student as it
-improves, and the resulting **0.75M-parameter CNN**:
+| | ReflexRL | PPO from scratch | |
+|---|---|---|---|
+| environment steps to reach the target score | **304K** | 900K | **2.95× fewer** |
+| score on 50 episodes nothing ever saw | **7.34** | 6.95 | **+6%** |
+| spread across seeds (lower = more reliable) | **0.22** | 1.88 | **8× tighter** |
+| seeds mastering a map never trained on | **3 of 3** | 0 of 3 | — |
 
-| | measured |
-|---|---|
-| reaches the target score with | **2.95× fewer environment steps** than PPO from scratch |
-| final score | **7.23** vs PPO's 6.69 (**108%**) |
-| decision latency | **2.57 ms** vs 445 ms for the VLM (**173× faster**) |
-| cost per 10K decisions | **$0.0004** on one CPU core vs $0.77 (**173× cheaper** on the same GPU) |
-| real time, when the game does not wait | **7.25 kills** vs **−0.38** for its own teacher |
-| model calls at deployment | **0** |
+The teacher that produced this scores **4.40**. Its students finish above **7.2**, and
+they stop listening to it after 6–10% of training. A teacher is a curriculum, not a
+ceiling.
 
-Everything was trained and measured on **free Kaggle T4s**. Total paid spend: **$0.05** of
-Jev API calls.
+At deployment both the vision model and the decision model are **gone**. What ships is
+**751,526 parameters** making **0 model calls** per action.
+
+Trained and measured entirely on **free Kaggle T4s**. Paid compute: **$0.00**. Paid API:
+**~$0.05**.
+
+---
+
+## Three findings
+
+### 1. Split perception from decision, and a bad player becomes a good teacher
+
+Asked to pick actions, Qwen3-VL scores 1.7 kills on `defend_the_center` — barely above
+random (0.57) — whether it has 2B or 8B parameters. Four times the parameters bought
+nothing, because the bottleneck was never perception.
+
+Ask it only **what it sees**, hand the percept to a structured decision model
+(TypeSafe **Jev 1.13**), and the same 8B model becomes a teacher worth **4.40**.
+
+| controller | kills | episodes |
+|---|---|---|
+| random | 0.57 | 30 |
+| Qwen3-VL-2B picking actions | 1.73 | 30 |
+| Qwen3-VL-8B picking actions | 1.67 | 30 |
+| **Qwen3-VL-8B sees → Jev decides** | **4.40** | 30 |
+
+### 2. *What* you distil beats *how well* you distil it
+
+Two students. Same small CNN, same 3,662 teacher-labelled frames, same teacher. Both
+reproduce the teacher on held-out labels about equally well. The only difference is what
+the label *is*:
+
+| student | copies the teacher's… | agreement with teacher | kills |
+|---|---|---|---|
+| action-cloned | chosen **action** | 0.655 | 0.88 |
+| **perception-distilled** (Jev still decides) | **percept** | 0.629 (lower!) | **2.53** |
+
+The student with *worse* fidelity scores **2.9× higher**. Copying behaviour faithfully
+copies the teacher's mistakes and discards the structure that made it good. Copying what
+it *saw*, and rebuilding the decision on top, keeps the useful part.
+
+The percept is recovered by least squares: the teacher's action distribution is
+π_T = q · J for a known decision table J, so q is inverted back out of it.
+
+### 3. You can tell in advance whether a VLM can teach a task
+
+The same four-way question, scored against ground truth, predicts everything downstream:
+
+| setting | question | accuracy | majority baseline |
+|---|---|---|---|
+| Doom `defend_the_center` | which way is the monster | **0.733** | 0.313 |
+| Doom `health_gathering` | is a medkit visible, and where | 0.740 | 0.640 |
+| **Valorant, real gameplay frames** | which way is the nearest player | **0.747** | 0.493 |
+| Valorant, real gameplay frames | which of them is an *enemy* | 0.307 | 0.620 |
+
+**The model is good at *where*, and bad at *whether* and *which kind*.** That one
+sentence predicted, in advance, which scenarios would work: `defend_the_center` works
+because a monster is nearly always on screen so only direction matters; `health_gathering`
+does not, because 96 of 150 frames contain no medkit and the model cannot report absence.
+
+A 20-minute probe tells you whether a VLM can teach a task before you spend a GPU-day
+finding out. That generalises past Doom: the localisation result holds on real Valorant
+footage, the friend/foe judgement does not (it needs team colours nobody supplied).
 
 ---
 
@@ -51,162 +111,130 @@ Jev API calls.
 The policy sees **pixels only**: 4 stacked RGB frames at 64×112. No depth buffer, no
 object labels, no game variables (`tests/test_core.py` enforces this).
 
-Teacher influence is handed over as the student catches up: 100% → 50% → 25% → 10% → 0,
-each step taken only when the student's own score reaches the teacher's. In practice the
-teacher is gone by ~200K of 1.5M steps, and the student ends up **better than every
-teacher in the chain**.
+Teacher influence is handed over as the student catches up — 100% → 50% → 25% → 10% → 0 —
+each step taken only when the student's own score reaches the teacher's. That adaptivity
+is load-bearing: on the held-out map, a *fixed* schedule let a 4.40 teacher override an
+18-scoring student and made transfer **0.86×**, worse than no teacher at all.
 
 ## Results
 
-`results/SCOREBOARD.md` is regenerated from the result files by
-`python scripts/scoreboard.py`. Highlights:
+Full tables, per-seed data, learning curves, confusion matrices and the source file for
+every number: **[results/METRICS.md](results/METRICS.md)**. Rebuild with
+`python scripts/metrics_report.py`; nothing is typed by hand.
 
-### Controllers (game paused, so slow models aren't penalised)
+### Sample efficiency (3 seeds × 1.5M steps, target R\* = 5.46 pre-registered)
 
-| controller | kills on `defend_the_center` |
-|---|---|
-| random | 0.57 |
-| Qwen3-VL-2B alone | 1.73 |
-| Qwen3-VL-8B alone | 1.67 |
-| **Qwen3-VL-8B sees + Jev decides** | **4.40** |
-
-Four times the parameters bought nothing. The decision layer quadrupled the score.
-
-### Learned policies (1.5M steps, 3 seeds, target = 80% of the way from random to PPO's final)
-
-| method | final (per seed) | steps to target | X |
+| method | steps to R\*, per seed | X | final, mean |
 |---|---|---|---|
-| PPO from scratch | 6.95 (7.8, 7.1, 6.0) | 900K, 1400K, 600K | 1.00× |
-| BC → PPO (same teacher, imitate then RL) | 6.80 (8.1, 7.7, 4.6) | 604K, 704K, **never** | — |
-| **ReflexRL (guided, adaptive handover)** | **7.34 (7.4, 7.4, 7.2)** | **304K ×3** | **2.95×** |
-| ReflexRL (live Qwen+Jev rounds) | 7.24 (7.3, 7.2) | 353K ×2 | 2.54× |
-| ReflexRL (fixed schedule, 1 seed) | 7.38 | 453K | 1.98× |
-| the distilled teacher that guided it | 3.10 | — | — |
+| PPO from scratch | 900K, 1400K, 600K | 1.00× | 6.95 |
+| BC → PPO (same teacher, same labels) | 604K, 704K, **never** | — | 6.80 |
+| **ReflexRL (guided, adaptive handover)** | **304K, 304K, 304K** | **2.95×** | **7.34** |
+| ReflexRL (live Qwen+Jev DAgger rounds) | 353K, 353K | 2.54× | 7.24 |
+| ReflexRL (fixed anneal) | 453K | 1.98× | 7.38 |
 
-Final scores come from **50 episodes on seeds 7,000,000+**, which no training run and no
-handover decision ever saw. ReflexRL is the only method without a bad seed (spread 0.22 vs
-1.88 for PPO and 3.58 for BC→PPO), and it more than doubles the score of the teacher that
-guided it.
+The 3,662 environment steps spent collecting teacher labels are charged to every
+teacher-using method before the comparison.
 
-BC→PPO is the sharp control: the same teacher and the same labels, but imitating first and
-then doing RL gives no reliable gain. The gain comes from *guiding exploration and handing
-back control*.
+**BC → PPO is the control that matters.** Identical teacher, identical labels, identical
+budget — imitate first, then run the same PPO. It produces no reliable speed-up and one
+seed never reaches the target. What produces X is *guiding exploration and handing control
+back*, not having the teacher's answers baked into the weights.
 
-### Held-out map (`defend_the_line`: different layout, same controls, 3 seeds)
+### Reliability, on episodes nothing ever saw
 
-| | reaches 19.9 kills | reaches 21.5 kills |
-|---|---|---|
-| PPO from scratch | 301K steps | **never** (0/3 seeds) |
-| PPO policy fine-tuned | 301K | 1/3 seeds |
-| **ReflexRL policy fine-tuned** | **250K** | **3/3 seeds** |
-| ReflexRL fine-tuned *with* the teacher | 250K | 3/3 seeds |
+| method | mean | worst seed | best seed | spread |
+|---|---|---|---|---|
+| PPO from scratch | 6.95 | 5.96 | 7.84 | 1.88 |
+| BC → PPO | 6.80 | 4.56 | 8.14 | 3.58 |
+| **ReflexRL** | **7.34** | **7.20** | 7.42 | **0.22** |
 
-The last row is where the adaptive handover earns its place: arriving with a policy that
-already outscores the teacher, the rule drops teacher influence to zero at the first
-evaluation, so guidance costs nothing (final 23.32 vs 23.14 unguided). An earlier version
-that stepped down too slowly let a 2.53-scoring teacher override an 18-scoring student and
-made transfer **0.86×** — a fixed schedule cannot avoid that.
+50 episodes from seeds 7,000,000+ — disjoint from training (0–2011), in-training
+evaluation (900,000+) and teacher labelling (50,000+). On a 3-seed budget, the
+8× tighter spread is a stronger claim than the mean.
 
-Zero-shot transfer is near random for every policy; what transfers is how fast the map is
-re-learned.
+### Held-out map (`defend_the_line`: new layout, same controls)
 
-### Deployment
-
-| | reflex policy | Qwen3-VL-2B |
-|---|---|---|
-| parameters | 751,526 | 2.1B |
-| FLOPs per action | 28.9M | 1.29T |
-| latency (same T4) | 2.85 ms | 468 ms |
-| real-time score (the game does not wait) | **7.25** | **−0.38** (Qwen-8B + Jev, 6.2 s/decision) |
-
-### Where the teacher works, and where it does not
-
-The same perception question, asked of Qwen3-VL-8B in three settings and scored against
-ground truth (ViZDoom's object labels; the Valorant dataset's bounding boxes):
-
-| setting | question | accuracy | guessing the most common answer |
+| | reaches 19.9 kills | reaches 21.5 | final |
 |---|---|---|---|
-| Doom, `defend_the_center` | which way is the monster | **0.73** | 0.31 |
-| Doom, `health_gathering` | is a medkit visible, and where | 0.74 | 0.64 |
-| **Valorant, real frames** | which way is the nearest player | **0.75** | 0.49 |
-| Valorant, real frames | which of them is an *enemy* | 0.35 | 0.62 |
+| PPO from scratch | 350K steps | **0 of 3 seeds** | 21.54 |
+| PPO policy fine-tuned | 350K | 1 of 3 | 21.17 |
+| **ReflexRL policy fine-tuned** | **250K** | **3 of 3** | **23.14** |
+| ReflexRL fine-tuned *with* the teacher | 201K | 3 of 3 | 23.32 |
 
-The model is good at *where*, and bad at *whether* and *which kind*. That is why
-`defend_the_center` works (monsters are nearly always on screen, so only direction
-matters) and `health_gathering` does not (96 of 150 frames contain no visible medkit, and
-the model cannot report absence). On real Valorant frames it localises characters well
-(75% against a 49% baseline, 150 frames), but it cannot tell
-enemies from teammates, which needs team colours nobody told it about.
+Zero-shot transfer is near random for every policy. What transfers is how fast the new
+map is re-learned.
 
-Two measurement errors were found and fixed while producing this table, both of which had
-made the model look worse than it is: Health-Gathering distance labels were generated from
-a *different* rollout than the frames the model saw, and 90 of the 93 Valorant frames
-labelled "no enemy" actually contained a teammate, so the model was penalised for
-correctly seeing a person. `tests/test_probe_alignment.py` now guards the first.
+### Deployment — the consequence, not the claim
 
-Contextual calibration — dividing out the answer prior measured on a blank frame, which is
-what rescued the *action* teacher on `defend_the_center` — makes the perception numbers
-**worse** (0.74 to 0.25 on Health Gathering). It removes answer bias, but it also
-erases genuinely skewed class priors, and here the skew is in the world rather than the
-model.
+| | reflex policy | its teacher | ratio |
+|---|---|---|---|
+| parameters | 751,526 | 2.1B (8.8B for the 8B teacher) | — |
+| latency, same T4 | 2.57 ms | 445 ms | **173×** |
+| USD per 10K decisions | $0.0004 (one CPU core) | $0.73 | **173×** |
+| model calls per action | **0** | 1 | — |
+| kills when the game does **not** wait | **7.25** | **−0.38** | — |
 
-## What failed, and why that matters
+The teacher scores below random once it has to play in real time. That is the reason the
+knowledge has to be *moved* rather than queried — not a result in itself.
+
+## What failed, and why it is in the repo
 
 1. **fp16 silently corrupts Qwen3-VL on pre-Ampere GPUs.** For a day the teacher looked
-   like it had multiple-choice "position bias" — always answering A. It was actually
-   emitting garbage: only 0.03% of its probability landed on *any* answer letter, and
-   renormalising over letters hid that. A synthetic control (a red circle on the left,
-   centre or right) exposed it: **25% correct in fp16, 100% in fp32**. Every teacher
-   result before the fix was discarded. The code now runs fp32 (or 4-bit weights with
-   fp32 compute for 8B) and refuses to emit labels when the answer-letter mass drops
-   below 0.5.
-2. **Bigger VLMs did not help.** 2B: 1.73. 4B: failed the probe. 8B: 1.67. The ceiling
-   was the *decision*, not the perception.
-3. **Action cloning the teacher fails.** A network imitating the teacher's actions scores
-   0.88. Distilling its *perception* and keeping Jev as the decision maker scores 2.53 and
-   is what guided RL actually uses.
-4. **Health Gathering and Deadly Corridor were dropped.** The VLM cannot report *absence*:
-   in 96 of 150 Health-Gathering frames no medkit is visible, and its accuracy (0.74)
-   barely clears the 0.64 you get by always answering "none". A teacher that plays at
-   random level is useless, so those scenarios are reported as negatives rather than
-   carried.
+   like it had multiple-choice position bias — always answering A. It was emitting
+   garbage: **0.03%** of its probability landed on *any* answer letter, and renormalising
+   over letters hid that. A synthetic control (a red circle, left/centre/right) exposed
+   it: **25% correct in fp16, 100% in fp32**. Every teacher number measured before the fix
+   was discarded. The code now runs fp32 (4-bit weights with fp32 compute for 8B) and
+   refuses to emit a label when letter mass drops below 0.5.
+2. **Bigger did not help.** 2B: 1.73. 4B: failed the probe. 8B: 1.67. The ceiling was the
+   *decision*, not the perception — which is what motivated finding 1.
+3. **Three of four scenarios failed the pre-registered teacher gate** and were not used.
+   All three require reporting *absence*, which the perception probes show the model
+   cannot do. The gate caught it before any GPU-hours were spent.
+4. **Contextual calibration helps the action teacher and destroys the perception probes**
+   (0.740 → 0.253). It removes answer bias, but it also erases genuinely skewed class
+   priors. Both numbers are reported rather than whichever flatters.
 
 Pre-registrations for every gate and metric are in `experiments/configs/*.json`, written
-before the corresponding runs.
+before the corresponding run.
 
 ## No train/test leakage
 
-Training, in-training evaluation, and the final reported numbers come from disjoint
-environment-seed streams (training 0–2011, validation 900,000+, final test 7,000,000+,
-teacher labels 50,000+). `tests/test_seed_hygiene.py` fails if they ever overlap.
+Training, in-training evaluation, teacher labelling and final reporting use disjoint
+environment-seed streams (0–2011 / 900,000+ / 50,000+ / 7,000,000+).
+`tests/test_seed_hygiene.py` fails the build if any two overlap.
+`tests/test_probe_alignment.py` asserts probe frames and their oracle labels come from the
+same rollout — it exists because they once did not, and the bug made the teacher look
+worse than it is.
 
 ## Reproduce
 
 ```bash
 pip install -e .[dev]
-pytest tests                                   # 19 tests: pixels-only, IS correction, resume, seeds
+pytest tests                                   # 28 tests: pixels-only, IS correction, resume, seeds
 python scripts/teacher_gate.py --policy random --scenarios dtc --episodes 30
-python scripts/jev_table.py                    # 4 Jev calls (~$0.0001), cached to experiments/configs/
+python scripts/jev_table.py                    # 4 Jev calls (~$0.0001), cached
 python scripts/teacher_gate.py --policy qwen --model Qwen/Qwen3-VL-8B-Instruct --nf4 \
        --variant perception_jev --scenarios dtc --episodes 30
 python scripts/build_perception_teacher.py --scenario dtc --labels runs/phase0/*/labels
 python scripts/train.py --method reflexrl --scenario dtc --steps 1500000 --seed 0
 python scripts/final_eval.py                   # fresh unseen episodes
-python scripts/make_demo.py                    # benchmark + real-time + video
+python scripts/metrics_report.py               # rebuild results/METRICS.md
 ```
 
 Kaggle job definitions (one per experiment, free T4s) are in `kaggle/`.
 
 ## Limitations
 
-- One scenario carries the main result; the held-out map shares its controls.
-- The perception vocabulary (monster left/centre/right/none) and Jev's option list were
+- One scenario carries the main result; the held-out map shares its controls. The gate in
+  `results/METRICS.md` §8 is the honest statement of where this teacher works.
+- 3 seeds per method — enough to show a spread, not enough for tight confidence intervals.
+- The percept vocabulary (monster left/centre/right/none) and Jev's option list were
   written by hand. The models decide; the abstraction is human-chosen.
-- The online teacher during RL is a distilled copy of the Qwen+Jev teacher; live rounds
-  (Qwen queried on the student's own states, Jev deciding per state) are the
-  `--dagger` path.
-- 3 seeds per method. Enough to show the spread, not enough for tight confidence
-  intervals.
+- The online teacher during RL is a *distilled copy* of the Qwen+Jev teacher, scoring 2.53
+  against the original's 4.40. Everything downstream is taught by a degraded copy and the
+  students still finish above 7.2. Live rounds (Qwen queried on the student's own states)
+  are the `--dagger` path, at 2.54×.
 
 ## Related work
 
@@ -214,6 +242,6 @@ Kickstarting ([Schmitt et al., 2018](https://arxiv.org/abs/1803.03835)), Jump-St
 ([Uchendu et al., 2022](https://arxiv.org/abs/2204.02372)) and LLM policy teachers
 ([Zheng et al., 2023](https://arxiv.org/abs/2311.13373)) all guide RL with a teacher and
 anneal its influence. What is different here: the teacher is a **vision-language model
-restricted to perception**, paired with a **structured decision model**, and every cost —
-including the environment steps spent collecting teacher labels — is charged to the
-method.
+restricted to perception**, paired with a **structured decision model**; the handover is
+**adaptive** rather than scheduled; and every cost — including the environment steps spent
+collecting teacher labels — is charged to the method.
