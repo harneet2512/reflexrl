@@ -67,18 +67,68 @@ four possible answers, and each answer maps to a decision:
 | monster on the **left** | `TURN_LEFT_FIRE` (0.92) | turn onto it and shoot in the same tic |
 | monster in the **centre** | `FIRE` (1.00) | already aimed, do not waste the turn |
 | monster on the **right** | `TURN_RIGHT_FIRE` (0.94) | mirror of left |
-| **nothing visible** | `TURN_LEFT` (0.68) or `TURN_RIGHT` (0.31), **never fire** | sweep for the threat you cannot see, and do not waste ammo on empty air |
+| **nothing visible** | `TURN_LEFT` (0.68) or `TURN_RIGHT` (0.31), never fire | sweep for the threat you cannot see |
 
-That last row is the whole answer to the rear-view problem. **"Nothing visible" is not
-"do nothing", it is "keep turning until something comes into view."** A 360-degree threat
-is handled by a four-way percept because the empty case drives a search, and the four
-stacked frames give the policy enough short-term memory to keep sweeping in one direction
-rather than dithering.
+That last row is the answer to the rear-view problem. **"Nothing visible" is not "do
+nothing", it is "keep turning until something comes into view."** A 360-degree threat is
+handled by a four-way percept because the empty case drives a search, and the four stacked
+frames give the policy enough short-term memory to keep sweeping one way rather than
+dithering.
 
-This is also why the decision layer matters so much. The full table above is four rows
-long. Asked to pick actions directly, Qwen3-VL scores 1.7; asked only what it sees, with
-those four rows deciding, the same model scores 4.4. The hard part was never seeing the
-monster. It was reliably converting "monster on the left" into "turn left and fire, now."
+This is also why the decision layer matters. The whole table is four rows. Asked to pick
+actions directly, Qwen3-VL scores 1.7; asked only what it sees, with those four rows
+deciding, the same model scores 4.4. The hard part was never seeing the monster. It was
+reliably converting "monster on the left" into "turn left and fire, now."
+
+### Does the trained policy actually look, or has it memorised a rhythm?
+
+Fair challenge, and the reason to ask it is that the arena never changes. A policy that
+just spins at a steady rate and fires on a beat would collect kills without seeing
+anything, because monsters walk into its line of fire on their own. That would make the
+whole result a timing trick.
+
+It is testable. Replay the same episodes with the observation degraded, changing nothing
+else (`python scripts/perception_check.py`):
+
+| what the policy is shown | kills |
+|---|---|
+| the real frames | **7.35** |
+| all zeros, so it is blind | **0.50** |
+| the first frame, frozen forever | **0.35** |
+| real Doom frames from a *different* episode | **2.35** |
+| *random actions, for reference* | *0.85* |
+
+**Cut the link between frame and world and the policy falls below random.** An open-loop
+routine would be unaffected, since the monsters still arrive on schedule. This one is not:
+it is closed-loop on what it sees.
+
+Where that seeing shows up is worth being exact about, because it is not where the
+teacher's table would suggest. Measured against ViZDoom's ground-truth object labels,
+which the policy never receives:
+
+| what was really on screen | fires | turns left | turns right |
+|---|---|---|---|
+| monster left | 0.88 | **0.72** | 0.16 |
+| monster centre | 0.85 | 0.36 | 0.26 |
+| monster right | 0.68 | 0.40 | **0.51** |
+| nothing visible | 0.90 | **0.78** | 0.14 |
+
+The student did **not** inherit the teacher's fire discipline. It fires about 90% of the
+time whatever is on screen, because it prefers the combined `TURN_LEFT_FIRE` and
+`TURN_RIGHT_FIRE` actions, so firing carries almost no information. **The discrimination
+is entirely in the turn direction**: monster on the left, turn left 4.5 to 1; empty view,
+sweep left 5.6 to 1; monster on the right, and it reverses.
+
+That reversal is what the baseline never learns. Turn-left rate minus turn-right rate, by
+what was actually on screen:
+
+| truth | ReflexRL | PPO from scratch |
+|---|---|---|
+| monster left | +0.56 | +0.49 |
+| **monster right** | **-0.11** (reverses correctly) | **+0.10** (still turns left) |
+
+Both policies see. Only the guided one learned that a monster on the right calls for the
+opposite turn, which is exactly the distinction its teacher was built to supply.
 
 ---
 
@@ -356,6 +406,7 @@ python scripts/teacher_gate.py --policy qwen --model Qwen/Qwen3-VL-8B-Instruct -
 python scripts/build_perception_teacher.py --scenario dtc --labels runs/phase0/*/labels
 python scripts/train.py --method reflexrl --scenario dtc --steps 1500000 --seed 0
 python scripts/final_eval.py                   # fresh unseen episodes
+python scripts/perception_check.py             # blindfold + ground-truth alignment
 python scripts/metrics_report.py               # rebuild results/METRICS.md
 python scripts/make_budget_video.py            # the same-budget three-way comparison
 python scripts/make_gifs.py                    # rebuild every animation above

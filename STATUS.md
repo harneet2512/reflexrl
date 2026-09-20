@@ -24,6 +24,11 @@ shooter" is not a finding; everybody knows it. The findings are:
    curriculum, not a ceiling, and it is switched off by 6-10% of training.
 4. **You can tell in advance whether a VLM can teach a task**, with a 20-minute
    perception probe, before spending a GPU-day on it.
+5. **The trained policy really is looking.** Blind it and it scores 0.50 against 7.35
+   seeing, below the 0.85 random floor, so the result is not an open-loop timing trick.
+   The discrimination sits in turn direction, not in fire discipline: it fires ~90% of
+   the time regardless, but only the guided policy reverses its turn for a monster on
+   the right.
 
 ## Done
 
@@ -35,6 +40,7 @@ shooter" is not a finding; everybody knows it. The findings are:
 | Perception distillation (least-squares inversion of Jev's table) | done | 2.53 kills vs 0.88 for action cloning |
 | Guided PPO + adaptive handover, 3 seeds x 1.5M steps | done | **X = 2.95x**, final 7.34 |
 | **Knowledge ablation** (shuffled teacher, 2 seeds x 1.5M) | done | **X = 1.05x**: the gain is the VLM's sight, not the mechanism |
+| **Blindfold + alignment check** (is the policy closed-loop on vision?) | done | blind 0.50 vs seeing 7.35; turn direction tracks ground truth |
 | Controls: PPO from scratch, BC->PPO, fixed anneal, live DAgger | done | all in `results/METRICS.md` §1 |
 | Leakage-free final evaluation, 50 unseen episodes | done | `results/final_eval.json`, seeds 7,000,000+ |
 | Held-out map transfer (`defend_the_line`) | done | 3/3 seeds reach 21.5 vs 0/3 for PPO |

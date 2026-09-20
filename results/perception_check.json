@@ -1,0 +1,108 @@
+{
+  "seed_base": 606060,
+  "scenario": "defend_the_center",
+  "episodes": 20,
+  "arms": {
+    "ReflexRL": {
+      "blindfold": {
+        "real": {
+          "mean": 7.35,
+          "se": 0.24360235069300518,
+          "episodes": 20
+        },
+        "blank": {
+          "mean": 0.5,
+          "se": 0.2564945880212885,
+          "episodes": 20
+        },
+        "frozen": {
+          "mean": 0.35,
+          "se": 0.10942433098048308,
+          "episodes": 20
+        },
+        "mismatched": {
+          "mean": 2.35,
+          "se": 0.292673700111305,
+          "episodes": 20
+        }
+      },
+      "alignment": {
+        "left": {
+          "decisions": 836,
+          "p_fire": 0.8767942583732058,
+          "p_turn_left": 0.7248803827751196,
+          "p_turn_right": 0.1590909090909091
+        },
+        "center": {
+          "decisions": 1453,
+          "p_fire": 0.8451479697178252,
+          "p_turn_left": 0.35650378527185134,
+          "p_turn_right": 0.26083964211975225
+        },
+        "right": {
+          "decisions": 428,
+          "p_fire": 0.677570093457944,
+          "p_turn_left": 0.40186915887850466,
+          "p_turn_right": 0.5070093457943925
+        },
+        "none": {
+          "decisions": 422,
+          "p_fire": 0.8957345971563981,
+          "p_turn_left": 0.7796208530805687,
+          "p_turn_right": 0.13507109004739337
+        }
+      }
+    },
+    "PPO from scratch": {
+      "blindfold": {
+        "real": {
+          "mean": 7.45,
+          "se": 0.3515005427861348,
+          "episodes": 20
+        },
+        "blank": {
+          "mean": 0.65,
+          "se": 0.2835396565598986,
+          "episodes": 20
+        },
+        "frozen": {
+          "mean": 3.3,
+          "se": 0.2523573072576179,
+          "episodes": 20
+        },
+        "mismatched": {
+          "mean": 2.3,
+          "se": 0.4173853451138282,
+          "episodes": 20
+        }
+      },
+      "alignment": {
+        "left": {
+          "decisions": 1044,
+          "p_fire": 0.6082375478927203,
+          "p_turn_left": 0.7413793103448276,
+          "p_turn_right": 0.24616858237547892
+        },
+        "center": {
+          "decisions": 914,
+          "p_fire": 0.7516411378555798,
+          "p_turn_left": 0.562363238512035,
+          "p_turn_right": 0.42669584245076586
+        },
+        "right": {
+          "decisions": 517,
+          "p_fire": 0.6421663442940039,
+          "p_turn_left": 0.5357833655705996,
+          "p_turn_right": 0.4410058027079304
+        },
+        "none": {
+          "decisions": 620,
+          "p_fire": 0.4338709677419355,
+          "p_turn_left": 0.7032258064516129,
+          "p_turn_right": 0.2887096774193548
+        }
+      }
+    }
+  },
+  "random_floor": 0.85
+}
