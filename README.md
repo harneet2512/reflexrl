@@ -4,7 +4,7 @@
 
 ![Qwen3-VL-8B + Jev at 6.2 s per decision, beside the 0.75M-parameter policy it trained at 1.7 ms](results/demo/split_screen.png)
 
-*45-second demo: [](results/demo/reflexrl_demo.mp4)*
+*45-second demo video: [results/demo/reflexrl_demo.mp4](results/demo/reflexrl_demo.mp4)*
 
 A vision-language model is a **bad** Doom player. Asked to pick actions, Qwen3-VL scores
 1.7 kills on `defend_the_center`, barely above random (0.6), whether it has 2B or 8B
