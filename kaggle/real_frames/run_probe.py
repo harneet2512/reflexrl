@@ -15,7 +15,8 @@ src = glob.glob("/kaggle/input/**/reflexrl/__init__.py", recursive=True)
 repo = "/kaggle/working/repo"
 shutil.copytree(os.path.dirname(os.path.dirname(src[0])), repo, dirs_exist_ok=True)
 os.chdir(repo)
-root = "/kaggle/input/valorant-object-detection-dataset"
+root = "/kaggle/input"  # the mount name varies; the probe discovers the dataset
+print("mounted:", os.listdir(root), flush=True)
 for f in glob.glob(f"{root}/**/README*.txt", recursive=True):  # record the stated licence
     print(f"--- {f}\n{open(f).read()[:600]}", flush=True)
 rc = sh(f"{sys.executable} -u scripts/real_frames_probe.py --root {root} --frames 150 --perms 2 "

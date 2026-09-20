@@ -31,6 +31,14 @@ from reflexrl.teacher.prompts import LETTERS  # noqa: E402
 COPY = re.compile(r"( - Copy( \(\d+\))?)+", re.I)  # the dataset repeats frames as " - Copy (2)..."
 
 
+def _is_num(x: str) -> bool:
+    try:
+        float(x)
+        return True
+    except ValueError:
+        return False
+
+
 def dedup_key(p: Path) -> str:
     return COPY.sub("", p.stem).lower()
 
@@ -72,13 +80,26 @@ def main() -> None:
     root = Path(args.root)
     enemy_ids = enemy_class_ids(root)
 
-    labels = {dedup_key(f): f for f in root.rglob("*.txt") if f.parent.name.lower() == "labels"}
-    images = {}
-    for f in root.rglob("*.jpg"):
-        images.setdefault(dedup_key(f), f)
+    def is_yolo(f: Path) -> bool:
+        try:
+            first = next((ln for ln in f.read_text().splitlines() if ln.strip()), "")
+        except Exception:
+            return False
+        parts = first.split()
+        return len(parts) >= 5 and all(_is_num(x) for x in parts[:5])
+
+    labels, images = {}, {}
+    for f in root.rglob("*"):
+        if f.suffix.lower() in (".jpg", ".jpeg", ".png"):
+            images.setdefault(dedup_key(f), f)
+        elif f.suffix.lower() == ".txt" and not f.name.lower().startswith("readme") and is_yolo(f):
+            labels.setdefault(dedup_key(f), f)
     pairs = [(images[k], labels[k]) for k in sorted(labels) if k in images]
-    print(f"{len(pairs)} unique labelled frames (deduplicated from {len(list(root.rglob('*.jpg')))})",
-          flush=True)
+    print(f"{len(images)} unique images, {len(labels)} label files, {len(pairs)} paired", flush=True)
+    if not pairs:
+        for d in sorted(root.glob("*")):
+            print("  contents:", d, flush=True)
+        raise SystemExit("no image/label pairs found under " + str(root))
     random.Random(0).shuffle(pairs)
 
     truth, chosen = [], []
