@@ -1,0 +1,112 @@
+{
+  "meta": {
+    "config": {
+      "runs": "runs/train/defend_the_center",
+      "scenario": "dtc",
+      "teachers": "runs/teachers",
+      "episodes": 50,
+      "device": "cuda",
+      "out": "/kaggle/working/results/final_eval.json"
+    },
+    "git_commit": "unknown",
+    "host": "c9278959ee05",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "torch": "2.10.0+cu128",
+    "cuda_device": "Tesla T4",
+    "started_unix": 1789884237.7227244
+  },
+  "test_seed_base": 7000000,
+  "episodes": 50,
+  "policies": {
+    "bc_ppo_s0": {
+      "return_mean": 7.7,
+      "return_se": 0.16963345838625593,
+      "len_mean": 157.98,
+      "n": 50
+    },
+    "bc_ppo_s1": {
+      "return_mean": 8.14,
+      "return_se": 0.19796928230080008,
+      "len_mean": 167.2,
+      "n": 50
+    },
+    "bc_ppo_s2": {
+      "return_mean": 4.56,
+      "return_se": 0.16699016224231378,
+      "len_mean": 132.24,
+      "n": 50
+    },
+    "ppo_s0": {
+      "return_mean": 7.06,
+      "return_se": 0.20285714285714285,
+      "len_mean": 154.5,
+      "n": 50
+    },
+    "ppo_s1": {
+      "return_mean": 5.96,
+      "return_se": 0.16650059753523958,
+      "len_mean": 152.88,
+      "n": 50
+    },
+    "ppo_s2": {
+      "return_mean": 7.84,
+      "return_se": 0.2463778415692583,
+      "len_mean": 154.22,
+      "n": 50
+    },
+    "reflexrl_live_s0": {
+      "return_mean": 7.26,
+      "return_se": 0.1423132503475688,
+      "len_mean": 159.56,
+      "n": 50
+    },
+    "reflexrl_live_s1": {
+      "return_mean": 7.22,
+      "return_se": 0.13788489728015604,
+      "len_mean": 154.74,
+      "n": 50
+    },
+    "reflexrl_s0": {
+      "return_mean": 7.42,
+      "return_se": 0.14593820330425294,
+      "len_mean": 157.84,
+      "n": 50
+    },
+    "reflexrl_s1": {
+      "return_mean": 7.4,
+      "return_se": 0.16162440712835371,
+      "len_mean": 158.12,
+      "n": 50
+    },
+    "reflexrl_s2": {
+      "return_mean": 7.2,
+      "return_se": 0.13401187885209798,
+      "len_mean": 157.36,
+      "n": 50
+    },
+    "distilled_perception_jev_teacher": {
+      "return_mean": 3.1,
+      "return_se": 0.25434991163949794,
+      "len_mean": 115.56,
+      "n": 50
+    }
+  },
+  "summary": {
+    "best": "bc_ppo_s1",
+    "means": {
+      "bc_ppo_s0": 7.7,
+      "bc_ppo_s1": 8.14,
+      "bc_ppo_s2": 4.56,
+      "ppo_s0": 7.06,
+      "ppo_s1": 5.96,
+      "ppo_s2": 7.84,
+      "reflexrl_live_s0": 7.26,
+      "reflexrl_live_s1": 7.22,
+      "reflexrl_s0": 7.42,
+      "reflexrl_s1": 7.4,
+      "reflexrl_s2": 7.2,
+      "distilled_perception_jev_teacher": 3.1
+    }
+  }
+}

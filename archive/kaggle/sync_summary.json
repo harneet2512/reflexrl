@@ -1,12 +1,7 @@
 {
-  "reflexrl-demo": {
-    "small": 3,
-    "big": 2,
-    "bytes_big": 48171878
-  },
-  "reflexrl-live-teacher": {
-    "small": 10,
-    "big": 15,
-    "bytes_big": 45166495
+  "reflexrl-final-eval": {
+    "small": 2,
+    "big": 0,
+    "bytes_big": 0
   }
 }

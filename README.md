@@ -15,8 +15,9 @@ improves, and the resulting **0.75M-parameter CNN**:
 |---|---|
 | reaches the target score with | **2.95× fewer environment steps** than PPO from scratch |
 | final score | **7.23** vs PPO's 6.69 (**108%**) |
-| decision latency | **2.85 ms** vs 468 ms for the VLM (**164× faster**) |
-| cost per 10K decisions | **$0.0004** on one CPU core vs $0.77 (**164× cheaper** on the same GPU) |
+| decision latency | **2.57 ms** vs 445 ms for the VLM (**173× faster**) |
+| cost per 10K decisions | **$0.0004** on one CPU core vs $0.77 (**173× cheaper** on the same GPU) |
+| real time, when the game does not wait | **7.25 kills** vs **−0.38** for its own teacher |
 | model calls at deployment | **0** |
 
 Everything was trained and measured on **free Kaggle T4s**. Total paid spend: **$0.05** of
@@ -71,14 +72,21 @@ Four times the parameters bought nothing. The decision layer quadrupled the scor
 
 | method | final (per seed) | steps to target | X |
 |---|---|---|---|
-| PPO from scratch | 6.69 (7.1, 5.5, 7.5) | 900K, 1400K, 600K | 1.00× |
-| BC → PPO (same teacher, imitate then RL) | 6.66 (7.3, 8.1, 4.5) | 604K, 704K, **never** | — |
-| **ReflexRL (guided, adaptive handover)** | **7.23** (7.3, 7.0, 7.3) | **304K ×3** | **2.95×** |
+| PPO from scratch | 6.95 (7.8, 7.1, 6.0) | 900K, 1400K, 600K | 1.00× |
+| BC → PPO (same teacher, imitate then RL) | 6.80 (8.1, 7.7, 4.6) | 604K, 704K, **never** | — |
+| **ReflexRL (guided, adaptive handover)** | **7.34 (7.4, 7.4, 7.2)** | **304K ×3** | **2.95×** |
+| ReflexRL (live Qwen+Jev rounds) | 7.24 (7.3, 7.2) | 353K ×2 | 2.54× |
 | ReflexRL (fixed schedule, 1 seed) | 7.38 | 453K | 1.98× |
+| the distilled teacher that guided it | 3.10 | — | — |
 
-ReflexRL is the only method with no bad seed. BC→PPO is the sharp control: the same
-teacher and the same labels, but imitating first and then doing RL gives no reliable
-gain. The gain comes from *guiding exploration and handing back control*.
+Final scores come from **50 episodes on seeds 7,000,000+**, which no training run and no
+handover decision ever saw. ReflexRL is the only method without a bad seed (spread 0.22 vs
+1.88 for PPO and 3.58 for BC→PPO), and it more than doubles the score of the teacher that
+guided it.
+
+BC→PPO is the sharp control: the same teacher and the same labels, but imitating first and
+then doing RL gives no reliable gain. The gain comes from *guiding exploration and handing
+back control*.
 
 ### Held-out map (`defend_the_line`: different layout, same controls, 3 seeds)
 
@@ -86,7 +94,14 @@ gain. The gain comes from *guiding exploration and handing back control*.
 |---|---|---|
 | PPO from scratch | 301K steps | **never** (0/3 seeds) |
 | PPO policy fine-tuned | 301K | 1/3 seeds |
-| **ReflexRL policy fine-tuned** | **201K (1.5×)** | **3/3 seeds** |
+| **ReflexRL policy fine-tuned** | **250K** | **3/3 seeds** |
+| ReflexRL fine-tuned *with* the teacher | 250K | 3/3 seeds |
+
+The last row is where the adaptive handover earns its place: arriving with a policy that
+already outscores the teacher, the rule drops teacher influence to zero at the first
+evaluation, so guidance costs nothing (final 23.32 vs 23.14 unguided). An earlier version
+that stepped down too slowly let a 2.53-scoring teacher override an 18-scoring student and
+made transfer **0.86×** — a fixed schedule cannot avoid that.
 
 Zero-shot transfer is near random for every policy; what transfers is how fast the map is
 re-learned.
@@ -98,7 +113,7 @@ re-learned.
 | parameters | 751,526 | 2.1B |
 | FLOPs per action | 28.9M | 1.29T |
 | latency (same T4) | 2.85 ms | 468 ms |
-| real-time score (the game does not wait) | **7.12** | 2.88 |
+| real-time score (the game does not wait) | **7.25** | **−0.38** (Qwen-8B + Jev, 6.2 s/decision) |
 
 ## What failed, and why that matters
 

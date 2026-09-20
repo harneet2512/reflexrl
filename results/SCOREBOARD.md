@@ -30,6 +30,24 @@ Teacher-label collection (3,662 env steps) is charged to every teacher-using met
 | PPO from scratch | 350K | 0/3 seeds | 21.54 |
 | PPO policy fine-tuned | 350K | 1/3 seeds | 21.17 |
 | ReflexRL policy fine-tuned | 250K | 3/3 seeds | 23.14 |
+| ReflexRL fine-tuned WITH the teacher | 201K | 3/3 seeds | 23.32 |
+
+## Final evaluation on unseen episodes (seeds 7,000,000+, 50 episodes)
+
+| policy | kills |
+|---|---|
+| bc_ppo_s1 | 8.14 ± 0.20 |
+| ppo_s2 | 7.84 ± 0.25 |
+| bc_ppo_s0 | 7.70 ± 0.17 |
+| reflexrl_s0 | 7.42 ± 0.15 |
+| reflexrl_s1 | 7.40 ± 0.16 |
+| reflexrl_live_s0 | 7.26 ± 0.14 |
+| reflexrl_live_s1 | 7.22 ± 0.14 |
+| reflexrl_s2 | 7.20 ± 0.13 |
+| ppo_s0 | 7.06 ± 0.20 |
+| ppo_s1 | 5.96 ± 0.17 |
+| bc_ppo_s2 | 4.56 ± 0.17 |
+| distilled_perception_jev_teacher | 3.10 ± 0.25 |
 
 ## Deployment (same T4)
 
