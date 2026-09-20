@@ -9,9 +9,10 @@ the game runs on. It finishes on **-0.38** kills, below random.
 **Right: the 751,526-parameter policy that teacher trained.** 1.7 ms per decision,
 **zero model calls**, **7.25** kills. Same map, same seed, both in real time.
 
-*45-second demo: [results/demo/reflexrl_demo.mp4](results/demo/reflexrl_demo.mp4)
+*Videos: [same-budget three-way comparison](results/demo/budget_comparison.mp4) (54 s)
+· [45-second demo](results/demo/reflexrl_demo.mp4)
 · every metric with its source file: [results/METRICS.md](results/METRICS.md)
-· done / in flight / left: [STATUS.md](STATUS.md)*
+· done / left: [STATUS.md](STATUS.md)*
 
 ---
 
@@ -58,6 +59,20 @@ keeps the **same action vocabulary, same decision table, same adaptive handover,
 intervention correction, and the same marginal distribution over actions**, but whose
 perception is drawn independently of the frame it is looking at. Right kind of advice,
 wrong frame.
+
+![Three agents that have each seen exactly 250,368 frames of Doom, playing the same maps side by side at 3x speed. PPO and the shuffled-teacher control average around 3 and 2 kills and die early; ReflexRL averages over 6.](results/demo/budget_comparison.gif)
+
+All three agents above have seen **exactly the same number of Doom frames**
+(250,368), and play the same maps from the same seeds. The bars at the bottom are
+every episode, so consistency is visible rather than asserted. Over 8 episodes:
+PPO **3.0**, the decoupled control **2.1**, ReflexRL **6.1**. The left two are
+usually dead inside 15 seconds.
+
+*Full 54-second version, 8 episodes per agent:
+[results/demo/budget_comparison.mp4](results/demo/budget_comparison.mp4).
+Rebuild with `python scripts/make_budget_video.py`. These are sampled episodes
+from one seed per arm, shown to make the gap visible; the authoritative numbers
+are the 16-episode evaluation curves and the 50-episode held-out test below.*
 
 | | steps to target | **X** | final |
 |---|---|---|---|

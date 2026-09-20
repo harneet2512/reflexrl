@@ -7,6 +7,8 @@ Three GIFs, no GPU and no re-running of anything:
 - ``learning_race.gif``      -- ReflexRL vs PPO from scratch, animated from the
   archived ``metrics.jsonl`` files, racing to the pre-registered target score.
 - ``gameplay.gif``           -- the reflex policy playing, full frame.
+- ``budget_comparison.gif``  -- first episodes of the same-budget three-way
+  comparison recorded by scripts/make_budget_video.py.
 
     python scripts/make_gifs.py
 """
@@ -33,6 +35,9 @@ SRC = OUT / "reflexrl_demo.mp4"
 # these are tuned to keep each file near 4 MB, which a README can autoplay.
 SPLIT_SCREEN = (6.0, 8.0, 640, 12)  # inside the 3.0-19.0 s split screen
 MONTAGE = (31.0, 4.0, 640, 12)  # inside the 30.5-38.5 s full-frame montage
+# the budget comparison is its own recording (scripts/make_budget_video.py); the
+# README shows its first three episodes and links the full 54 s file
+BUDGET = (0.0, 26.0, 560, 9)
 
 BG = "#16161a"
 AMBER = "#ffc850"  # ReflexRL
@@ -41,19 +46,20 @@ DIM = "#8a8a94"
 
 
 def clip_gif(start: float, dur: float, width: int, fps: int, out: Path,
-             colors: int = 128) -> None:
-    """Extract one segment of the demo video as a palette-optimised GIF."""
+             colors: int = 128, src: Path | None = None) -> None:
+    """Extract one segment of a demo video as a palette-optimised GIF."""
+    source = str(src or SRC)
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
         raise SystemExit("ffmpeg not on PATH")
     pal = out.with_suffix(".palette.png")
     scale = f"fps={fps},scale={width}:-1:flags=lanczos"
     subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-ss", str(start), "-t", str(dur),
-                    "-i", str(SRC), "-vf",
+                    "-i", source, "-vf",
                     f"{scale},palettegen=max_colors={colors}:stats_mode=diff", str(pal)],
                    check=True)
     subprocess.run([ffmpeg, "-y", "-loglevel", "error", "-ss", str(start), "-t", str(dur),
-                    "-i", str(SRC), "-i", str(pal), "-lavfi",
+                    "-i", source, "-i", str(pal), "-lavfi",
                     f"{scale}[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=5:"
                     "diff_mode=rectangle", str(out)], check=True)
     pal.unlink(missing_ok=True)
@@ -133,7 +139,7 @@ def learning_race(out: Path, seconds: float = 9.0, fps: int = 14) -> None:
     ax.set_xlim(0, top / 1e6)
     ax.set_ylim(min(0.0, float(min(r_lo.min(), p_lo.min()))) - 0.3,
                 float(max(r_hi.max(), p_hi.max())) * 1.12)
-    ax.set_xlabel("environment steps (millions)  —  the cost of learning", color=DIM, fontsize=11)
+    ax.set_xlabel("environment steps (millions): the cost of learning", color=DIM, fontsize=11)
     ax.set_ylabel("score (no teacher involved)", color=DIM, fontsize=11)
     ax.tick_params(colors=DIM)
     for s in ax.spines.values():
@@ -194,7 +200,8 @@ def learning_race(out: Path, seconds: float = 9.0, fps: int = 14) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--only", choices=["split", "race", "gameplay"], default=None)
+    ap.add_argument("--only", choices=["split", "race", "gameplay", "budget"],
+                    default=None)
     args = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     if args.only in (None, "split"):
@@ -203,6 +210,13 @@ def main() -> None:
         learning_race(OUT / "learning_race.gif")
     if args.only in (None, "gameplay"):
         clip_gif(*MONTAGE, OUT / "gameplay.gif")
+    if args.only in (None, "budget"):
+        budget = OUT / "budget_comparison.mp4"
+        if budget.exists():
+            clip_gif(*BUDGET, OUT / "budget_comparison.gif", src=budget)
+        else:
+            print("no budget_comparison.mp4; run scripts/make_budget_video.py first",
+                  file=sys.stderr)
 
 
 if __name__ == "__main__":

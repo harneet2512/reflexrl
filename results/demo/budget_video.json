@@ -1,0 +1,48 @@
+{
+  "seed_base": 909090,
+  "scenario": "defend_the_center",
+  "episodes_per_arm": 8,
+  "budgets": {
+    "250368": {
+      "PPO FROM SCRATCH": {
+        "per_episode": [
+          3.0,
+          1.0,
+          4.0,
+          2.0,
+          3.0,
+          4.0,
+          4.0,
+          3.0
+        ],
+        "mean": 3.0
+      },
+      "SHUFFLED TEACHER": {
+        "per_episode": [
+          3.0,
+          2.0,
+          1.0,
+          3.0,
+          3.0,
+          1.0,
+          3.0,
+          1.0
+        ],
+        "mean": 2.125
+      },
+      "REFLEXRL": {
+        "per_episode": [
+          5.0,
+          6.0,
+          6.0,
+          8.0,
+          6.0,
+          8.0,
+          4.0,
+          6.0
+        ],
+        "mean": 6.125
+      }
+    }
+  }
+}
