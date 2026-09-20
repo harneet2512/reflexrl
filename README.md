@@ -119,6 +119,37 @@ re-learned.
 | latency (same T4) | 2.85 ms | 468 ms |
 | real-time score (the game does not wait) | **7.25** | **−0.38** (Qwen-8B + Jev, 6.2 s/decision) |
 
+### Where the teacher works, and where it does not
+
+The same perception question, asked of Qwen3-VL-8B in three settings and scored against
+ground truth (ViZDoom's object labels; the Valorant dataset's bounding boxes):
+
+| setting | question | accuracy | guessing the most common answer |
+|---|---|---|---|
+| Doom, `defend_the_center` | which way is the monster | **0.73** | 0.31 |
+| Doom, `health_gathering` | is a medkit visible, and where | 0.74 | 0.64 |
+| **Valorant, real frames** | which way is the nearest player | **0.75** | 0.49 |
+| Valorant, real frames | which of them is an *enemy* | 0.35 | 0.62 |
+
+The model is good at *where*, and bad at *whether* and *which kind*. That is why
+`defend_the_center` works (monsters are nearly always on screen, so only direction
+matters) and `health_gathering` does not (96 of 150 frames contain no visible medkit, and
+the model cannot report absence). On real Valorant frames it localises characters well
+(75% against a 49% baseline, 150 frames), but it cannot tell
+enemies from teammates, which needs team colours nobody told it about.
+
+Two measurement errors were found and fixed while producing this table, both of which had
+made the model look worse than it is: Health-Gathering distance labels were generated from
+a *different* rollout than the frames the model saw, and 90 of the 93 Valorant frames
+labelled "no enemy" actually contained a teammate, so the model was penalised for
+correctly seeing a person. `tests/test_probe_alignment.py` now guards the first.
+
+Contextual calibration — dividing out the answer prior measured on a blank frame, which is
+what rescued the *action* teacher on `defend_the_center` — makes the perception numbers
+**worse** (0.74 to 0.25 on Health Gathering). It removes answer bias, but it also
+erases genuinely skewed class priors, and here the skew is in the world rather than the
+model.
+
 ## What failed, and why that matters
 
 1. **fp16 silently corrupts Qwen3-VL on pre-Ampere GPUs.** For a day the teacher looked
@@ -134,8 +165,11 @@ re-learned.
 3. **Action cloning the teacher fails.** A network imitating the teacher's actions scores
    0.88. Distilling its *perception* and keeping Jev as the decision maker scores 2.53 and
    is what guided RL actually uses.
-4. **Health Gathering and Deadly Corridor were dropped.** The VLM could not see medkits
-   well enough to teach navigation, and a teacher that plays at random level is useless.
+4. **Health Gathering and Deadly Corridor were dropped.** The VLM cannot report *absence*:
+   in 96 of 150 Health-Gathering frames no medkit is visible, and its accuracy (0.74)
+   barely clears the 0.64 you get by always answering "none". A teacher that plays at
+   random level is useless, so those scenarios are reported as negatives rather than
+   carried.
 
 Pre-registrations for every gate and metric are in `experiments/configs/*.json`, written
 before the corresponding runs.
