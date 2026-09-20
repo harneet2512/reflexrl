@@ -1,0 +1,22 @@
+[{"stream_name":"stdout","time":1.156900454,"data":"+ /usr/bin/python3 -m pip install -q vizdoom==1.3.0 gymnasium==1.3.0 opencv-python-headless\n"}
+,{"stream_name":"stdout","time":5.3680114549999995,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 38.9/38.9 MB 37.2 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":5.400062898,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 953.9/953.9 kB 44.6 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":5.513941717,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.1/12.1 MB 105.6 MB/s eta 0:00:00\n"}
+,{"stream_name":"stderr","time":9.837430145999999,"data":"ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n"}
+,{"stream_name":"stderr","time":9.837474351000001,"data":"kaggle-environments 1.29.3 requires gymnasium==1.2.0, but you have gymnasium 1.3.0 which is incompatible.\n"}
+,{"stream_name":"stderr","time":9.837479534,"data":"dopamine-rl 4.1.2 requires gym\u003c=0.25.2, but you have gym 0.26.2 which is incompatible.\n"}
+,{"stream_name":"stdout","time":10.478097949,"data":"teacher files: ['perception_jev.pt', 'perception_teacher.json', 'proxy.pt', 'teacher.json']\n"}
+,{"stream_name":"stdout","time":10.516256894,"data":"+ /usr/bin/python3 -u scripts/run_queue.py experiments/configs/plan_kaggle_lane1.json --n-envs 12\n"}
+,{"stream_name":"stdout","time":10.606903681,"data":"[1/3] start /kaggle/working/repo/runs/train/defend_the_center/bc_ppo_s0\n"}
+,{"stream_name":"stdout","time":1722.362626283,"data":"[1/3] ok /kaggle/working/repo/runs/train/defend_the_center/bc_ppo_s0 in 28.5 min\n"}
+,{"stream_name":"stdout","time":1722.3629007,"data":"[2/3] start /kaggle/working/repo/runs/train/defend_the_center/bc_ppo_s1\n"}
+,{"stream_name":"stdout","time":3424.360126841,"data":"[2/3] ok /kaggle/working/repo/runs/train/defend_the_center/bc_ppo_s1 in 28.4 min\n"}
+,{"stream_name":"stdout","time":3424.360519924,"data":"[3/3] start /kaggle/working/repo/runs/train/defend_the_center/bc_ppo_s2\n"}
+,{"stream_name":"stdout","time":5122.432133082,"data":"[3/3] ok /kaggle/working/repo/runs/train/defend_the_center/bc_ppo_s2 in 28.3 min\n"}
+,{"stream_name":"stderr","time":5124.682089013,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":5124.682115625,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":5124.979846981,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":5124.979876122,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":5125.623931324,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":5126.946368272,"data":"[NbConvertApp] Writing 281888 bytes to __results__.html\n"}
+]

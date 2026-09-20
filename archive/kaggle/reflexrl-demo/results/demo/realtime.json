@@ -1,0 +1,203 @@
+{
+  "meta": {
+    "config": {
+      "runs": "runs/train/defend_the_center",
+      "episodes": 8,
+      "out": "/kaggle/working/results/demo"
+    },
+    "git_commit": "unknown",
+    "host": "556472d63ea2",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "torch": "2.10.0+cu128",
+    "cuda_device": "Tesla T4",
+    "started_unix": 1789874253.3517299
+  },
+  "reflex_run": "runs/train/defend_the_center/ppo_s2",
+  "realtime": {
+    "reflex": {
+      "n": 8,
+      "return_mean": 7.125,
+      "return_se": 0.5489437910335498,
+      "ms_mean": 1.8906337953084194,
+      "ms_p95": 1.588558706247056,
+      "max_actions_per_s": 660.7167046698729,
+      "episodes": [
+        {
+          "return": 7.0,
+          "decisions": 132,
+          "lag_tics": 19,
+          "game_seconds": 15.628571428571428,
+          "ms_mean": 5.500914280303553,
+          "ms_median": 1.2944535000087853,
+          "ms_p95": 1.429021549938625,
+          "max_actions_per_s": 181.78796269932383
+        },
+        {
+          "return": 9.0,
+          "decisions": 143,
+          "lag_tics": 0,
+          "game_seconds": 16.34285714285714,
+          "ms_mean": 1.3255907972045868,
+          "ms_median": 1.3024899999436457,
+          "ms_p95": 1.4164321000748714,
+          "max_actions_per_s": 754.3806143711962
+        },
+        {
+          "return": 9.0,
+          "decisions": 152,
+          "lag_tics": 0,
+          "game_seconds": 17.37142857142857,
+          "ms_mean": 1.5456446447396837,
+          "ms_median": 1.3650534999669617,
+          "ms_p95": 2.4751343499701757,
+          "max_actions_per_s": 646.9792415762029
+        },
+        {
+          "return": 4.0,
+          "decisions": 118,
+          "lag_tics": 0,
+          "game_seconds": 13.485714285714286,
+          "ms_mean": 1.3791956440617839,
+          "ms_median": 1.3523299999746996,
+          "ms_p95": 1.5403498499154002,
+          "max_actions_per_s": 725.0602946040069
+        },
+        {
+          "return": 7.0,
+          "decisions": 136,
+          "lag_tics": 0,
+          "game_seconds": 15.542857142857143,
+          "ms_mean": 1.3380209411730661,
+          "ms_median": 1.3229799999407987,
+          "ms_p95": 1.438965250002866,
+          "max_actions_per_s": 747.3724582541157
+        },
+        {
+          "return": 7.0,
+          "decisions": 145,
+          "lag_tics": 0,
+          "game_seconds": 16.571428571428573,
+          "ms_mean": 1.3523407793141375,
+          "ms_median": 1.3289700000314042,
+          "ms_p95": 1.513171600026908,
+          "max_actions_per_s": 739.4585856585401
+        },
+        {
+          "return": 7.0,
+          "decisions": 143,
+          "lag_tics": 0,
+          "game_seconds": 16.34285714285714,
+          "ms_mean": 1.347484391609831,
+          "ms_median": 1.3244120000308612,
+          "ms_p95": 1.4516316000253937,
+          "max_actions_per_s": 742.123624011189
+        },
+        {
+          "return": 7.0,
+          "decisions": 138,
+          "lag_tics": 0,
+          "game_seconds": 15.771428571428572,
+          "ms_mean": 1.3358788840607132,
+          "ms_median": 1.3199954999549846,
+          "ms_p95": 1.4437633500222091,
+          "max_actions_per_s": 748.5708561844083
+        }
+      ]
+    },
+    "qwen2b_calibrated": {
+      "n": 8,
+      "return_mean": 2.875,
+      "return_se": 0.7425222459389924,
+      "ms_mean": 2247.3054225162177,
+      "ms_p95": 2446.9858333124957,
+      "max_actions_per_s": 0.4462834153833215,
+      "episodes": [
+        {
+          "return": 1.0,
+          "decisions": 5,
+          "lag_tics": 386,
+          "game_seconds": 11.6,
+          "ms_mean": 2402.4782775999934,
+          "ms_median": 1964.105778999965,
+          "ms_p95": 3759.65400360003,
+          "max_actions_per_s": 0.41623685397021415
+        },
+        {
+          "return": 4.0,
+          "decisions": 8,
+          "lag_tics": 562,
+          "game_seconds": 16.97142857142857,
+          "ms_mean": 2037.1430217499835,
+          "ms_median": 2032.9395539999382,
+          "ms_p95": 2079.3172829499895,
+          "max_actions_per_s": 0.4908835507980004
+        },
+        {
+          "return": 5.0,
+          "decisions": 7,
+          "lag_tics": 462,
+          "game_seconds": 14.0,
+          "ms_mean": 2116.4036492856926,
+          "ms_median": 2112.1859150000546,
+          "ms_p95": 2147.346820799953,
+          "max_actions_per_s": 0.47249965777440894
+        },
+        {
+          "return": -1.0,
+          "decisions": 3,
+          "lag_tics": 216,
+          "game_seconds": 6.514285714285714,
+          "ms_mean": 2199.7829099999913,
+          "ms_median": 2200.4805850000366,
+          "ms_p95": 2216.666978799992,
+          "max_actions_per_s": 0.45459031227768015
+        },
+        {
+          "return": 2.0,
+          "decisions": 6,
+          "lag_tics": 438,
+          "game_seconds": 13.2,
+          "ms_mean": 2289.954861666653,
+          "ms_median": 2286.0855999999785,
+          "ms_p95": 2335.7831212499605,
+          "max_actions_per_s": 0.4366898303280046
+        },
+        {
+          "return": 4.0,
+          "decisions": 6,
+          "lag_tics": 442,
+          "game_seconds": 13.314285714285715,
+          "ms_mean": 2391.605094166683,
+          "ms_median": 2398.133112500034,
+          "ms_p95": 2408.946613250066,
+          "max_actions_per_s": 0.4181292314684729
+        },
+        {
+          "return": 5.0,
+          "decisions": 8,
+          "lag_tics": 590,
+          "game_seconds": 17.771428571428572,
+          "ms_mean": 2318.260316375003,
+          "ms_median": 2310.3584720000185,
+          "ms_p95": 2387.9075293499795,
+          "max_actions_per_s": 0.4313579423917635
+        },
+        {
+          "return": 3.0,
+          "decisions": 7,
+          "lag_tics": 470,
+          "game_seconds": 14.228571428571428,
+          "ms_mean": 2222.815249285743,
+          "ms_median": 2221.9344920000594,
+          "ms_p95": 2240.264316499997,
+          "max_actions_per_s": 0.4498799440580273
+        }
+      ]
+    }
+  },
+  "teacher_gate_dtc": {
+    "2B": 1.7333333333333334,
+    "8B": 1.6666666666666667
+  }
+}

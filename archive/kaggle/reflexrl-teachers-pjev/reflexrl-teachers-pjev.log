@@ -1,0 +1,18 @@
+[{"stream_name":"stdout","time":0.741749503,"data":"+ /usr/bin/python3 -m pip install -q vizdoom==1.3.0 gymnasium==1.3.0 opencv-python-headless\n"}
+,{"stream_name":"stdout","time":5.088985109,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 38.9/38.9 MB 38.8 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":5.121073963,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 953.9/953.9 kB 37.6 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":5.261939372,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.1/12.1 MB 83.8 MB/s eta 0:00:00\n"}
+,{"stream_name":"stderr","time":9.610546013,"data":"ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n"}
+,{"stream_name":"stderr","time":9.610598266,"data":"kaggle-environments 1.29.3 requires gymnasium==1.2.0, but you have gymnasium 1.3.0 which is incompatible.\n"}
+,{"stream_name":"stderr","time":9.610602024,"data":"dopamine-rl 4.1.2 requires gym\u003c=0.25.2, but you have gym 0.26.2 which is incompatible.\n"}
+,{"stream_name":"stdout","time":10.309419052,"data":"lane label dirs: ['/kaggle/input/notebooks/harneetb/reflexrl-gate-pjev/runs/phase0/lane0/Qwen3-VL-8B-Instruct_pjev/labels/defend_the_center', '/kaggle/input/notebooks/harneetb/reflexrl-gate-pjev/runs/phase0/lane1/Qwen3-VL-8B-Instruct_pjev/labels/defend_the_center']\n"}
+,{"stream_name":"stdout","time":24.6106679,"data":"label dirs: ['defend_the_center']\n"}
+,{"stream_name":"stdout","time":24.610730347,"data":"+ /usr/bin/python3 -u scripts/build_teacher.py --scenario dtc --labels /kaggle/working/all_labels --out /kaggle/working/runs/teachers\n"}
+,{"stream_name":"stdout","time":48.741213504,"data":"defend_the_center: BC/proxy eval 0.88 +- 0.21; fidelity top1 0.655 KL 0.637\n"}
+,{"stream_name":"stderr","time":53.447813318,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":53.447848914,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":53.707986772,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":53.708051804,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":54.347456443,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":55.630157311,"data":"[NbConvertApp] Writing 282240 bytes to __results__.html\n"}
+]

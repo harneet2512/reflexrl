@@ -1,0 +1,48 @@
+{
+  "ppo": {
+    "scenario": "defend_the_center",
+    "total_steps": 60000,
+    "n_envs": 12,
+    "n_steps": 128,
+    "epochs": 4,
+    "minibatches": 4,
+    "lr": 0.00025,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip": 0.1,
+    "ent_coef": 0.01,
+    "vf_coef": 0.5,
+    "max_grad_norm": 0.5,
+    "seed": 0,
+    "device": "cuda",
+    "eval_every": 50000,
+    "eval_episodes": 16,
+    "ckpt_every": 250000,
+    "intervene": false,
+    "distill": false,
+    "alpha0": 1.0
+  },
+  "meta": {
+    "config": {
+      "method": "ppo",
+      "scenario": "dtc",
+      "steps": 60000,
+      "seed": 0,
+      "n_envs": 12,
+      "teacher_horizon": 0.4,
+      "teachers": "runs/teachers",
+      "out": "/kaggle/working/bench_n12",
+      "device": "cuda",
+      "init_ckpt": null,
+      "tag": null
+    },
+    "git_commit": "unknown",
+    "host": "88005eac215d",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "torch": "2.10.0+cu128",
+    "cuda_device": "Tesla T4",
+    "started_unix": 1789794365.0882926
+  },
+  "schedule": null
+}

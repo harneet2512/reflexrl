@@ -1,0 +1,104 @@
+[{"stream_name":"stdout","time":1.597200544,"data":"+ /usr/bin/python3 -m pip install -q vizdoom==1.3.0 gymnasium==1.3.0 transformers==5.17.0 accelerate bitsandbytes opencv-python-headless matplotlib\n"}
+,{"stream_name":"stdout","time":9.62117721,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 38.9/38.9 MB 43.7 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":9.665188349,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 953.9/953.9 kB 40.7 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":9.808694274,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.3/12.3 MB 88.5 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":10.360924373,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 43.1/43.1 MB 41.4 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":10.548626902,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.1/12.1 MB 65.9 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":10.587831223,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 516.0/516.0 kB 27.5 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":10.645909577,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.4/3.4 MB 83.2 MB/s eta 0:00:00\n"}
+,{"stream_name":"stderr","time":30.850437485,"data":"ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n"}
+,{"stream_name":"stderr","time":30.850480274,"data":"kaggle-environments 1.29.3 requires gymnasium==1.2.0, but you have gymnasium 1.3.0 which is incompatible.\n"}
+,{"stream_name":"stderr","time":30.850485429,"data":"dopamine-rl 4.1.2 requires gym\u003c=0.25.2, but you have gym 0.26.2 which is incompatible.\n"}
+,{"stream_name":"stdout","time":34.42149725,"data":"best run: runs/train/defend_the_center/reflexrl_s0 [(7.34375, 'runs/train/defend_the_center/reflexrl_s0'), (7.03125, 'runs/train/defend_the_center/reflexrl_s1'), (7.3125, 'runs/train/defend_the_center/reflexrl_s2')]\n"}
+,{"stream_name":"stdout","time":34.42153431,"data":"+ /usr/bin/python3 -u scripts/benchmark_deploy.py --scenario dtc --ckpt runs/train/defend_the_center/reflexrl_s0/ckpt_final.pt --out /kaggle/working/results/benchmark\n"}
+,{"stream_name":"stderr","time":88.781938868,"data":"Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n"}
+,{"stream_name":"stderr","time":160.126455875,"data":"\rLoading weights:   0%|          | 0/625 [00:00\u003c?, ?it/s]\rLoading weights:   0%|          | 1/625 [00:01\u003c17:10,  1.65s/it]\rLoading weights:  23%|██▎       | 146/625 [00:01\u003c00:04, 115.87it/s]\rLoading weights:  37%|███▋      | 231/625 [00:02\u003c00:03, 123.94it/s]\rLoading weights:  45%|████▌     | 283/625 [00:02\u003c00:02, 120.85it/s]\rLoading weights:  51%|█████     | 319/625 [00:03\u003c00:02, 129.37it/s]\rLoading weights:  62%|██████▏   | 388/625 [00:03\u003c00:01, 184.11it/s]\rLoading weights:  74%|███████▎  | 460/625 [00:03\u003c00:00, 244.40it/s]\rLoading weights:  85%|████████▌ | 532/625 [00:03\u003c00:00, 305.39it/s]\rLoading weights:  96%|█████████▌| 600/625 [00:03\u003c00:00, 324.86it/s]\rLoading weights: 100%|██████████| 625/625 [00:03\u003c00:00, 169.47it/s]\n"}
+,{"stream_name":"stdout","time":189.582870024,"data":"{\n"}
+,{"stream_name":"stdout","time":189.582912732,"data":"  \"scenario\": \"defend_the_center\",\n"}
+,{"stream_name":"stdout","time":189.582923587,"data":"  \"reflex\": {\n"}
+,{"stream_name":"stdout","time":189.582927288,"data":"    \"params\": 751526,\n"}
+,{"stream_name":"stdout","time":189.582931044,"data":"    \"flops_per_action\": 28888064,\n"}
+,{"stream_name":"stdout","time":189.582934664,"data":"    \"cpu_1core\": {\n"}
+,{"stream_name":"stdout","time":189.582938675,"data":"      \"ms_mean\": 3.3504959400006555,\n"}
+,{"stream_name":"stdout","time":189.582942187,"data":"      \"ms_median\": 3.3139775000279315,\n"}
+,{"stream_name":"stdout","time":189.582945546,"data":"      \"ms_p95\": 3.59343549999096,\n"}
+,{"stream_name":"stdout","time":189.582948936,"data":"      \"actions_per_s\": 298.4632776483246,\n"}
+,{"stream_name":"stdout","time":189.58295289,"data":"      \"n\": 500,\n"}
+,{"stream_name":"stdout","time":189.582957712,"data":"      \"usd_per_10k\": 0.00043742585883341895\n"}
+,{"stream_name":"stdout","time":189.582962448,"data":"    },\n"}
+,{"stream_name":"stdout","time":189.58296588,"data":"    \"gpu\": {\n"}
+,{"stream_name":"stdout","time":189.582969241,"data":"      \"ms_mean\": 2.853610742000569,\n"}
+,{"stream_name":"stdout","time":189.582972536,"data":"      \"ms_median\": 2.8048204999890913,\n"}
+,{"stream_name":"stdout","time":189.582975948,"data":"      \"ms_p95\": 3.181737250022819,\n"}
+,{"stream_name":"stdout","time":189.582979211,"data":"      \"actions_per_s\": 350.4332196685432,\n"}
+,{"stream_name":"stdout","time":189.582982719,"data":"      \"n\": 500,\n"}
+,{"stream_name":"stdout","time":189.582985901,"data":"      \"peak_vram_mb\": 11.82275390625,\n"}
+,{"stream_name":"stdout","time":189.58298918,"data":"      \"usd_per_10k\": 0.004676750938278709\n"}
+,{"stream_name":"stdout","time":189.582992473,"data":"    }\n"}
+,{"stream_name":"stdout","time":189.582995766,"data":"  },\n"}
+,{"stream_name":"stdout","time":189.582998943,"data":"  \"qwen\": {\n"}
+,{"stream_name":"stdout","time":189.58300218,"data":"    \"model\": \"Qwen/Qwen3-VL-2B-Instruct\",\n"}
+,{"stream_name":"stdout","time":189.583005632,"data":"    \"params\": 2127532032,\n"}
+,{"stream_name":"stdout","time":189.583008988,"data":"    \"gpu\": {\n"}
+,{"stream_name":"stdout","time":189.583012318,"data":"      \"ms_mean\": 467.8172282599985,\n"}
+,{"stream_name":"stdout","time":189.583015635,"data":"      \"ms_median\": 467.2768615000109,\n"}
+,{"stream_name":"stdout","time":189.583018877,"data":"      \"ms_p95\": 477.5577728500082,\n"}
+,{"stream_name":"stdout","time":189.583022241,"data":"      \"actions_per_s\": 2.1375869454816883,\n"}
+,{"stream_name":"stdout","time":189.583025531,"data":"      \"n\": 50,\n"}
+,{"stream_name":"stdout","time":189.583028719,"data":"      \"peak_vram_mb\": 8346.39453125,\n"}
+,{"stream_name":"stdout","time":189.58303197,"data":"      \"usd_per_10k\": 0.7667004574261086\n"}
+,{"stream_name":"stdout","time":189.583035238,"data":"    },\n"}
+,{"stream_name":"stdout","time":189.583038383,"data":"    \"flops_per_action\": 1288787266944\n"}
+,{"stream_name":"stdout","time":189.583041755,"data":"  },\n"}
+,{"stream_name":"stdout","time":189.583044914,"data":"  \"ratios_same_gpu\": {\n"}
+,{"stream_name":"stdout","time":189.583048155,"data":"    \"speedup_mean\": 163.93869751556508,\n"}
+,{"stream_name":"stdout","time":189.583051455,"data":"    \"speedup_p95\": 150.0934034847105,\n"}
+,{"stream_name":"stdout","time":189.583054696,"data":"    \"cost_ratio\": 163.9386975155651,\n"}
+,{"stream_name":"stdout","time":189.583067049,"data":"    \"flops_ratio\": 44613.14080943604\n"}
+,{"stream_name":"stdout","time":189.583069855,"data":"  }\n"}
+,{"stream_name":"stdout","time":189.583072282,"data":"}\n"}
+,{"stream_name":"stdout","time":195.226424985,"data":"+ /usr/bin/python3 -u scripts/make_demo.py --runs runs/train/defend_the_center --episodes 8 --out /kaggle/working/results/demo\n"}
+,{"stream_name":"stdout","time":197.946189465,"data":"reflex policy: runs/train/defend_the_center/ppo_s2\n"}
+,{"stream_name":"stdout","time":199.444942533,"data":"  realtime ep 0: return 7.0 ms 5.5\n"}
+,{"stream_name":"stdout","time":200.339404285,"data":"  realtime ep 1: return 9.0 ms 1.3\n"}
+,{"stream_name":"stdout","time":201.38881135,"data":"  realtime ep 2: return 9.0 ms 1.5\n"}
+,{"stream_name":"stdout","time":202.197143901,"data":"  realtime ep 3: return 4.0 ms 1.4\n"}
+,{"stream_name":"stdout","time":203.077552333,"data":"  realtime ep 4: return 7.0 ms 1.3\n"}
+,{"stream_name":"stdout","time":204.025261403,"data":"  realtime ep 5: return 7.0 ms 1.4\n"}
+,{"stream_name":"stdout","time":204.955349258,"data":"  realtime ep 6: return 7.0 ms 1.3\n"}
+,{"stream_name":"stdout","time":205.872416985,"data":"  realtime ep 7: return 7.0 ms 1.3\n"}
+,{"stream_name":"stderr","time":213.050652786,"data":"Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n"}
+,{"stream_name":"stderr","time":219.399304984,"data":"\rLoading weights:   0%|          | 0/625 [00:00\u003c?, ?it/s]\rLoading weights:   0%|          | 1/625 [00:00\u003c10:05,  1.03it/s]\rLoading weights:  12%|█▏        | 78/625 [00:01\u003c00:05, 98.76it/s]\rLoading weights:  19%|█▉        | 121/625 [00:01\u003c00:04, 107.00it/s]\rLoading weights:  24%|██▍       | 150/625 [00:01\u003c00:04, 108.13it/s]\rLoading weights:  28%|██▊       | 172/625 [00:01\u003c00:04, 112.12it/s]\rLoading weights:  31%|███       | 191/625 [00:02\u003c00:03, 109.67it/s]\rLoading weights:  34%|███▍      | 212/625 [00:02\u003c00:03, 122.63it/s]\rLoading weights:  37%|███▋      | 229/625 [00:02\u003c00:03, 122.31it/s]\rLoading weights:  39%|███▉      | 245/625 [00:02\u003c00:03, 123.23it/s]\rLoading weights:  42%|████▏     | 260/625 [00:02\u003c00:02, 127.60it/s]\rLoading weights:  44%|████▍     | 278/625 [00:02\u003c00:02, 131.05it/s]\rLoading weights:  47%|████▋     | 293/625 [00:02\u003c00:02, 127.14it/s]\rLoading weights:  51%|█████     | 318/625 [00:02\u003c00:01, 155.45it/s]\rLoading weights:  62%|██████▏   | 388/625 [00:03\u003c00:00, 293.25it/s]\rLoading weights:  72%|███████▏  | 447/625 [00:03\u003c00:00, 371.44it/s]\rLoading weights:  82%|████████▏ | 510/625 [00:03\u003c00:00, 430.76it/s]\rLoading weights:  91%|█████████ | 570/625 [00:03\u003c00:00, 475.30it/s]\rLoading weights:  99%|█████████▉| 620/625 [00:03\u003c00:00, 359.22it/s]\rLoading weights: 100%|██████████| 625/625 [00:03\u003c00:00, 176.54it/s]\n"}
+,{"stream_name":"stdout","time":232.472601294,"data":"  realtime ep 0: return 1.0 ms 2402.5\n"}
+,{"stream_name":"stdout","time":249.463350336,"data":"  realtime ep 1: return 4.0 ms 2037.1\n"}
+,{"stream_name":"stdout","time":264.919767423,"data":"  realtime ep 2: return 5.0 ms 2116.4\n"}
+,{"stream_name":"stdout","time":272.009757716,"data":"  realtime ep 3: return -1.0 ms 2199.8\n"}
+,{"stream_name":"stdout","time":286.404994256,"data":"  realtime ep 4: return 2.0 ms 2290.0\n"}
+,{"stream_name":"stdout","time":301.358336438,"data":"  realtime ep 5: return 4.0 ms 2391.6\n"}
+,{"stream_name":"stdout","time":320.635301997,"data":"  realtime ep 6: return 5.0 ms 2318.3\n"}
+,{"stream_name":"stdout","time":336.824966632,"data":"  realtime ep 7: return 3.0 ms 2222.8\n"}
+,{"stream_name":"stdout","time":428.473521279,"data":"{\n"}
+,{"stream_name":"stdout","time":428.473607769,"data":" \"reflex\": {\n"}
+,{"stream_name":"stdout","time":428.473615831,"data":"  \"n\": 8,\n"}
+,{"stream_name":"stdout","time":428.473622998,"data":"  \"return_mean\": 7.125,\n"}
+,{"stream_name":"stdout","time":428.473628829,"data":"  \"return_se\": 0.5489437910335498,\n"}
+,{"stream_name":"stdout","time":428.473634659,"data":"  \"ms_mean\": 1.8906337953084194,\n"}
+,{"stream_name":"stdout","time":428.473640663,"data":"  \"ms_p95\": 1.588558706247056,\n"}
+,{"stream_name":"stdout","time":428.473646244,"data":"  \"max_actions_per_s\": 660.7167046698729\n"}
+,{"stream_name":"stdout","time":428.473652122,"data":" },\n"}
+,{"stream_name":"stdout","time":428.473657562,"data":" \"qwen2b_calibrated\": {\n"}
+,{"stream_name":"stdout","time":428.473663032,"data":"  \"n\": 8,\n"}
+,{"stream_name":"stdout","time":428.473668687,"data":"  \"return_mean\": 2.875,\n"}
+,{"stream_name":"stdout","time":428.473690953,"data":"  \"return_se\": 0.7425222459389924,\n"}
+,{"stream_name":"stdout","time":428.473697715,"data":"  \"ms_mean\": 2247.3054225162177,\n"}
+,{"stream_name":"stdout","time":428.473703366,"data":"  \"ms_p95\": 2446.9858333124957,\n"}
+,{"stream_name":"stdout","time":428.473710039,"data":"  \"max_actions_per_s\": 0.4462834153833215\n"}
+,{"stream_name":"stdout","time":428.473716522,"data":" }\n"}
+,{"stream_name":"stdout","time":428.473722898,"data":"}\n"}
+,{"stream_name":"stderr","time":433.067590553,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":433.067629438,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":433.447381611,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":433.447432549,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":434.168654879,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":435.807320475,"data":"[NbConvertApp] Writing 280554 bytes to __results__.html\n"}
+]

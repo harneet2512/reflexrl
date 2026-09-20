@@ -1,0 +1,82 @@
+{
+  "reflexrl-qwen-gate": {
+    "small": 5,
+    "big": 25,
+    "bytes_big": 461743344
+  },
+  "reflexrl-gate-8b": {
+    "small": 5,
+    "big": 8,
+    "bytes_big": 114562932
+  },
+  "reflexrl-gate-pjev": {
+    "small": 5,
+    "big": 8,
+    "bytes_big": 120095924
+  },
+  "reflexrl-debias-probe": {
+    "small": 2,
+    "big": 0,
+    "bytes_big": 0
+  },
+  "reflexrl-size-check": {
+    "small": 2,
+    "big": 0,
+    "bytes_big": 0
+  },
+  "reflexrl-diagnose": {
+    "small": 2,
+    "big": 0,
+    "bytes_big": 0
+  },
+  "reflexrl-teachers-pjev": {
+    "small": 2,
+    "big": 1,
+    "bytes_big": 3010459
+  },
+  "reflexrl-perception-teacher": {
+    "small": 2,
+    "big": 1,
+    "bytes_big": 3009141
+  },
+  "reflexrl-train-ppo": {
+    "small": 13,
+    "big": 21,
+    "bytes_big": 63236031
+  },
+  "reflexrl-train-lane0": {
+    "small": 17,
+    "big": 22,
+    "bytes_big": 66245172
+  },
+  "reflexrl-train-lane1": {
+    "small": 15,
+    "big": 23,
+    "bytes_big": 69255631
+  },
+  "reflexrl-pilot-pjev": {
+    "small": 7,
+    "big": 4,
+    "bytes_big": 12042744
+  },
+  "reflexrl-heldout-a": {
+    "small": 49,
+    "big": 62,
+    "bytes_big": 186696112
+  },
+  "reflexrl-demo": {
+    "small": 3,
+    "big": 2,
+    "bytes_big": 59602773
+  },
+  "reflexrl-bench-cpu": {
+    "small": 7,
+    "big": 2,
+    "bytes_big": 6022250
+  },
+  "reflexrl-bench-gpu": {
+    "small": 7,
+    "big": 2,
+    "bytes_big": 6022378
+  }
+}
