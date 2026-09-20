@@ -1,22 +1,12 @@
 {
+  "reflexrl-demo": {
+    "small": 3,
+    "big": 2,
+    "bytes_big": 48171878
+  },
   "reflexrl-live-teacher": {
     "small": 10,
     "big": 15,
     "bytes_big": 45166495
-  },
-  "reflexrl-heldout-b": {
-    "small": 44,
-    "big": 58,
-    "bytes_big": 174651302
-  },
-  "reflexrl-train-lane0": {
-    "small": 17,
-    "big": 22,
-    "bytes_big": 66245172
-  },
-  "reflexrl-train-lane1": {
-    "small": 15,
-    "big": 23,
-    "bytes_big": 69255631
   }
 }

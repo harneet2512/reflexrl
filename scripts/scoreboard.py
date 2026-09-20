@@ -29,7 +29,7 @@ def gate(pattern: str, scenario: str = DTC) -> tuple[float, int] | None:
 
 def runs(pattern: str) -> list[tuple[str, np.ndarray, float]]:
     out = []
-    for m in sorted(glob.glob(str(REPO / pattern))):
+    for m in sorted(glob.glob(str(REPO / pattern), recursive=True)):
         p = Path(m)
         done = p.parent / "done.json"
         if not done.exists():
@@ -66,13 +66,14 @@ def main() -> None:
         if g:
             lines.append(f"| {label} | {g[0]:.2f} | {g[1]} |")
 
+    A = "archive/kaggle"
     collected = {
-        "PPO from scratch": "runs/kaggle_ppo/runs/train/defend_the_center/ppo_s*/metrics.jsonl",
-        "BC -> PPO": "kaggle/train_lane1/output3/runs/train/defend_the_center/bc_ppo_s*/metrics.jsonl",
-        "ReflexRL (offline teacher)": "kaggle/train_lane0/output/runs/train/defend_the_center/reflexrl_s*/metrics.jsonl",
-        "ReflexRL (fixed schedule)": "kaggle/train_lane1/output/runs/train/defend_the_center/fixed_s*/metrics.jsonl",
-        "ReflexRL (live Qwen+Jev teacher)": "archive/kaggle/reflexrl-live-teacher/**/reflexrl_live_s*/metrics.jsonl",
-        "ReflexRL (action-cloned teacher)": "archive/kaggle/reflexrl-ablation/**/reflexrl_actionclone_s*/metrics.jsonl",
+        "PPO from scratch": f"{A}/reflexrl-train-ppo/**/ppo_s*/metrics.jsonl",
+        "BC -> PPO": f"{A}/reflexrl-train-lane1/**/bc_ppo_s*/metrics.jsonl",
+        "ReflexRL (offline teacher)": f"{A}/reflexrl-train-lane0/**/reflexrl_s*/metrics.jsonl",
+        "ReflexRL (fixed schedule)": f"{A}/reflexrl-train-lane1*/**/fixed_s*/metrics.jsonl",
+        "ReflexRL (live Qwen+Jev rounds)": f"{A}/reflexrl-live-teacher/**/reflexrl_live_s*/metrics.jsonl",
+        "ReflexRL (action-cloned teacher)": f"{A}/reflexrl-ablation/**/reflexrl_actionclone_s*/metrics.jsonl",
     }
     ppo = runs(collected["PPO from scratch"])
     if ppo and rand:
@@ -95,6 +96,24 @@ def main() -> None:
             hs = ", ".join(f"{int(h / 1000)}K" if h else "never" for h in hits)
             lines.append(f"| {label} | {np.mean(fins):.2f} ({', '.join(f'{f:.1f}' for f in fins)}) "
                          f"| {hs} | {x} |")
+
+    held = {"PPO from scratch": f"{A}/reflexrl-heldout*/**/defend_the_line/ppo_s*/metrics.jsonl",
+            "PPO policy fine-tuned": f"{A}/reflexrl-heldout*/**/defend_the_line/ppo_ft_s*/metrics.jsonl",
+            "ReflexRL policy fine-tuned": f"{A}/reflexrl-heldout*/**/defend_the_line/reflexrl_ft_s*/metrics.jsonl",
+            "ReflexRL fine-tuned WITH the teacher": f"{A}/reflexrl-heldout*/**/defend_the_line/reflexrl_guided_ft_s*/metrics.jsonl"}
+    if any(runs(p_) for p_ in held.values()):
+        lines += ["", "## Held-out map (`defend_the_line`, 750K steps)", "",
+                  "| condition | steps to 19.9 kills | reaches 21.5 | final |", "|---|---|---|---|"]
+        for label, pat in held.items():
+            rs = runs(pat)
+            if not rs:
+                continue
+            h80 = [steps_to(c, 19.9) for _, c, _ in rs]
+            h90 = [steps_to(c, 21.5) for _, c, _ in rs]
+            med = np.median([h for h in h80 if h]) if all(h80) else None
+            lines.append(f"| {label} | {f'{int(med/1000)}K' if med else 'not all seeds'} | "
+                         f"{sum(h is not None for h in h90)}/{len(h90)} seeds | "
+                         f"{np.mean([f for _, _, f in rs]):.2f} |")
 
     fe = REPO / "results" / "final_eval.json"
     if fe.exists():
