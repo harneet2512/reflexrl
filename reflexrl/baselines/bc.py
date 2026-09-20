@@ -74,5 +74,7 @@ class ProxyTeacher:
     @torch.no_grad()
     def probs(self, obs_u8: np.ndarray) -> np.ndarray:
         self.calls += len(obs_u8)
-        logits = self.policy(torch.as_tensor(obs_u8, device=self.device))[0]
-        return torch.softmax(logits, -1).cpu().numpy()
+        obs = torch.as_tensor(obs_u8, device=self.device)
+        if hasattr(self.policy, "action_probs"):  # perception student + Jev table
+            return self.policy.action_probs(obs).cpu().numpy()
+        return torch.softmax(self.policy(obs)[0], -1).cpu().numpy()

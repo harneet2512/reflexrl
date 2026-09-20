@@ -31,7 +31,17 @@ from reflexrl.runinfo import run_metadata  # noqa: E402
 METHODS = ("ppo", "bc_ppo", "fixed", "reflexrl")
 
 
-def load_proxy(teacher_dir: Path, n_actions: int, device: str) -> tuple[ActorCritic, dict]:
+def load_proxy(teacher_dir: Path, n_actions: int, device: str):
+    """Perception student + Jev table when present (the Qwen-sees/Jev-decides teacher),
+    else the action-cloned network."""
+    pj = teacher_dir / "perception_jev.pt"
+    if pj.exists():
+        from reflexrl.baselines.perception_bc import PerceptionJevPolicy, PerceptionNet
+        blob = torch.load(pj, map_location="cpu", weights_only=False)
+        net = PerceptionNet()
+        net.load_state_dict(blob["perception"])
+        info = json.loads((teacher_dir / "perception_teacher.json").read_text())
+        return PerceptionJevPolicy(net, blob["J"]), {"bc_eval": info["eval"], "kind": "perception_jev"}
     net = ActorCritic(n_actions)
     net.load_state_dict(torch.load(teacher_dir / "proxy.pt", map_location="cpu"))
     return net, json.loads((teacher_dir / "teacher.json").read_text())
@@ -63,6 +73,8 @@ def main() -> None:
     if args.method != "ppo":
         proxy, tinfo = load_proxy(Path(args.teachers) / spec.name, n_act, args.device)
         if args.method == "bc_ppo":
+            if not isinstance(proxy, ActorCritic):
+                raise SystemExit("bc_ppo needs an action-cloned proxy (proxy.pt)")
             policy = proxy  # fine-tune the imitation network with plain PPO
         else:
             teacher = ProxyTeacher(proxy, args.device)
