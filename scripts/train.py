@@ -62,6 +62,8 @@ def main() -> None:
     p.add_argument("--init-ckpt", default=None,
                    help="start the student from this checkpoint (held-out adaptation)")
     p.add_argument("--tag", default=None, help="run-name override, e.g. ppo_ft")
+    p.add_argument("--teacher-kind", choices=["auto", "perception_jev", "action_clone"],
+                   default="auto", help="which distillation of the teacher guides RL")
     args = p.parse_args()
 
     spec = get_scenario(args.scenario)
@@ -72,7 +74,8 @@ def main() -> None:
     horizon = int(args.steps * args.teacher_horizon)
     if args.method != "ppo":
         proxy, tinfo = load_proxy(Path(args.teachers) / spec.name, n_act, args.device,
-                                  want_actor_critic=args.method == "bc_ppo")
+                                  want_actor_critic=(args.method == "bc_ppo"
+                                                     or args.teacher_kind == "action_clone"))
         if args.method == "bc_ppo":
             if not isinstance(proxy, ActorCritic):
                 raise SystemExit("bc_ppo needs an action-cloned proxy (proxy.pt)")

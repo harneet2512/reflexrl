@@ -34,7 +34,7 @@ def main() -> None:
         cmd = [sys.executable, "-u", str(REPO / "scripts" / "train.py"),
                "--method", r["method"], "--scenario", r["scenario"],
                "--steps", str(r["steps"]), "--seed", str(r["seed"]), *extra]
-        for key in ("init_ckpt", "tag"):
+        for key in ("init_ckpt", "tag", "teacher_kind"):
             if r.get(key):
                 cmd += [f"--{key.replace('_', '-')}", str(r[key])]
         if (wd / "metrics.jsonl").exists() and not (wd / "resume.pt").exists():

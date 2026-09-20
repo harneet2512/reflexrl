@@ -1,0 +1,18 @@
+[
+ {
+  "method": "reflexrl",
+  "scenario": "dtc",
+  "steps": 1500000,
+  "seed": 0,
+  "tag": "reflexrl_actionclone",
+  "teacher_kind": "action_clone"
+ },
+ {
+  "method": "reflexrl",
+  "scenario": "dtc",
+  "steps": 1500000,
+  "seed": 1,
+  "tag": "reflexrl_actionclone",
+  "teacher_kind": "action_clone"
+ }
+]

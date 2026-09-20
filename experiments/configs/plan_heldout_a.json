@@ -1,0 +1,38 @@
+[
+ {
+  "method": "ppo",
+  "scenario": "dtl",
+  "steps": 750000,
+  "seed": 0
+ },
+ {
+  "method": "ppo",
+  "scenario": "dtl",
+  "steps": 750000,
+  "seed": 0,
+  "tag": "ppo_ft",
+  "init_ckpt": "runs/train/defend_the_center/ppo_s0/ckpt_final.pt"
+ },
+ {
+  "method": "ppo",
+  "scenario": "dtl",
+  "steps": 750000,
+  "seed": 0,
+  "tag": "reflexrl_ft",
+  "init_ckpt": "runs/train/defend_the_center/reflexrl_s0/ckpt_final.pt"
+ },
+ {
+  "method": "ppo",
+  "scenario": "dtl",
+  "steps": 750000,
+  "seed": 1
+ },
+ {
+  "method": "ppo",
+  "scenario": "dtl",
+  "steps": 750000,
+  "seed": 1,
+  "tag": "ppo_ft",
+  "init_ckpt": "runs/train/defend_the_center/ppo_s1/ckpt_final.pt"
+ }
+]

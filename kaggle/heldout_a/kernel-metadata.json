@@ -1,0 +1,14 @@
+{
+  "id": "harneetb/reflexrl-heldout-a",
+  "title": "reflexrl-heldout-a",
+  "code_file": "run_train.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": ["harneetb/reflexrl-code"],
+  "competition_sources": [],
+  "kernel_sources": ["harneetb/reflexrl-train-ppo", "harneetb/reflexrl-train-lane0"]
+}
