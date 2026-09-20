@@ -51,6 +51,8 @@ LEFT_ACTIONS, RIGHT_ACTIONS = {0, 3}, {1, 4}
 ARMS = {
     "ReflexRL": "reflexrl-train-lane0/runs/train/defend_the_center/reflexrl_s0",
     "PPO from scratch": "reflexrl-train-ppo/runs/train/defend_the_center/ppo_s0",
+    "Shuffled-teacher control":
+        "reflexrl-ablation/runs/train/defend_the_center/reflexrl_shuffled_s0",
 }
 
 
@@ -152,7 +154,7 @@ def alignment(policy: ActorCritic, scenario: str, episodes: int) -> dict:
         finally:
             env.close()
 
-    out = {}
+    out: dict = {}
     for cls in ("left", "center", "right", "none"):
         n = sum(v for (c, _), v in table.items() if c == cls)
         if not n:
@@ -164,7 +166,81 @@ def alignment(policy: ActorCritic, scenario: str, episodes: int) -> dict:
                     "p_turn_left": left / n, "p_turn_right": right / n}
         print(f"    truth={cls:<7} n={n:<6} fire {fire / n:.2f}  "
               f"left {left / n:.2f}  right {right / n:.2f}", flush=True)
+
+    # Does the turn decision depend on which side the monster is on at all?
+    # P(turn left | monster left) - P(turn left | monster right). Zero means the
+    # policy turns the same way whatever it is looking at; higher means its
+    # steering tracks the thing it is supposed to be steering toward.
+    if "left" in out and "right" in out:
+        out["direction_sensitivity"] = (out["left"]["p_turn_left"]
+                                        - out["right"]["p_turn_left"])
+        if "center" in out and "none" in out:
+            # the same question for shooting: does firing depend on anything
+            # being there? near zero means it just holds the trigger down
+            out["fire_sensitivity"] = out["center"]["p_fire"] - out["none"]["p_fire"]
+        print(f"    direction sensitivity {out['direction_sensitivity']:+.2f}", flush=True)
     return out
+
+
+def chart(summary: dict, out: Path) -> None:
+    """Two panels: how much each policy needs to see, and how well it steers."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    BG, DIM = "#16161a", "#8a8a94"
+    colour = {"ReflexRL": "#ffc850", "PPO from scratch": "#ff78b4",
+              "Shuffled-teacher control": "#7f8fa6"}
+    arms = [a for a in colour if a in summary["arms"]]
+    if not arms:
+        return
+    fig = plt.figure(figsize=(11.2, 4.6), dpi=110, facecolor=BG)
+
+    ax = fig.add_axes((0.065, 0.20, 0.52, 0.60), facecolor=BG)
+    modes = ["real", "blank", "frozen", "mismatched"]
+    labels = ["real\nframes", "blind\n(zeros)", "frozen\nframe", "wrong\nepisode"]
+    w = 0.26
+    for j, arm in enumerate(arms):
+        vals = [summary["arms"][arm]["blindfold"][m]["mean"] for m in modes]
+        errs = [summary["arms"][arm]["blindfold"][m]["se"] for m in modes]
+        ax.bar([i + (j - 1) * w for i in range(len(modes))], vals, w, yerr=errs,
+               color=colour[arm], label=arm, ecolor="#55555f", capsize=2)
+    floor = summary.get("random_floor")
+    if floor is not None:
+        ax.axhline(floor, color=DIM, ls="--", lw=1.2)
+        ax.text(-0.42, floor + 0.22, f"random actions ({floor:.2f})",
+                color=DIM, fontsize=8.5, ha="left")
+    ax.set_xticks(range(len(modes)))
+    ax.set_xticklabels(labels, color=DIM, fontsize=9)
+    ax.set_ylabel("kills", color=DIM, fontsize=10)
+    ax.tick_params(colors=DIM)
+    for sp in ax.spines.values():
+        sp.set_color("#33333c")
+    ax.set_title("Break the view, and the policy stops working",
+                 color="#ededed", fontsize=12, loc="left", pad=10)
+    leg = ax.legend(facecolor="#1e1e24", edgecolor="#33333c", fontsize=8.5)
+    for t in leg.get_texts():
+        t.set_color("#dddddd")
+
+    ax2 = fig.add_axes((0.68, 0.20, 0.29, 0.60), facecolor=BG)
+    vals = [summary["arms"][a]["alignment"].get("direction_sensitivity", 0.0) for a in arms]
+    ax2.barh(range(len(arms)), vals, 0.55, color=[colour[a] for a in arms])
+    for i, v in enumerate(vals):
+        ax2.text(v + 0.008, i, f"{v:+.2f}", color="#ededed", fontsize=10, va="center")
+    ax2.set_yticks(range(len(arms)))
+    ax2.set_yticklabels([a.replace(" from scratch", "").replace("-teacher control", " ctrl")
+                         for a in arms], color=DIM, fontsize=9)
+    ax2.set_xlim(0, max(vals) * 1.35)
+    ax2.set_xlabel("P(turn left | monster left)\n minus P(turn left | monster right)",
+                   color=DIM, fontsize=9)
+    ax2.tick_params(colors=DIM)
+    for sp in ax2.spines.values():
+        sp.set_color("#33333c")
+    ax2.set_title("Does steering track the monster?", color="#ededed", fontsize=12,
+                  loc="left", pad=10)
+    fig.savefig(out, facecolor=BG)
+    plt.close(fig)
+    print(f"wrote {out}", flush=True)
 
 
 def main() -> None:
@@ -210,7 +286,8 @@ def main() -> None:
 
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(summary, indent=2))
-    print(f"\nwrote {args.out}", flush=True)
+    print(f"wrote {args.out}", flush=True)
+    chart(summary, Path("results/demo/perception_check.png"))
 
 
 if __name__ == "__main__":

@@ -50,7 +50,9 @@
           "p_fire": 0.8957345971563981,
           "p_turn_left": 0.7796208530805687,
           "p_turn_right": 0.13507109004739337
-        }
+        },
+        "direction_sensitivity": 0.3230112238966149,
+        "fire_sensitivity": -0.050586627438572895
       }
     },
     "PPO from scratch": {
@@ -100,7 +102,61 @@
           "p_fire": 0.4338709677419355,
           "p_turn_left": 0.7032258064516129,
           "p_turn_right": 0.2887096774193548
+        },
+        "direction_sensitivity": 0.20559594477422805,
+        "fire_sensitivity": 0.31777017011364433
+      }
+    },
+    "Shuffled-teacher control": {
+      "blindfold": {
+        "real": {
+          "mean": 5.8,
+          "se": 0.26754242162397546,
+          "episodes": 20
+        },
+        "blank": {
+          "mean": 0.5,
+          "se": 0.30348848933344197,
+          "episodes": 20
+        },
+        "frozen": {
+          "mean": 3.3,
+          "se": 0.2523573072576179,
+          "episodes": 20
+        },
+        "mismatched": {
+          "mean": 2.7,
+          "se": 0.19330913339165218,
+          "episodes": 20
         }
+      },
+      "alignment": {
+        "left": {
+          "decisions": 928,
+          "p_fire": 0.8060344827586207,
+          "p_turn_left": 0.6314655172413793,
+          "p_turn_right": 0.28448275862068967
+        },
+        "center": {
+          "decisions": 1205,
+          "p_fire": 0.8896265560165975,
+          "p_turn_left": 0.4979253112033195,
+          "p_turn_right": 0.45394190871369294
+        },
+        "right": {
+          "decisions": 324,
+          "p_fire": 0.7839506172839507,
+          "p_turn_left": 0.36728395061728397,
+          "p_turn_right": 0.5432098765432098
+        },
+        "none": {
+          "decisions": 454,
+          "p_fire": 0.8766519823788547,
+          "p_turn_left": 0.6762114537444934,
+          "p_turn_right": 0.2753303964757709
+        },
+        "direction_sensitivity": 0.26418156662409537,
+        "fire_sensitivity": 0.012974573637742792
       }
     }
   },

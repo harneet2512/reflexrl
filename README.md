@@ -87,48 +87,66 @@ just spins at a steady rate and fires on a beat would collect kills without seei
 anything, because monsters walk into its line of fire on their own. That would make the
 whole result a timing trick.
 
-It is testable. Replay the same episodes with the observation degraded, changing nothing
-else (`python scripts/perception_check.py`):
+It is testable, and the test runs all three arms of the experiment at once
+(`python scripts/perception_check.py`):
 
-| what the policy is shown | kills |
-|---|---|
-| the real frames | **7.35** |
-| all zeros, so it is blind | **0.50** |
-| the first frame, frozen forever | **0.35** |
-| real Doom frames from a *different* episode | **2.35** |
-| *random actions, for reference* | *0.85* |
+![Left: kills for each policy when the observation is real, blank, frozen, or taken from a different episode. All three collapse toward or below the random floor when the view stops matching the world. Right: how strongly each policy's turn direction depends on which side the monster is really on, ReflexRL +0.32, shuffled control +0.26, PPO +0.21.](results/demo/perception_check.png)
 
-**Cut the link between frame and world and the policy falls below random.** An open-loop
-routine would be unaffected, since the monsters still arrive on schedule. This one is not:
-it is closed-loop on what it sees.
+**Test 1, blindfold.** Replay the same episodes with the observation degraded and change
+nothing else. 20 episodes per cell, seeds 606,060+.
 
-Where that seeing shows up is worth being exact about, because it is not where the
-teacher's table would suggest. Measured against ViZDoom's ground-truth object labels,
-which the policy never receives:
-
-| what was really on screen | fires | turns left | turns right |
+| what the policy is shown | **ReflexRL** | PPO from scratch | shuffled-teacher control |
 |---|---|---|---|
-| monster left | 0.88 | **0.72** | 0.16 |
-| monster centre | 0.85 | 0.36 | 0.26 |
-| monster right | 0.68 | 0.40 | **0.51** |
-| nothing visible | 0.90 | **0.78** | 0.14 |
+| the real frames | **7.35** | 7.45 | 5.80 |
+| all zeros, so it is blind | **0.50** | 0.65 | 0.50 |
+| the first frame, frozen forever | **0.35** | 3.30 | 3.30 |
+| real frames from a *different* episode | **2.35** | 2.30 | 2.70 |
 
-The student did **not** inherit the teacher's fire discipline. It fires about 90% of the
-time whatever is on screen, because it prefers the combined `TURN_LEFT_FIRE` and
-`TURN_RIGHT_FIRE` actions, so firing carries almost no information. **The discrimination
-is entirely in the turn direction**: monster on the left, turn left 4.5 to 1; empty view,
-sweep left 5.6 to 1; monster on the right, and it reverses.
+*(random actions score 0.85 on the same episodes)*
 
-That reversal is what the baseline never learns. Turn-left rate minus turn-right rate, by
-what was actually on screen:
+**Cut the link between frame and world and every policy falls to the random floor or
+below.** An open-loop routine would be unaffected, since the monsters still arrive on
+schedule. None of these is open-loop: they are all genuinely reacting to what they see.
+So the result is not a timing trick, and that is true of the baseline too.
 
-| truth | ReflexRL | PPO from scratch |
+The interesting difference is the **frozen frame** row. Given one static image forever,
+PPO and the control still manage 3.30, meaning each has a partly open-loop fallback that
+keeps scoring without new information. ReflexRL drops to **0.35**. It has no such
+fallback: it is the policy that depends on live vision the most.
+
+**Test 2, alignment.** Play normally and, at every decision, compare the action against
+what was *really* on screen (ViZDoom's object labels, which the policy never receives).
+
+| what was really on screen | **ReflexRL** turns left / right | PPO turns left / right |
 |---|---|---|
-| monster left | +0.56 | +0.49 |
-| **monster right** | **-0.11** (reverses correctly) | **+0.10** (still turns left) |
+| monster left | **0.72** / 0.16 | 0.74 / 0.25 |
+| monster centre | 0.36 / 0.26 | 0.56 / 0.43 |
+| monster right | 0.40 / **0.51** | 0.54 / 0.44 |
+| nothing visible | **0.78** / 0.14 | 0.70 / 0.29 |
 
-Both policies see. Only the guided one learned that a monster on the right calls for the
-opposite turn, which is exactly the distinction its teacher was built to supply.
+Read the `monster right` row. ReflexRL **reverses**, turning right more than left.
+PPO does not: it still turns left more often than right when the monster is on its right.
+Collapsing that into one number, P(turn left | monster left) minus
+P(turn left | monster right), which is zero for a policy whose steering ignores the
+monster entirely:
+
+| | direction sensitivity |
+|---|---|
+| **ReflexRL** | **+0.32** |
+| shuffled-teacher control | +0.26 |
+| PPO from scratch | +0.21 |
+
+**One honest correction.** An earlier version of this section claimed the policy holds
+fire on an empty view. That is the *teacher's* rule, and the student ignores it: it fires
+around 85 to 90% of the time whatever is on screen, because it prefers the combined
+`TURN_LEFT_FIRE` and `TURN_RIGHT_FIRE` actions. Firing therefore carries almost no
+information, and all of the discrimination lives in the turn direction.
+
+**And one more.** At 1.5M steps PPO reaches the same score as ReflexRL (7.45 against
+7.35) with measurably worse direction sensitivity, so it is getting there by a partly
+different, more open-loop strategy. That is consistent with the rest of this README
+rather than at odds with it: the claim is 2.95x fewer steps and a tighter seed spread,
+not a higher endpoint.
 
 ---
 
