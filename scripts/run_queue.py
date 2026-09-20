@@ -37,6 +37,8 @@ def main() -> None:
         for key in ("init_ckpt", "tag", "teacher_kind"):
             if r.get(key):
                 cmd += [f"--{key.replace('_', '-')}", str(r[key])]
+        if r.get("shuffled_teacher"):
+            cmd += ["--shuffled-teacher"]
         if (wd / "metrics.jsonl").exists() and not (wd / "resume.pt").exists():
             (wd / "metrics.jsonl").unlink()  # no saved state: restart cleanly
         print(f"[{i + 1}/{len(plan)}] start {wd}", flush=True)

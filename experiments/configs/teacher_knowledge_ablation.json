@@ -1,0 +1,11 @@
+{
+  "written": "2026-09-20, before running; the question a sceptic will ask",
+  "question": "Does the 2.95x speedup come from the VLM's knowledge, or would any teacher-shaped guidance do?",
+  "control": "identical ReflexRL run, but the teacher's perception is replaced by the SAME marginal distribution drawn independently of the frame (shuffled labels): same action vocabulary, same Jev decision table, same adaptive handover, same intervention correction",
+  "prediction": "if the VLM's knowledge is doing the work, X collapses towards 1.0",
+  "seeds": [
+    0,
+    1
+  ],
+  "steps": 1500000
+}

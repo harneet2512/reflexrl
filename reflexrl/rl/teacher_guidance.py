@@ -85,3 +85,26 @@ class NoTeacher:
 
     def on_eval(self, step: int, student_return: float) -> None:
         pass
+
+
+class ShuffledTeacher:
+    """Control teacher: the right *kind* of advice, about the wrong frame.
+
+    Keeps the real teacher's marginal action distribution but breaks the link
+    between advice and observation, by shuffling the batch before asking it.
+    Anything the guided run gains over this is attributable to what the
+    vision model actually saw, not to the shape of the guidance.
+    """
+
+    def __init__(self, policy, device: str = "cuda", seed: int = 0):
+        self.policy = policy
+        self.device = device
+        self.rng = np.random.default_rng(10_000 + seed)
+        self.calls = 0
+
+    def probs(self, obs_u8: np.ndarray) -> np.ndarray:
+        import torch
+        self.calls += len(obs_u8)
+        with torch.no_grad():
+            p = self.policy.action_probs(torch.as_tensor(obs_u8, device=self.device)).cpu().numpy()
+        return p[self.rng.permutation(len(p))]

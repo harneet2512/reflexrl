@@ -64,6 +64,8 @@ def main() -> None:
     p.add_argument("--tag", default=None, help="run-name override, e.g. ppo_ft")
     p.add_argument("--teacher-kind", choices=["auto", "perception_jev", "action_clone"],
                    default="auto", help="which distillation of the teacher guides RL")
+    p.add_argument("--shuffled-teacher", action="store_true",
+                   help="control: teacher perception independent of the frame (same marginals)")
     p.add_argument("--dagger", action="store_true",
                    help="query Qwen+Jev live during training on the student's own states")
     p.add_argument("--dagger-every", type=int, default=100_000)
@@ -87,6 +89,16 @@ def main() -> None:
             if not isinstance(proxy, ActorCritic):
                 raise SystemExit("bc_ppo needs an action-cloned proxy (proxy.pt)")
             policy = proxy  # fine-tune the imitation network with plain PPO
+        elif args.shuffled_teacher:
+            from reflexrl.baselines.perception_bc import PerceptionJevPolicy, PerceptionNet
+            from reflexrl.rl.teacher_guidance import ShuffledTeacher
+            blob = torch.load(Path(args.teachers) / spec.name / "perception_jev.pt",
+                              map_location="cpu", weights_only=False)
+            net = PerceptionNet()
+            net.load_state_dict(blob["perception"])
+            teacher = ShuffledTeacher(PerceptionJevPolicy(net, blob["J"]).to(args.device).eval(),
+                                      args.device, seed=args.seed)
+            cfg.intervene = cfg.distill = True
         elif args.dagger:
             import numpy as np
 
