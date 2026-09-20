@@ -65,16 +65,16 @@ def qwen_decider(teacher, rng: np.random.Generator):
     return decide
 
 
-def realtime_eval(decide, scenario: str, n: int, keep_first: bool) -> tuple[dict, list]:
-    rows, first = [], None
+def realtime_eval(decide, scenario: str, n: int, record: bool) -> tuple[dict, list]:
+    """Runs n episodes; keeps the longest recorded timeline for the video."""
+    rows, best = [], None
     for i in range(n):
         env = DoomEnv(scenario, seed=DEMO_SEED + i, keep_full_frames=True)
-        res = realtime_episode(env, decide, record=keep_first and i == 0)
+        res = realtime_episode(env, decide, record=record)
         env.close()
-        if keep_first and i == 0:
-            first = res.pop("tics")
-        else:
-            res.pop("tics", None)
+        tics = res.pop("tics", None)
+        if record and tics and (best is None or len(tics) > len(best)):
+            best = tics
         rows.append(res)
         print(f"  realtime ep {i}: return {res['return']:.1f} ms {res['ms_mean']:.1f}", flush=True)
     r = np.array([x["return"] for x in rows])
@@ -83,7 +83,7 @@ def realtime_eval(decide, scenario: str, n: int, keep_first: bool) -> tuple[dict
                "ms_p95": float(np.mean([x["ms_p95"] for x in rows])),
                "max_actions_per_s": float(np.mean([x["max_actions_per_s"] for x in rows])),
                "episodes": rows}
-    return summary, first
+    return summary, best
 
 
 def main() -> None:

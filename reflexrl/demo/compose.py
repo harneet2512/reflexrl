@@ -57,25 +57,37 @@ def split_screen(qwen_tics: list, reflex_tics: list, seconds: float,
     """Both tic lists are 35 fps game timelines from realtime_episode(record=True)."""
     n = int(seconds * FPS)
     pw, ph = 616, 347
-    frames, q_calls, last_q, last_r = [], 0, None, None
+    # cumulative decisions (= model calls) up to each tic, so the counter is right
+    # even once an episode has ended and its last frame is being held
+    q_calls_at = np.cumsum([int(x.fresh) for x in qwen_tics])
+    frames, last_q, last_r = [], None, None
     for t in range(n):
         img = canvas()
+        q_over = t >= len(qwen_tics)
+        r_over = t >= len(reflex_tics)
         q = qwen_tics[min(t, len(qwen_tics) - 1)]
         r = reflex_tics[min(t, len(reflex_tics) - 1)]
-        if t < len(qwen_tics) and q.fresh:
-            q_calls += 1
+        q_calls = int(q_calls_at[min(t, len(q_calls_at) - 1)])
         last_q = q.frame if q.frame is not None else last_q
         last_r = r.frame if r.frame is not None else last_r
-        for x0, fr, name, col in ((16, last_q, "QWEN3-VL-8B + JEV", QWEN),
-                                  (648, last_r, "REFLEXRL", ACCENT)):
+        for x0, fr, name, col, over, fresh, ms in (
+                (16, last_q, "QWEN3-VL-8B + JEV", QWEN, q_over, q.fresh, q.latency_ms),
+                (648, last_r, "REFLEXRL", ACCENT, r_over, r.fresh, r.latency_ms)):
             text(img, name, (x0, 50), 1.1, col, 2)
             img[70:70 + ph, x0:x0 + pw] = _panel(fr, (pw, ph))
+            if over:  # the episode ended: say so instead of freezing silently
+                cv2.rectangle(img, (x0, 70), (x0 + pw, 70 + ph), (0, 0, 0), -1)
+                text(img, "ELIMINATED", (x0 + pw // 2, 70 + ph // 2), 1.3, col, 2, center=True)
+            elif ms > 100 and not fresh:  # visibly waiting for a slow model
+                cv2.rectangle(img, (x0, 70 + ph - 34), (x0 + pw, 70 + ph), (0, 0, 0), -1)
+                text(img, f"thinking... {ms / 1000:.1f} s per decision", (x0 + 12, 70 + ph - 10),
+                     0.6, col)
         rows = (
             ("DECISION LATENCY", f"{qwen_stats['ms_mean']:.0f} ms",
              f"{reflex_stats['ms_mean']:.1f} ms"),
             ("MAX ACTION RATE", f"{qwen_stats['max_actions_per_s']:.1f} Hz",
              f"{reflex_stats['max_actions_per_s']:.0f} Hz"),
-            ("MODEL CALLS", f"{q_calls}", "0"),
+            ("MODEL CALLS SO FAR", f"{q_calls}", "0"),
             ("SCORE", f"{q.score:.0f}", f"{r.score:.0f}"),
         )
         y = 470

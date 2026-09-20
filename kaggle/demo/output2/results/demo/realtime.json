@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "config": {
+      "runs": "runs/train/defend_the_center",
+      "episodes": 8,
+      "teacher_model": "Qwen/Qwen3-VL-8B-Instruct",
+      "jev_table": "experiments/configs/jev_table_dtc.json",
+      "out": "/kaggle/working/results/demo"
+    },
+    "git_commit": "unknown",
+    "host": "6e9d28d511ca",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "torch": "2.10.0+cu128",
+    "cuda_device": "Tesla T4",
+    "started_unix": 1789883042.3216262
+  },
+  "reflex_run": "runs/train/defend_the_center/reflexrl_s0",
+  "realtime": {
+    "reflex": {
+      "n": 8,
+      "return_mean": 7.5,
+      "return_se": 0.46291004988627565,
+      "ms_mean": 1.6723073371982127,
+      "ms_p95": 1.3763194937418177,
+      "max_actions_per_s": 735.3253141204808,
+      "episodes": [
+        {
+          "return": 6.0,
+          "decisions": 150,
+          "lag_tics": 18,
+          "game_seconds": 17.65714285714286,
+          "ms_mean": 4.73302182666733,
+          "ms_median": 1.201978500006362,
+          "ms_p95": 1.3789885000107915,
+          "max_actions_per_s": 211.28151033779017
+        },
+        {
+          "return": 7.0,
+          "decisions": 183,
+          "lag_tics": 0,
+          "game_seconds": 20.914285714285715,
+          "ms_mean": 1.1952484043714853,
+          "ms_median": 1.1694910000414893,
+          "ms_p95": 1.369677799988267,
+          "max_actions_per_s": 836.6461702375955
+        },
+        {
+          "return": 9.0,
+          "decisions": 197,
+          "lag_tics": 0,
+          "game_seconds": 22.514285714285716,
+          "ms_mean": 1.212432329948327,
+          "ms_median": 1.19798800000126,
+          "ms_p95": 1.3693014000068615,
+          "max_actions_per_s": 824.7882997664861
+        },
+        {
+          "return": 7.0,
+          "decisions": 148,
+          "lag_tics": 0,
+          "game_seconds": 16.914285714285715,
+          "ms_mean": 1.2392671891893463,
+          "ms_median": 1.2210100000231705,
+          "ms_p95": 1.3509405999542423,
+          "max_actions_per_s": 806.9284886450835
+        },
+        {
+          "return": 9.0,
+          "decisions": 159,
+          "lag_tics": 0,
+          "game_seconds": 18.17142857142857,
+          "ms_mean": 1.2221650062900227,
+          "ms_median": 1.199917999997524,
+          "ms_p95": 1.347490100010873,
+          "max_actions_per_s": 818.2201215493627
+        },
+        {
+          "return": 9.0,
+          "decisions": 154,
+          "lag_tics": 0,
+          "game_seconds": 17.6,
+          "ms_mean": 1.2651784090878635,
+          "ms_median": 1.2448870000127954,
+          "ms_p95": 1.4181337999872312,
+          "max_actions_per_s": 790.4023597122202
+        },
+        {
+          "return": 7.0,
+          "decisions": 170,
+          "lag_tics": 0,
+          "game_seconds": 19.428571428571427,
+          "ms_mean": 1.2178774882372903,
+          "ms_median": 1.2026635000097485,
+          "ms_p95": 1.352969349994737,
+          "max_actions_per_s": 821.1006522892234
+        },
+        {
+          "return": 6.0,
+          "decisions": 137,
+          "lag_tics": 0,
+          "game_seconds": 15.657142857142857,
+          "ms_mean": 1.2932680437940365,
+          "ms_median": 1.2705780000032973,
+          "ms_p95": 1.4230543999815382,
+          "max_actions_per_s": 773.234910426085
+        }
+      ]
+    },
+    "qwen8b_jev_teacher": {
+      "n": 8,
+      "return_mean": -0.375,
+      "return_se": 0.2630521404045756,
+      "ms_mean": 6574.222456812478,
+      "ms_p95": 6647.342765393727,
+      "max_actions_per_s": 0.1522034133814109,
+      "episodes": [
+        {
+          "return": 0.0,
+          "decisions": 2,
+          "lag_tics": 256,
+          "game_seconds": 7.542857142857143,
+          "ms_mean": 6604.771167500019,
+          "ms_median": 6604.771167500019,
+          "ms_p95": 6954.901931750004,
+          "max_actions_per_s": 0.151405699703978
+        },
+        {
+          "return": -1.0,
+          "decisions": 2,
+          "lag_tics": 222,
+          "game_seconds": 6.571428571428571,
+          "ms_mean": 6381.134586500025,
+          "ms_median": 6381.134586500025,
+          "ms_p95": 6464.507391050017,
+          "max_actions_per_s": 0.1567119430634808
+        },
+        {
+          "return": 0.0,
+          "decisions": 2,
+          "lag_tics": 324,
+          "game_seconds": 9.485714285714286,
+          "ms_mean": 6709.295447999977,
+          "ms_median": 6709.295447999977,
+          "ms_p95": 6770.56515660002,
+          "max_actions_per_s": 0.14904694654609335
+        },
+        {
+          "return": -1.0,
+          "decisions": 1,
+          "lag_tics": 224,
+          "game_seconds": 6.514285714285714,
+          "ms_mean": 6787.321129999896,
+          "ms_median": 6787.321129999896,
+          "ms_p95": 6787.321129999896,
+          "max_actions_per_s": 0.14733353275123662
+        },
+        {
+          "return": 0.0,
+          "decisions": 2,
+          "lag_tics": 318,
+          "game_seconds": 9.314285714285715,
+          "ms_mean": 6785.007177500006,
+          "ms_median": 6785.007177500006,
+          "ms_p95": 6804.506006449992,
+          "max_actions_per_s": 0.14738377924140364
+        },
+        {
+          "return": 1.0,
+          "decisions": 2,
+          "lag_tics": 322,
+          "game_seconds": 9.428571428571429,
+          "ms_mean": 6543.248444999961,
+          "ms_median": 6543.248444999961,
+          "ms_p95": 6589.925001899911,
+          "max_actions_per_s": 0.15282928783854333
+        },
+        {
+          "return": -1.0,
+          "decisions": 2,
+          "lag_tics": 246,
+          "game_seconds": 7.257142857142857,
+          "ms_mean": 6400.1158389999655,
+          "ms_median": 6400.1158389999655,
+          "ms_p95": 6419.68010289998,
+          "max_actions_per_s": 0.15624717195060217
+        },
+        {
+          "return": -1.0,
+          "decisions": 2,
+          "lag_tics": 264,
+          "game_seconds": 7.771428571428571,
+          "ms_mean": 6382.885860999977,
+          "ms_median": 6382.885860999977,
+          "ms_p95": 6387.335402500003,
+          "max_actions_per_s": 0.15666894595594957
+        }
+      ]
+    }
+  },
+  "teacher_gate_dtc": {
+    "2B": 1.7333333333333334,
+    "8B": 1.6666666666666667,
+    "jev": 4.4
+  }
+}

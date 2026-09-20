@@ -1,0 +1,62 @@
+{
+  "meta": {
+    "config": {
+      "scenario": "dtc",
+      "ckpt": "runs/train/defend_the_center/reflexrl_s0/ckpt_final.pt",
+      "model": "Qwen/Qwen3-VL-2B-Instruct",
+      "usd_per_gpu_hour": 0.59,
+      "usd_per_cpu_core_hour": 0.047,
+      "skip_teacher": false,
+      "out": "/kaggle/working/results/benchmark"
+    },
+    "git_commit": "unknown",
+    "host": "6e9d28d511ca",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "torch": "2.10.0+cu128",
+    "cuda_device": "Tesla T4",
+    "started_unix": 1789882502.6893747
+  },
+  "scenario": "defend_the_center",
+  "reflex": {
+    "params": 751526,
+    "flops_per_action": 28888064,
+    "cpu_1core": {
+      "ms_mean": 3.107304105999276,
+      "ms_median": 3.113487999996778,
+      "ms_p95": 3.412412499986317,
+      "actions_per_s": 321.82237910647325,
+      "n": 500,
+      "usd_per_10k": 0.00040567581383879435
+    },
+    "gpu": {
+      "ms_mean": 2.8089527819997784,
+      "ms_median": 2.781805499992629,
+      "ms_p95": 3.214721399990592,
+      "actions_per_s": 356.00456027889146,
+      "n": 500,
+      "peak_vram_mb": 11.82275390625,
+      "usd_per_10k": 0.00460356150383297
+    }
+  },
+  "qwen": {
+    "model": "Qwen/Qwen3-VL-2B-Instruct",
+    "params": 2127532032,
+    "gpu": {
+      "ms_mean": 470.5294492199982,
+      "ms_median": 466.78959999997005,
+      "ms_p95": 487.6867571000304,
+      "actions_per_s": 2.1252654890309435,
+      "n": 50,
+      "peak_vram_mb": 8346.06298828125,
+      "usd_per_10k": 0.7711454862216636
+    },
+    "flops_per_action": 1288787266944
+  },
+  "ratios_same_gpu": {
+    "speedup_mean": 167.51062966783445,
+    "speedup_p95": 151.70420587658313,
+    "cost_ratio": 167.51062966783442,
+    "flops_ratio": 44613.14080943604
+  }
+}
