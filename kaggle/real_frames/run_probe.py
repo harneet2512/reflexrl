@@ -20,9 +20,11 @@ print("mounted:", os.listdir(root), flush=True)
 for f in glob.glob(f"{root}/**/README*.txt", recursive=True):  # record the stated licence
     print(f"--- {f}\n{open(f).read()[:600]}", flush=True)
 rc = 0
-for width in (640, 320):  # 640 needs batch 1 on a T4; 320 matches the Doom pipeline
+# "player" counts teammates: a vision model has no way to know which team a
+# character belongs to, so that is the question it can fairly be asked.
+for target in ("player", "enemy"):
     rc |= sh(f"{sys.executable} -u scripts/real_frames_probe.py --root {root} --frames 150 "
-             f"--perms 2 --width {width} --out /kaggle/working/real_frames")
+             f"--perms 2 --width 640 --target {target} --out /kaggle/working/real_frames")
 os.chdir("/kaggle/working")
 shutil.rmtree(repo, ignore_errors=True)
 sys.exit(rc)

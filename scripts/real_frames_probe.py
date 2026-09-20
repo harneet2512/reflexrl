@@ -81,10 +81,14 @@ def main() -> None:
     p.add_argument("--perms", type=int, default=2)
     p.add_argument("--jev-table", default="experiments/configs/jev_table_dtc.json")
     p.add_argument("--width", type=int, default=320, help="resize width; 0 keeps full resolution")
+    p.add_argument("--target", choices=["enemy", "player"], default="enemy",
+                   help="'player' counts teammates too: a vision model cannot know team colours")
     p.add_argument("--out", default="runs/real_frames")
     args = p.parse_args()
     root = Path(args.root)
     enemy_ids, mate_ids = class_ids(root)
+    target_ids = enemy_ids + mate_ids if args.target == "player" else enemy_ids
+    print(f"target: {args.target} (class ids {target_ids})", flush=True)
 
     def is_yolo(f: Path) -> bool:
         try:
@@ -110,7 +114,7 @@ def main() -> None:
 
     truth, chosen, has_mate = [], [], []
     for img, lab in pairs:
-        cls, _ = oracle(lab, enemy_ids)
+        cls, _ = oracle(lab, target_ids)
         mate, _ = oracle(lab, mate_ids) if mate_ids else ("none", 0.0)
         truth.append(cls)
         has_mate.append(mate != "none")
@@ -138,7 +142,7 @@ def main() -> None:
     print(f"frame size fed to the model: {frames[0][0].shape}", flush=True)
     def question_for(perm) -> str:
         options = "\n".join(
-            f"{LETTERS[k]}. {WHERE[CLASSES[i]].replace('not visible', 'no enemy is visible')}"
+            f"{LETTERS[k]}. {WHERE[CLASSES[i]].replace('not visible', 'nobody is visible')}"
             for k, i in enumerate(perm))
         return ("This is a screenshot from the first-person shooter Valorant. Where is the "
                 f"nearest enemy player?\n{options}\nAnswer with a single letter.")
@@ -189,7 +193,7 @@ def main() -> None:
                                  for t, p_, a in list(zip(truth, pred, actions, strict=True))[:12]]}
     os.makedirs(args.out, exist_ok=True)
     res["frame_width"] = args.width or "full"
-    Path(args.out, f"real_frames_w{args.width or 'full'}.json").write_text(json.dumps(res, indent=2))
+    Path(args.out, f"real_frames_{args.target}_w{args.width or 'full'}.json").write_text(json.dumps(res, indent=2))
     print(json.dumps({k: v for k, v in res.items() if k != "meta"}, indent=1), flush=True)
 
 

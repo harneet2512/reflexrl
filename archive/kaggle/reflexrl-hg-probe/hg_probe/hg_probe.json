@@ -8,14 +8,15 @@
       "out": "/kaggle/working/hg_probe"
     },
     "git_commit": "unknown",
-    "host": "aaf9deb77118",
+    "host": "3393b8edbdf4",
     "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
     "python": "3.12.13",
     "torch": "2.10.0+cu128",
     "cuda_device": "Tesla T4",
-    "started_unix": 1789889162.9392924
+    "started_unix": 1789890774.7883599
   },
   "position": {
+    "accuracy_calibrated": 0.25333333333333335,
     "accuracy": 0.74,
     "majority_rate": 0.64,
     "counts": {
@@ -27,12 +28,13 @@
     "pass": false
   },
   "distance": {
+    "accuracy_calibrated": 0.13333333333333333,
     "accuracy": 0.6266666666666667,
     "majority_rate": 0.64,
     "counts": {
+      "close": 10,
       "far": 44,
-      "none": 96,
-      "close": 10
+      "none": 96
     }
   }
 }

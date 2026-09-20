@@ -6,7 +6,7 @@
       "frames": 150,
       "perms": 2,
       "jev_table": "experiments/configs/jev_table_dtc.json",
-      "width": 640,
+      "width": 320,
       "out": "/kaggle/working/real_frames"
     },
     "git_commit": "unknown",
@@ -15,7 +15,7 @@
     "python": "3.12.13",
     "torch": "2.10.0+cu128",
     "cuda_device": "Tesla T4",
-    "started_unix": 1789890932.6893618
+    "started_unix": 1789891384.2889583
   },
   "n_frames": 150,
   "oracle_counts": {
@@ -24,12 +24,12 @@
     "left": 2,
     "right": 1
   },
-  "perception_accuracy_calibrated": 0.29333333333333333,
-  "perception_accuracy": 0.35333333333333333,
+  "perception_accuracy_calibrated": 0.22,
+  "perception_accuracy": 0.31333333333333335,
   "majority_rate": 0.62,
-  "beats_majority_by": -0.26666666666666666,
+  "beats_majority_by": -0.30666666666666664,
   "frames_with_teammate_only": 90,
-  "accuracy_excluding_teammate_only": 0.7333333333333333,
+  "accuracy_excluding_teammate_only": 0.55,
   "majority_excluding_teammate_only": 0.9,
   "confusion": {
     "left": {
@@ -37,18 +37,19 @@
       "center": 1
     },
     "center": {
-      "center": 44,
-      "right": 9,
-      "left": 1
+      "right": 12,
+      "center": 39,
+      "left": 2,
+      "none": 1
     },
     "right": {
       "right": 1
     },
     "none": {
       "center": 38,
-      "right": 28,
-      "left": 20,
-      "none": 7
+      "right": 21,
+      "left": 28,
+      "none": 6
     }
   },
   "example_decisions": [
@@ -64,13 +65,13 @@
     },
     {
       "truth": "center",
-      "qwen": "center",
-      "jev_action": "FIRE"
+      "qwen": "right",
+      "jev_action": "TURN_RIGHT_FIRE"
     },
     {
       "truth": "none",
-      "qwen": "right",
-      "jev_action": "TURN_RIGHT_FIRE"
+      "qwen": "left",
+      "jev_action": "TURN_LEFT_FIRE"
     },
     {
       "truth": "center",
@@ -109,9 +110,9 @@
     },
     {
       "truth": "center",
-      "qwen": "center",
-      "jev_action": "FIRE"
+      "qwen": "right",
+      "jev_action": "TURN_RIGHT_FIRE"
     }
   ],
-  "frame_width": 640
+  "frame_width": 320
 }
