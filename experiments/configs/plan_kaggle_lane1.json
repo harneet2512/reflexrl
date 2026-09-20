@@ -16,11 +16,5 @@
   "scenario": "dtc",
   "steps": 1500000,
   "seed": 2
- },
- {
-  "method": "fixed",
-  "scenario": "dtc",
-  "steps": 1500000,
-  "seed": 0
  }
 ]

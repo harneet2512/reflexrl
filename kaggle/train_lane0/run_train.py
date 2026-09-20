@@ -23,10 +23,14 @@ repo = "/kaggle/working/repo"
 shutil.copytree(os.path.dirname(os.path.dirname(src[0])), repo, dirs_exist_ok=True)
 os.chdir(repo)
 os.makedirs("runs", exist_ok=True)
-t = (glob.glob("/kaggle/input/**/teachers/*/perception_jev.pt", recursive=True)
-     or glob.glob("/kaggle/input/**/teachers/*/proxy.pt", recursive=True))
+# Merge every mounted teacher job: the perception student (perception_jev.pt,
+# used by reflexrl/fixed) and the action-cloned network (proxy.pt, used by bc_ppo)
+# live in different Kaggle notebooks but the same runs/teachers/<scenario> layout.
+t = glob.glob("/kaggle/input/**/teachers/*/*.pt", recursive=True)
 assert t, "teacher not mounted"
-shutil.copytree(os.path.dirname(os.path.dirname(t[0])), "runs/teachers", dirs_exist_ok=True)
+for f in t:
+    shutil.copytree(os.path.dirname(os.path.dirname(f)), "runs/teachers", dirs_exist_ok=True)
+print("teacher files:", sorted(os.listdir(glob.glob("runs/teachers/*")[0])), flush=True)
 prev = [p for p in glob.glob("/kaggle/input/**/train", recursive=True) if "reflexrl-runs" in p]
 if prev:
     shutil.copytree(prev[0], "runs/train", dirs_exist_ok=True)
