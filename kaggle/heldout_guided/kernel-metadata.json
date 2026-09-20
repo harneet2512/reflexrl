@@ -1,0 +1,19 @@
+{
+ "id": "harneetb/reflexrl-heldout-guided",
+ "title": "reflexrl-heldout-guided",
+ "code_file": "run_train.py",
+ "language": "python",
+ "kernel_type": "script",
+ "is_private": true,
+ "enable_gpu": true,
+ "enable_internet": true,
+ "machine_shape": "NvidiaTeslaT4",
+ "dataset_sources": [
+  "harneetb/reflexrl-code"
+ ],
+ "competition_sources": [],
+ "kernel_sources": [
+  "harneetb/reflexrl-train-lane0",
+  "harneetb/reflexrl-perception-teacher"
+ ]
+}

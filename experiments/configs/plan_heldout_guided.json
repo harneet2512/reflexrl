@@ -1,0 +1,26 @@
+[
+ {
+  "method": "reflexrl",
+  "scenario": "dtl",
+  "steps": 750000,
+  "seed": 0,
+  "tag": "reflexrl_guided_ft",
+  "init_ckpt": "runs/train/defend_the_center/reflexrl_s0/ckpt_final.pt"
+ },
+ {
+  "method": "reflexrl",
+  "scenario": "dtl",
+  "steps": 750000,
+  "seed": 1,
+  "tag": "reflexrl_guided_ft",
+  "init_ckpt": "runs/train/defend_the_center/reflexrl_s1/ckpt_final.pt"
+ },
+ {
+  "method": "reflexrl",
+  "scenario": "dtl",
+  "steps": 750000,
+  "seed": 2,
+  "tag": "reflexrl_guided_ft",
+  "init_ckpt": "runs/train/defend_the_center/reflexrl_s2/ckpt_final.pt"
+ }
+]
