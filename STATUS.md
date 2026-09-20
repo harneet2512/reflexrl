@@ -100,8 +100,3 @@ adaptive handover, which is the combination this project tests.
   GPUs: 25% vs 100% on a synthetic control, with 0.03% of probability mass on the answer
   letters). This is a genuinely useful public-service bug report.
 - X/Twitter thread built around the demo video.
-
-## Budget
-
-Paid compute: **$0.00** (free Kaggle T4s throughout). Paid API: **~$0.05** of Jev calls.
-Kaggle GPU quota is the binding constraint, not money.

@@ -3,6 +3,7 @@
 from reflexrl.rl.dagger import DAGGER_SEED
 from reflexrl.rl.evaluate import EVAL_SEED_BASE
 from scripts.final_eval import TEST_SEED_BASE
+from scripts.make_budget_video import SEED as BUDGET_SEED
 
 TRAIN = {s * 1000 + i for s in range(3) for i in range(16)}
 VALID = {EVAL_SEED_BASE + i for i in range(32)}
@@ -11,11 +12,15 @@ GATE = {50_000 + off + i for off in (0, 100) for i in range(8)}
 DAGGER = {DAGGER_SEED + r for r in range(8)}
 PROBE = {777}
 DEMO = {424_242 + i for i in range(16)}
+# the same-budget comparison video plays episodes too; footage shown in the
+# README must not come from a seed any training run saw
+BUDGET_VIDEO = {BUDGET_SEED + i for i in range(16)}
 
 
 def test_streams_are_disjoint():
     groups = {"train": TRAIN, "valid": VALID, "test": TEST, "gate/labels": GATE,
-              "dagger": DAGGER, "probe": PROBE, "demo": DEMO}
+              "dagger": DAGGER, "probe": PROBE, "demo": DEMO,
+              "budget video": BUDGET_VIDEO}
     for a, sa in groups.items():
         for b, sb in groups.items():
             if a < b:

@@ -2,12 +2,15 @@
 
 ### A vision-language model knows what is in the frame. It cannot play. So move the knowledge, then delete the model.
 
-![The Qwen3-VL-8B + Jev teacher at 6,191 ms per decision, beside the 0.75M-parameter policy it trained, at 1.7 ms. Same map, same seed, both in real time.](results/demo/teacher_vs_student.gif)
+![The Qwen3-VL-8B + Jev teacher at 6,191 ms per decision, beside the 0.75M-parameter policy it trained, at 1.7 ms. Both play the same unseen episode in real time.](results/demo/teacher_vs_student.gif)
 
 **Left: the teacher.** 8.8B parameters, 6,191 ms per decision, frozen mid-thought while
 the game runs on. It finishes on **-0.38** kills, below random.
 **Right: the 751,526-parameter policy that teacher trained.** 1.7 ms per decision,
-**zero model calls**, **7.25** kills. Same map, same seed, both in real time.
+**zero model calls**, **7.25** kills.
+
+Both are dropped into the *same episode* so the comparison is fair, and it is an episode
+from a seed stream **no training run ever touched**.
 
 *Videos: [same-budget three-way comparison](results/demo/budget_comparison.mp4) (54 s)
 · [45-second demo](results/demo/reflexrl_demo.mp4)
@@ -43,8 +46,39 @@ ceiling.
 At deployment both the vision model and the decision model are **gone**. What ships is
 **751,526 parameters** making **0 model calls** per action, on one CPU core.
 
-Trained and measured entirely on **free Kaggle T4s**. Paid compute: **$0.00**.
-Paid API: **~$0.05**.
+---
+
+## What the agent sees, and what it does about it
+
+The task is `defend_the_center`: you stand in the middle of a circular arena, you
+**cannot move, only turn**, and monsters close in from every direction. Ammo is limited.
+
+The agent gets a **first-person view and nothing else**. No map, no radar, no rear view,
+no depth buffer, no object list, no game variables. Just 4 stacked RGB frames at 64x112,
+which `tests/test_core.py` enforces. **It cannot see behind itself**, exactly like a
+person playing.
+
+So how does it deal with a threat from behind? Through the fourth value in the percept
+vocabulary. The vision model is asked one question, *where is the nearest monster*, with
+four possible answers, and each answer maps to a decision:
+
+| what the model sees | what Jev 1.13 decides | why |
+|---|---|---|
+| monster on the **left** | `TURN_LEFT_FIRE` (0.92) | turn onto it and shoot in the same tic |
+| monster in the **centre** | `FIRE` (1.00) | already aimed, do not waste the turn |
+| monster on the **right** | `TURN_RIGHT_FIRE` (0.94) | mirror of left |
+| **nothing visible** | `TURN_LEFT` (0.68) or `TURN_RIGHT` (0.31), **never fire** | sweep for the threat you cannot see, and do not waste ammo on empty air |
+
+That last row is the whole answer to the rear-view problem. **"Nothing visible" is not
+"do nothing", it is "keep turning until something comes into view."** A 360-degree threat
+is handled by a four-way percept because the empty case drives a search, and the four
+stacked frames give the policy enough short-term memory to keep sweeping in one direction
+rather than dithering.
+
+This is also why the decision layer matters so much. The full table above is four rows
+long. Asked to pick actions directly, Qwen3-VL scores 1.7; asked only what it sees, with
+those four rows deciding, the same model scores 4.4. The hard part was never seeing the
+monster. It was reliably converting "monster on the left" into "turn left and fire, now."
 
 ---
 
@@ -60,19 +94,20 @@ intervention correction, and the same marginal distribution over actions**, but 
 perception is drawn independently of the frame it is looking at. Right kind of advice,
 wrong frame.
 
-![Three agents that have each seen exactly 250,368 frames of Doom, playing the same maps side by side at 3x speed. PPO and the shuffled-teacher control average around 3 and 2 kills and die early; ReflexRL averages over 6.](results/demo/budget_comparison.gif)
+![Three agents that have each seen exactly 250,368 frames of Doom, playing the same unseen episodes side by side at 3x speed. PPO and the shuffled-teacher control average around 3 and 2 kills and die early; ReflexRL averages over 6.](results/demo/budget_comparison.gif)
 
-All three agents above have seen **exactly the same number of Doom frames**
-(250,368), and play the same maps from the same seeds. The bars at the bottom are
-every episode, so consistency is visible rather than asserted. Over 8 episodes:
-PPO **3.0**, the decoupled control **2.1**, ReflexRL **6.1**. The left two are
-usually dead inside 15 seconds.
+All three agents above have seen **exactly the same number of Doom frames** (250,368).
+They are given the **same eight episodes as each other**, so the comparison is like for
+like, and those episodes come from a seed stream **none of the three was trained on**
+(`tests/test_seed_hygiene.py` checks this). The bars at the bottom are every episode, so
+consistency is visible rather than asserted. Over 8 episodes: PPO **3.0**, the decoupled
+control **2.1**, ReflexRL **6.1**. The left two are usually dead inside 15 seconds.
 
 *Full 54-second version, 8 episodes per agent:
 [results/demo/budget_comparison.mp4](results/demo/budget_comparison.mp4).
-Rebuild with `python scripts/make_budget_video.py`. These are sampled episodes
-from one seed per arm, shown to make the gap visible; the authoritative numbers
-are the 16-episode evaluation curves and the 50-episode held-out test below.*
+Rebuild with `python scripts/make_budget_video.py`. This is a sample of 8 episodes from
+one training seed per arm, shown to make the gap visible; the authoritative numbers are
+the 16-episode evaluation curves and the 50-episode held-out test below.*
 
 | | steps to target | **X** | final |
 |---|---|---|---|
@@ -277,12 +312,37 @@ before the corresponding run.
 
 ## No train/test leakage
 
-Training, in-training evaluation, teacher labelling and final reporting use disjoint
-environment-seed streams (0 to 2011 / 900,000+ / 50,000+ / 7,000,000+).
-`tests/test_seed_hygiene.py` fails the build if any two overlap.
-`tests/test_probe_alignment.py` asserts probe frames and their oracle labels come from the
-same rollout. It exists because they once did not, and the bug made the teacher look worse
-than it is.
+Worth stating precisely, because "we train and evaluate on `defend_the_center`" invites
+the question.
+
+**The map is fixed; the episodes are not.** `defend_the_center` is one arena layout. What
+an episode seed controls is *when and where monsters spawn and how they move*, so two
+seeds are two different fights in the same room. Training on an environment and then
+scoring on fresh episodes of it is the normal setup for RL, and it is not leakage. What
+would be leakage is scoring on the same episodes that were trained on, or picking a
+checkpoint using the episodes you then report.
+
+Neither happens here. Four seed streams, provably disjoint:
+
+| stream | seeds | used for |
+|---|---|---|
+| training | 0 to 2011 | environment resets during PPO |
+| in-training evaluation | 900,000+ | learning curves, handover decisions, checkpoint selection |
+| teacher labelling | 50,000+ | the frames Qwen was shown |
+| **final reported scores** | **7,000,000+** | the 50-episode table, and nothing else |
+| video footage | 424,242+ and 909,090+ | the GIFs and videos above |
+
+`tests/test_seed_hygiene.py` fails the build if any two of those streams intersect,
+including the seeds used for the footage, so a number cannot be reported from an episode
+that trained or selected the policy that produced it.
+
+**And there is a genuinely unseen map.** `defend_the_line` has a different layout and
+different enemy placement, and no policy trains on it before the transfer experiment. That
+is the section above where ReflexRL reaches 21.5 kills on 3 of 3 seeds and PPO on 0 of 3.
+
+`tests/test_probe_alignment.py` separately asserts that probe frames and their oracle
+labels come from the same rollout. It exists because they once did not, and that bug made
+the teacher look worse than it is.
 
 ## Reproduce
 
@@ -290,7 +350,7 @@ than it is.
 pip install -e .[dev]
 pytest tests                                   # 28 tests: pixels-only, IS correction, resume, seeds
 python scripts/teacher_gate.py --policy random --scenarios dtc --episodes 30
-python scripts/jev_table.py                    # 4 Jev calls (~$0.0001), cached
+python scripts/jev_table.py                    # builds the decision table, cached
 python scripts/teacher_gate.py --policy qwen --model Qwen/Qwen3-VL-8B-Instruct --nf4 \
        --variant perception_jev --scenarios dtc --episodes 30
 python scripts/build_perception_teacher.py --scenario dtc --labels runs/phase0/*/labels
@@ -301,7 +361,7 @@ python scripts/make_budget_video.py            # the same-budget three-way compa
 python scripts/make_gifs.py                    # rebuild every animation above
 ```
 
-Kaggle job definitions, one per experiment, all on free T4s, are in `kaggle/`.
+Kaggle job definitions, one per experiment, are in `kaggle/`.
 `scripts/sync_kaggle.py` mirrors their outputs back into `archive/kaggle/`, which is
 where every number in `results/METRICS.md` is read from.
 
