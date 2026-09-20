@@ -10,6 +10,10 @@ runs/
 *.ckpt
 *.mp4
 *.avi
+# the two demo videos are the product, not intermediate output, and the README
+# links to them: without these exceptions those links 404 on GitHub
+!results/demo/reflexrl_demo.mp4
+!results/demo/budget_comparison.mp4
 .ipynb_checkpoints/
 dist/
 build/

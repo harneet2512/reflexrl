@@ -232,13 +232,22 @@ is re-learned.
 
 ### Deployment, the consequence rather than the claim
 
-| | reflex policy | its teacher | ratio |
+Latency and cost are benchmarked against Qwen3-VL-**2B**, the cheapest thing that could
+plausibly be deployed. The real-time score is measured against the actual teacher,
+Qwen3-VL-**8B** + Jev, because that is what taught the policy.
+
+| | reflex policy | Qwen3-VL-2B | ratio |
 |---|---|---|---|
-| parameters | 751,526 | 2.1B (8.8B for the 8B teacher) | |
+| parameters | 751,526 | 2.1B | 2,831x |
+| FLOPs per action | 28.9M | 1.29T | 44,613x |
 | latency, same T4 | 2.57 ms | 445 ms | **173x** |
 | USD per 10K decisions | $0.0004 (one CPU core) | $0.73 | **173x** |
 | model calls per action | **0** | 1 | |
-| kills when the game does **not** wait | **7.25** | **-0.38** | |
+
+| | reflex policy | Qwen3-VL-8B + Jev (its teacher) |
+|---|---|---|
+| latency per decision | 1.7 ms | 6,191 ms |
+| kills when the game does **not** wait | **7.25** | **-0.38** |
 
 ![The trained reflex policy playing defend_the_center at 1.7 ms per decision with zero model calls](results/demo/gameplay.gif)
 
@@ -288,10 +297,25 @@ python scripts/build_perception_teacher.py --scenario dtc --labels runs/phase0/*
 python scripts/train.py --method reflexrl --scenario dtc --steps 1500000 --seed 0
 python scripts/final_eval.py                   # fresh unseen episodes
 python scripts/metrics_report.py               # rebuild results/METRICS.md
-python scripts/make_gifs.py                    # rebuild the animations above
+python scripts/make_budget_video.py            # the same-budget three-way comparison
+python scripts/make_gifs.py                    # rebuild every animation above
 ```
 
 Kaggle job definitions, one per experiment, all on free T4s, are in `kaggle/`.
+`scripts/sync_kaggle.py` mirrors their outputs back into `archive/kaggle/`, which is
+where every number in `results/METRICS.md` is read from.
+
+### Where things are
+
+| path | what it holds |
+|---|---|
+| `results/METRICS.md` | every measurement, with per-seed data and the file it came from |
+| `results/SCOREBOARD.md` | the same headline numbers, rebuilt by `scripts/scoreboard.py` |
+| `archive/kaggle/` | the raw output of all 24 Kaggle jobs; nothing is hand-edited |
+| `experiments/configs/*.json` | pre-registrations, each written before its run |
+| `reflexrl/teacher/` | Qwen wrapper, calibration, Jev client, perception teacher |
+| `reflexrl/rl/` | PPO with guidance, the handover schedules, DAgger |
+| `tests/` | 28 tests, including the pixels-only and seed-hygiene guards |
 
 ## Limitations
 
