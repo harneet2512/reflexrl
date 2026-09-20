@@ -38,12 +38,14 @@ def teacher_gate_scores(results: Path) -> dict:
                 rets += sc["returns"]
         return float(np.mean(rets)) if rets else None
     return {"2B": dtc(sorted(results.glob("qwen2b_fp32_cal_lane*.json"))),
-            "8B": dtc(sorted(results.glob("qwen8b_nf4_cal_dtc_lane*.json")))}
+            "8B": dtc(sorted(results.glob("qwen8b_nf4_cal_dtc_lane*.json"))),
+            "jev": dtc(sorted(results.glob("qwen8b_jev_dtc_lane*.json")))}
 
 
 def best_run(runs: Path) -> Path:
+    cands = sorted(runs.glob("reflexrl_s*")) or sorted(runs.glob("ppo_s*"))
     done = [(json.loads((r / "done.json").read_text())["final_eval"], r)
-            for r in sorted(runs.glob("ppo_s*")) if (r / "done.json").exists()]
+            for r in cands if (r / "done.json").exists()]
     if not done:
         raise SystemExit(f"no finished ppo runs in {runs}")
     return max(done)[1]
@@ -88,6 +90,8 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--runs", default="runs/train/defend_the_center")
     p.add_argument("--episodes", type=int, default=10)
+    p.add_argument("--teacher-model", default="Qwen/Qwen3-VL-8B-Instruct")
+    p.add_argument("--jev-table", default="experiments/configs/jev_table_dtc.json")
     p.add_argument("--out", default="results/demo")
     args = p.parse_args()
     out = Path(args.out)
@@ -101,16 +105,23 @@ def main() -> None:
     print("reflex policy:", run, flush=True)
 
     reflex, reflex_tics = realtime_eval(reflex_decider(policy, dev), "dtc", args.episodes, True)
-    from reflexrl.teacher.qwen import CalibratedQwenTeacher, QwenTeacher
-    teacher = CalibratedQwenTeacher(QwenTeacher())  # the gate-validated 2B fp32 controller
+    import torch as _torch
+    from reflexrl.teacher.perception_jev import PerceptionJevTeacher
+    from reflexrl.teacher.qwen import QwenTeacher
+    # The gate-validated teacher: Qwen3-VL-8B (NF4 weights, fp32 compute) sees,
+    # Jev decides. This is what guided training; here it plays under real latency.
+    teacher = PerceptionJevTeacher(
+        QwenTeacher(args.teacher_model, dtype=_torch.float32, load_4bit=True),
+        args.jev_table)
     qwen, qwen_tics = realtime_eval(qwen_decider(teacher, np.random.default_rng(0)), "dtc",
                                     args.episodes, True)
     summary = {"meta": run_metadata(vars(args)), "reflex_run": str(run),
-               "realtime": {"reflex": reflex, "qwen2b_calibrated": qwen}}
+               "realtime": {"reflex": reflex, "qwen8b_jev_teacher": qwen}}
     (out / "realtime.json").write_text(json.dumps(summary, indent=2))
 
-    frames = C.card([("Teach slowly. Act fast?", 1.4, C.FG),
-                     ("Qwen3-VL vs a 0.8M-parameter reflex policy, real time", 0.7, C.DIM)], 3.0)
+    frames = C.card([("Teach slowly. Act fast.", 1.4, C.FG),
+                     ("Qwen3-VL-8B + Jev (the teacher) vs the 0.8M-parameter policy it trained",
+                      0.65, C.DIM)], 3.0)
     frames += C.split_screen(qwen_tics, reflex_tics, 16.0, qwen, reflex)
     frames += C.card([("How was the reflex policy trained?", 1.0, C.FG),
                       ("Reinforcement learning from pixels and reward only", 0.7, C.DIM)], 2.5)
@@ -124,7 +135,7 @@ def main() -> None:
         (f"{reflex['return_mean']:.1f} vs {qwen['return_mean']:.1f} kills in real time", 1.1, C.ACCENT),
         (f"{speed:.0f}x faster decisions ({reflex['ms_mean']:.1f} ms vs {qwen['ms_mean']:.0f} ms)", 0.9, C.FG),
         ("0 Qwen calls", 0.9, C.FG),
-        (f"Qwen3-VL as a teacher: 2B {gates['2B']:.2f}, 8B {gates['8B']:.2f} kills (paused game)", 0.6, C.DIM),
+        (f"teacher (paused game): {gates['jev']:.2f} kills; VLM alone: {gates['8B']:.2f}", 0.6, C.DIM),
     ], 6.0)
     raw = out / "demo_raw.mp4"
     C.write_video(frames, raw)

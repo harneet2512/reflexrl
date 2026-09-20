@@ -66,7 +66,7 @@ def split_screen(qwen_tics: list, reflex_tics: list, seconds: float,
             q_calls += 1
         last_q = q.frame if q.frame is not None else last_q
         last_r = r.frame if r.frame is not None else last_r
-        for x0, fr, name, col in ((16, last_q, "QWEN3-VL-2B", QWEN),
+        for x0, fr, name, col in ((16, last_q, "QWEN3-VL-8B + JEV", QWEN),
                                   (648, last_r, "REFLEXRL", ACCENT)):
             text(img, name, (x0, 50), 1.1, col, 2)
             img[70:70 + ph, x0:x0 + pw] = _panel(fr, (pw, ph))
@@ -75,7 +75,7 @@ def split_screen(qwen_tics: list, reflex_tics: list, seconds: float,
              f"{reflex_stats['ms_mean']:.1f} ms"),
             ("MAX ACTION RATE", f"{qwen_stats['max_actions_per_s']:.1f} Hz",
              f"{reflex_stats['max_actions_per_s']:.0f} Hz"),
-            ("QWEN CALLS", f"{q_calls}", "0"),
+            ("MODEL CALLS", f"{q_calls}", "0"),
             ("SCORE", f"{q.score:.0f}", f"{r.score:.0f}"),
         )
         y = 470
