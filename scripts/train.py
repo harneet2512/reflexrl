@@ -31,11 +31,11 @@ from reflexrl.runinfo import run_metadata  # noqa: E402
 METHODS = ("ppo", "bc_ppo", "fixed", "reflexrl")
 
 
-def load_proxy(teacher_dir: Path, n_actions: int, device: str):
-    """Perception student + Jev table when present (the Qwen-sees/Jev-decides teacher),
-    else the action-cloned network."""
+def load_proxy(teacher_dir: Path, n_actions: int, device: str, want_actor_critic: bool = False):
+    """Perception student + Jev table (the Qwen-sees/Jev-decides teacher) for guided RL;
+    the action-cloned network when the caller needs an initialisable policy (bc_ppo)."""
     pj = teacher_dir / "perception_jev.pt"
-    if pj.exists():
+    if pj.exists() and not want_actor_critic:
         from reflexrl.baselines.perception_bc import PerceptionJevPolicy, PerceptionNet
         blob = torch.load(pj, map_location="cpu", weights_only=False)
         net = PerceptionNet()
@@ -71,7 +71,8 @@ def main() -> None:
     teacher, schedule, policy = None, None, None
     horizon = int(args.steps * args.teacher_horizon)
     if args.method != "ppo":
-        proxy, tinfo = load_proxy(Path(args.teachers) / spec.name, n_act, args.device)
+        proxy, tinfo = load_proxy(Path(args.teachers) / spec.name, n_act, args.device,
+                                  want_actor_critic=args.method == "bc_ppo")
         if args.method == "bc_ppo":
             if not isinstance(proxy, ActorCritic):
                 raise SystemExit("bc_ppo needs an action-cloned proxy (proxy.pt)")
