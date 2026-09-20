@@ -7,5 +7,33 @@
     0,
     1
   ],
-  "steps": 1500000
+  "steps": 1500000,
+  "result": {
+    "recorded": "2026-09-20, after the run",
+    "verdict": "prediction confirmed",
+    "steps_to_target_per_seed": [
+      803000,
+      903000
+    ],
+    "median_steps_to_target": 853000,
+    "X": 1.05,
+    "X_real_teacher": 2.95,
+    "final_in_training_eval": [
+      6.16,
+      6.03
+    ],
+    "final_mean": 6.09,
+    "final_mean_real_teacher": 7.23,
+    "teacher_steps_consumed": [
+      268518,
+      169102
+    ],
+    "teacher_steps_real_teacher": [
+      93438,
+      143616,
+      143630
+    ],
+    "reading": "Guidance of the right shape, carrying no information about the frame, buys 1.05x: statistically nothing over PPO from scratch. The 2.95x is attributable to what the vision model saw, not to the intervention mechanism, the decision table or the handover rule. The shuffled teacher also consumed 1.5-2.9x MORE teacher steps, because the handover rule waits for the student to match the teacher's measured return and a student learning from noise takes longer to get there.",
+    "source": "archive/kaggle/reflexrl-ablation/runs/train/defend_the_center/reflexrl_shuffled_s*/done.json"
+  }
 }

@@ -30,6 +30,7 @@ Target R\* = **5.46** kills, fixed before these runs as 80% of the way from rand
 | **ReflexRL (guided, adaptive handover)** | 304K, 304K, 304K | 304K | **2.95x** | 7.34, 7.03, 7.31 | 7.23 |
 | ReflexRL (live Qwen+Jev DAgger rounds) | 353K, 353K | 353K | **2.54x** | 7.12, 7.28 | 7.20 |
 | ReflexRL (fixed anneal, no adaptivity) | 453K | 453K | **1.98x** | 7.38 | 7.38 |
+| ReflexRL (shuffled teacher: knowledge ablation) | 803K, 903K | 853K | **1.05x** | 6.16, 6.03 | 6.09 |
 
 <sub>source: `archive/kaggle/reflexrl-train-lane0/runs/train/defend_the_center/reflexrl_s0/done.json`, `archive/kaggle/reflexrl-train-lane0/runs/train/defend_the_center/reflexrl_s1/done.json`, `archive/kaggle/reflexrl-train-lane0/runs/train/defend_the_center/reflexrl_s2/done.json` and 7 more</sub>
 
@@ -39,17 +40,17 @@ The last two columns are the *in-training* evaluation (16 episodes, validation s
 
 ### Learning curves (evaluation return, 16 episodes per point)
 
-| env steps | PPO | BC->PPO | **ReflexRL** | ReflexRL live | ReflexRL fixed |
-|---|---|---|---|---|---|
-| 0 | 0.69 | 0.92 | 0.69 | 0.50 | 0.44 |
-| 100,000 | 3.08 | 2.94 | 2.52 | 1.19 | 3.31 |
-| 200,000 | 3.46 | 3.02 | 4.73 | 2.81 | 4.06 |
-| 300,000 | 3.17 | 3.25 | 5.48 | 4.81 | 4.62 |
-| 400,000 | 2.81 | 3.29 | 6.06 | 6.19 | 5.06 |
-| 500,000 | 3.79 | 4.00 | 6.25 | 6.38 | 6.25 |
-| 750,000 | 5.21 | 5.31 | 6.44 | 6.84 | 6.50 |
-| 1,000,000 | 5.92 | 6.17 | 6.71 | 6.81 | 7.19 |
-| 1,500,000 | 6.67 | 6.46 | 7.33 | 7.09 | 7.62 |
+| env steps | PPO | BC->PPO | **ReflexRL** | ReflexRL live | ReflexRL fixed | shuffled ablation |
+|---|---|---|---|---|---|---|
+| 0 | 0.69 | 0.92 | 0.69 | 0.50 | 0.44 | 0.50 |
+| 100,000 | 3.08 | 2.94 | 2.52 | 1.19 | 3.31 | 1.59 |
+| 200,000 | 3.46 | 3.02 | 4.73 | 2.81 | 4.06 | 2.41 |
+| 300,000 | 3.17 | 3.25 | 5.48 | 4.81 | 4.62 | 2.69 |
+| 400,000 | 2.81 | 3.29 | 6.06 | 6.19 | 5.06 | 3.91 |
+| 500,000 | 3.79 | 4.00 | 6.25 | 6.38 | 6.25 | 4.91 |
+| 750,000 | 5.21 | 5.31 | 6.44 | 6.84 | 6.50 | 5.47 |
+| 1,000,000 | 5.92 | 6.17 | 6.71 | 6.81 | 7.19 | 5.91 |
+| 1,500,000 | 6.67 | 6.46 | 7.33 | 7.09 | 7.62 | 5.78 |
 
 Mean over seeds of the last evaluation at or before each step.
 
@@ -74,6 +75,7 @@ The teacher scores **4.40**. The students it guided finish above **7.2** and sto
 | **ReflexRL (guided, adaptive handover)** | 27, 27, 27 |
 | ReflexRL (live Qwen+Jev DAgger rounds) | 64, 63 |
 | ReflexRL (fixed anneal, no adaptivity) | 29 |
+| ReflexRL (shuffled teacher: knowledge ablation) | 29, 28 |
 
 ---
 
@@ -298,13 +300,13 @@ Pre-registrations for every gate and metric live in `experiments/configs/*.json`
 
 | resource | amount |
 |---|---|
-| Kaggle jobs archived | 23 |
-| GPU wall-clock in training runs alone | 8.2 h |
+| Kaggle jobs archived | 24 |
+| GPU wall-clock in training runs alone | 9.2 h |
 | paid compute | **$0.00** (free Kaggle T4s) |
 | paid API | **~$0.05** of TypeSafe Jev calls |
 | model weights downloaded | Qwen3-VL 2B / 4B / 8B, open weights |
 
-Jobs: `reflexrl-bench-cpu`, `reflexrl-bench-gpu`, `reflexrl-debias-probe`, `reflexrl-demo`, `reflexrl-diagnose`, `reflexrl-final-eval`, `reflexrl-gate-8b`, `reflexrl-gate-pjev`, `reflexrl-heldout-a`, `reflexrl-heldout-b`, `reflexrl-heldout-guided`, `reflexrl-hg-probe`, `reflexrl-live-teacher`, `reflexrl-perception-teacher`, `reflexrl-pilot-pjev`, `reflexrl-qwen-gate`, `reflexrl-real-frames`, `reflexrl-size-check`, `reflexrl-teachers-pjev`, `reflexrl-train-lane0`, `reflexrl-train-lane1`, `reflexrl-train-lane1-v1`, `reflexrl-train-ppo`
+Jobs: `reflexrl-ablation`, `reflexrl-bench-cpu`, `reflexrl-bench-gpu`, `reflexrl-debias-probe`, `reflexrl-demo`, `reflexrl-diagnose`, `reflexrl-final-eval`, `reflexrl-gate-8b`, `reflexrl-gate-pjev`, `reflexrl-heldout-a`, `reflexrl-heldout-b`, `reflexrl-heldout-guided`, `reflexrl-hg-probe`, `reflexrl-live-teacher`, `reflexrl-perception-teacher`, `reflexrl-pilot-pjev`, `reflexrl-qwen-gate`, `reflexrl-real-frames`, `reflexrl-size-check`, `reflexrl-teachers-pjev`, `reflexrl-train-lane0`, `reflexrl-train-lane1`, `reflexrl-train-lane1-v1`, `reflexrl-train-ppo`
 
 ## 11. Leakage and seed hygiene
 

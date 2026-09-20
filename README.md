@@ -23,6 +23,11 @@ parameter model to beat LLMs at real-time ViZDoom). The interesting question is 
 after it: **the VLM still knows things the small network does not. Can that knowledge be
 moved across, and can the move be measured?**
 
+Yes, and the move is worth 2.95x. That it is the *knowledge* moving, rather than the
+guidance machinery doing the work, is a pre-registered control rather than an assertion:
+cut the link between the teacher's advice and the frame it is looking at, change nothing
+else, and the 2.95x falls to **1.05x**.
+
 | | ReflexRL | PPO from scratch | |
 |---|---|---|---|
 | environment steps to reach the target score | **304K** | 900K | **2.95x fewer** |
@@ -42,7 +47,36 @@ Paid API: **~$0.05**.
 
 ---
 
-## Three findings
+## Four findings
+
+### 0. The speed-up comes from what the model *saw*, not from being guided
+
+The obvious objection to any teacher-guided result is that guidance of almost any shape
+helps, and the expensive VLM is doing nothing a cheap heuristic could not. So it was
+pre-registered as a control and run: an identical ReflexRL training run whose teacher
+keeps the **same action vocabulary, same decision table, same adaptive handover, same
+intervention correction, and the same marginal distribution over actions**, but whose
+perception is drawn independently of the frame it is looking at. Right kind of advice,
+wrong frame.
+
+| | steps to target | **X** | final |
+|---|---|---|---|
+| PPO from scratch, no teacher | 900K | 1.00x | 6.69 |
+| **Teacher with the frame link cut** | 853K | **1.05x** | 6.09 |
+| **The real Qwen3-VL + Jev teacher** | **304K** | **2.95x** | **7.23** |
+
+Guidance carrying no information about the frame buys **1.05x**, which is nothing. The
+whole 2.95x is attributable to what the vision model actually saw. Written down before
+the run, in `experiments/configs/teacher_knowledge_ablation.json`, with the prediction
+"if the VLM's knowledge is doing the work, X collapses towards 1.0".
+
+It collapsed to 1.05. The mechanism is not the point; the knowledge is.
+
+A detail worth keeping: the shuffled teacher consumed **1.5 to 2.9x more** teacher steps
+before the handover rule let it go (269K and 169K, against 93K to 144K). The rule waits
+for the student to match the teacher's measured return, and a student learning from noise
+takes longer to get there. The handover rule detected a useless teacher without being told
+that it was useless.
 
 ### 1. Split perception from decision, and a bad player becomes a good teacher
 
@@ -144,6 +178,7 @@ every number: **[results/METRICS.md](results/METRICS.md)**. Rebuild with
 |---|---|---|---|
 | PPO from scratch | 900K, 1400K, 600K | 1.00x | 6.95 |
 | BC then PPO (same teacher, same labels) | 604K, 704K, **never** | | 6.80 |
+| *Teacher with the frame link cut* (control) | 803K, 903K | *1.05x* | not in the final-eval set |
 | **ReflexRL (guided, adaptive handover)** | **304K, 304K, 304K** | **2.95x** | **7.34** |
 | ReflexRL (live Qwen+Jev DAgger rounds) | 353K, 353K | 2.54x | 7.24 |
 | ReflexRL (fixed anneal, 1 seed) | 453K | 1.98x | not in the final-eval set |

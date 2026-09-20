@@ -1,7 +1,7 @@
 {
-  "reflexrl-real-frames": {
-    "small": 3,
-    "big": 0,
-    "bytes_big": 0
+  "reflexrl-ablation": {
+    "small": 12,
+    "big": 15,
+    "bytes_big": 45166495
   }
 }

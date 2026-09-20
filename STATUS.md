@@ -14,7 +14,9 @@ Latency is a *consequence* of that design, not the claim. "A VLM is too slow to 
 shooter" is not a finding; everybody knows it. The findings are:
 
 1. **Knowledge transfers, and it is worth 2.95x in sample efficiency.** More robustly, it
-   is worth an 8x tighter seed-to-seed spread.
+   is worth an 8x tighter seed-to-seed spread. A pre-registered control shows the gain is
+   the *knowledge* and not the guidance machinery: cut the link between the teacher's
+   advice and the frame, keep everything else, and 2.95x becomes 1.05x.
 2. **What you distil matters more than how well you distil it.** Two students, same
    3,662 labels, same teacher, near-identical fidelity: copying the teacher's *actions*
    gives 0.88 kills, copying its *percept* gives 2.53.
@@ -32,6 +34,7 @@ shooter" is not a finding; everybody knows it. The findings are:
 | Perception probes: Doom x2, real Valorant footage x2 | done | 0.733 / 0.740 / 0.747 / 0.307 vs majority baselines |
 | Perception distillation (least-squares inversion of Jev's table) | done | 2.53 kills vs 0.88 for action cloning |
 | Guided PPO + adaptive handover, 3 seeds x 1.5M steps | done | **X = 2.95x**, final 7.34 |
+| **Knowledge ablation** (shuffled teacher, 2 seeds x 1.5M) | done | **X = 1.05x**: the gain is the VLM's sight, not the mechanism |
 | Controls: PPO from scratch, BC->PPO, fixed anneal, live DAgger | done | all in `results/METRICS.md` §1 |
 | Leakage-free final evaluation, 50 unseen episodes | done | `results/final_eval.json`, seeds 7,000,000+ |
 | Held-out map transfer (`defend_the_line`) | done | 3/3 seeds reach 21.5 vs 0/3 for PPO |
@@ -53,21 +56,24 @@ was being penalised for correctly seeing a person.
 
 ## In flight
 
-| item | state |
-|---|---|
-| **Knowledge ablation**: teacher with the same action distribution but decoupled from the frame (`ShuffledTeacher`), 2 seeds x 1.5M | **running** on Kaggle (`harneetb/reflexrl-ablation`). Pre-registered prediction in `experiments/configs/teacher_knowledge_ablation.json`: if the VLM's *sight* is doing the work, X collapses toward 1.0 |
+Nothing. The knowledge ablation landed on 2026-09-20 and was the last open question.
 
-This is the one result that converts "guidance helps" into "**the VLM's knowledge** is
-what helps". Everything else is already measured.
+| result | X | final |
+|---|---|---|
+| PPO from scratch | 1.00x | 6.69 |
+| teacher with the frame link cut (control) | **1.05x** | 6.09 |
+| the real Qwen3-VL + Jev teacher | **2.95x** | 7.23 |
 
-## Left, in priority order
+Pre-registered prediction, written before the run: "if the VLM's knowledge is doing the
+work, X collapses towards 1.0." It collapsed to 1.05. This converts "guidance helps" into
+"**the VLM's knowledge** is what helps", which is the claim the whole project rests on.
 
-1. **Land the ablation** and add its row to section 1 of the metrics (automatic, since
-   the report script already globs for it).
-2. Refresh `results/SCOREBOARD.md`, sync the archive, push.
+## Left
 
-That is the whole list. The README rewrite, the metrics document, the GIFs and the
-literature positioning are done.
+1. Refresh `results/SCOREBOARD.md`, sync the archive, push. Small and mechanical.
+
+The README rewrite, the metrics document, the GIFs, the literature positioning and the
+ablation are all done.
 
 ## Known neighbours in the literature
 
