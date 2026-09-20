@@ -23,8 +23,9 @@ repo = "/kaggle/working/repo"
 shutil.copytree(os.path.dirname(os.path.dirname(src[0])), repo, dirs_exist_ok=True)
 os.chdir(repo)
 os.makedirs("runs", exist_ok=True)
-t = glob.glob("/kaggle/input/**/teachers/*/proxy.pt", recursive=True)
-assert t, "teacher proxies not mounted"
+t = (glob.glob("/kaggle/input/**/teachers/*/perception_jev.pt", recursive=True)
+     or glob.glob("/kaggle/input/**/teachers/*/proxy.pt", recursive=True))
+assert t, "teacher not mounted"
 shutil.copytree(os.path.dirname(os.path.dirname(t[0])), "runs/teachers", dirs_exist_ok=True)
 prev = [p for p in glob.glob("/kaggle/input/**/train", recursive=True) if "reflexrl-runs" in p]
 if prev:
