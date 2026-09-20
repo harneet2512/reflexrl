@@ -1,110 +1,166 @@
 # ReflexRL
 
-Can reinforcement learning teach a multimodal foundation model **when to
-think** — allocating its own inference compute while acting in a
-first-person world?
+### Foundation models can't play. They can teach — if you only ask them what they see.
 
-This repo tests one falsifiable hypothesis on ViZDoom `defend_the_center`:
+A vision-language model is a **bad** Doom player. Asked to pick actions, Qwen3-VL scores
+1.7 kills on `defend_the_center`, barely above random (0.6), whether it has 2B or 8B
+parameters. Split the job — let the VLM say **what it sees**, let a structured decision
+model (TypeSafe **Jev 1.13**) decide **what to do** — and the same model becomes a
+teacher worth 4.4 kills.
 
-> Under an explicit compute cost, an RL-learned depth router achieves a
-> better task-performance/compute tradeoff than fixed-depth, random-depth,
-> and confidence-based inference.
+Use that teacher to guide reinforcement learning, hand control back to the student as it
+improves, and the resulting **0.75M-parameter CNN**:
 
-The agent is Qwen3-VL-2B (frozen) with three intermediate exits —
-REFLEX (layer 9), FAST (19), DEEP (28) — plus a trained router, action
-heads, and value head. Reward = task reward − λ·C(d)/C(DEEP). PPO trains
-the heads and router on cached hidden states; the backbone never sees
-gradients.
+| | measured |
+|---|---|
+| reaches the target score with | **2.95× fewer environment steps** than PPO from scratch |
+| final score | **7.23** vs PPO's 6.69 (**108%**) |
+| decision latency | **2.85 ms** vs 468 ms for the VLM (**164× faster**) |
+| cost per 10K decisions | **$0.0004** on one CPU core vs $0.77 (**164× cheaper** on the same GPU) |
+| model calls at deployment | **0** |
 
-**Budget: $20 of Modal credits.** This is a mechanism demonstration, not
-a benchmark claim — the full PRD matrix (multiple scenarios, λ sweep,
-3+ seeds, continual learning) is cut. What $20 buys: one ReflexRL run,
-three trained baselines, matched-compute evals, a post-hoc oracle
-frontier, automaticity-over-training analysis, and a small LevDoom
-novelty probe — all reported as preliminary and underpowered.
+Everything was trained and measured on **free Kaggle T4s**. Total paid spend: **$0.05** of
+Jev API calls.
 
-## Layout
+---
 
+## The system
+
+```text
+                    TRAINING                                    DEPLOYMENT
+
+   frame ──► Qwen3-VL-8B ──► "monster on the left"
+                                    │                            frame
+                                    ▼                              │
+                              Jev 1.13  ──► TURN_LEFT_FIRE 0.92     ▼
+                                    │                        reflex policy
+                                    ▼                         (0.75M params)
+                            teacher π_T(a|o)                       │
+                                    │                              ▼
+                   guides exploration, then steps aside          action
+                                    │
+                                    ▼
+                            PPO ──► reflex policy            0 model calls
 ```
-reflexrl/
-  envs/vizdoom_env.py    pixels-only DTC wrapper; debug_state() is eval-only
-  models/qwen_vl.py      dual-mode backbone: features_collect / features_to
-  models/heads.py        ExitPolicy: norms, action heads, router, value
-  rl/                    rollout, GAE buffer, PPO on cached features, trainer
-  baselines/cnn_policy.py  CNN specialist (trains locally, $0)
-  eval/                  evaluate (oracle/matched/confidence), automaticity,
-                         novelty (LevDoom), latency, compute FLOP model
-  analysis/              pareto frontier, depth-over-training curves
-  demo/compose.py        offline mp4: gameplay + compute-bar overlay
-training/modal_app.py    Modal entrypoints: run_tests, profile, train, evaluate
-configs/                 phase budgets and run matrix
-tests/                   gates: env, model, compute, eval
-scripts/                 smoke_e2e.py, train.py
-```
 
-## Ground rules (enforced by tests)
+The policy sees **pixels only**: 4 stacked RGB frames at 64×112. No depth buffer, no
+object labels, no game variables (`tests/test_core.py` enforces this).
 
-- Policy input is stacked RGB frames **only**. `debug_state()` exists for
-  eval logging and is prohibited from the policy path.
-- Exits are real: `features_to(d)` truncates the text stack; a gate
-  asserts truncated-vs-collected hidden states match exactly.
-- FLOPs are analytic (HF config), latency is measured; the two are kept
-  separate so the Pareto claim doesn't depend on one machine.
-- `λ=0` exists in configs: if the router doesn't collapse to DEEP with
-  free compute, the penalty mechanism is broken, not interesting.
+Teacher influence is handed over as the student catches up: 100% → 50% → 25% → 10% → 0,
+each step taken only when the student's own score reaches the teacher's. In practice the
+teacher is gone by ~200K of 1.5M steps, and the student ends up **better than every
+teacher in the chain**.
 
-## Run it
+## Results
 
-Local (free): CPU smoke of the full loop with a stub backbone —
+`results/SCOREBOARD.md` is regenerated from the result files by
+`python scripts/scoreboard.py`. Highlights:
+
+### Controllers (game paused, so slow models aren't penalised)
+
+| controller | kills on `defend_the_center` |
+|---|---|
+| random | 0.57 |
+| Qwen3-VL-2B alone | 1.73 |
+| Qwen3-VL-8B alone | 1.67 |
+| **Qwen3-VL-8B sees + Jev decides** | **4.40** |
+
+Four times the parameters bought nothing. The decision layer quadrupled the score.
+
+### Learned policies (1.5M steps, 3 seeds, target = 80% of the way from random to PPO's final)
+
+| method | final (per seed) | steps to target | X |
+|---|---|---|---|
+| PPO from scratch | 6.69 (7.1, 5.5, 7.5) | 900K, 1400K, 600K | 1.00× |
+| BC → PPO (same teacher, imitate then RL) | 6.66 (7.3, 8.1, 4.5) | 604K, 704K, **never** | — |
+| **ReflexRL (guided, adaptive handover)** | **7.23** (7.3, 7.0, 7.3) | **304K ×3** | **2.95×** |
+| ReflexRL (fixed schedule, 1 seed) | 7.38 | 453K | 1.98× |
+
+ReflexRL is the only method with no bad seed. BC→PPO is the sharp control: the same
+teacher and the same labels, but imitating first and then doing RL gives no reliable
+gain. The gain comes from *guiding exploration and handing back control*.
+
+### Held-out map (`defend_the_line`: different layout, same controls, 3 seeds)
+
+| | reaches 19.9 kills | reaches 21.5 kills |
+|---|---|---|
+| PPO from scratch | 301K steps | **never** (0/3 seeds) |
+| PPO policy fine-tuned | 301K | 1/3 seeds |
+| **ReflexRL policy fine-tuned** | **201K (1.5×)** | **3/3 seeds** |
+
+Zero-shot transfer is near random for every policy; what transfers is how fast the map is
+re-learned.
+
+### Deployment
+
+| | reflex policy | Qwen3-VL-2B |
+|---|---|---|
+| parameters | 751,526 | 2.1B |
+| FLOPs per action | 28.9M | 1.29T |
+| latency (same T4) | 2.85 ms | 468 ms |
+| real-time score (the game does not wait) | **7.12** | 2.88 |
+
+## What failed, and why that matters
+
+1. **fp16 silently corrupts Qwen3-VL on pre-Ampere GPUs.** For a day the teacher looked
+   like it had multiple-choice "position bias" — always answering A. It was actually
+   emitting garbage: only 0.03% of its probability landed on *any* answer letter, and
+   renormalising over letters hid that. A synthetic control (a red circle on the left,
+   centre or right) exposed it: **25% correct in fp16, 100% in fp32**. Every teacher
+   result before the fix was discarded. The code now runs fp32 (or 4-bit weights with
+   fp32 compute for 8B) and refuses to emit labels when the answer-letter mass drops
+   below 0.5.
+2. **Bigger VLMs did not help.** 2B: 1.73. 4B: failed the probe. 8B: 1.67. The ceiling
+   was the *decision*, not the perception.
+3. **Action cloning the teacher fails.** A network imitating the teacher's actions scores
+   0.88. Distilling its *perception* and keeping Jev as the decision maker scores 2.53 and
+   is what guided RL actually uses.
+4. **Health Gathering and Deadly Corridor were dropped.** The VLM could not see medkits
+   well enough to teach navigation, and a teacher that plays at random level is useless.
+
+Pre-registrations for every gate and metric are in `experiments/configs/*.json`, written
+before the corresponding runs.
+
+## No train/test leakage
+
+Training, in-training evaluation, and the final reported numbers come from disjoint
+environment-seed streams (training 0–2011, validation 900,000+, final test 7,000,000+,
+teacher labels 50,000+). `tests/test_seed_hygiene.py` fails if they ever overlap.
+
+## Reproduce
 
 ```bash
 pip install -e .[dev]
-pytest tests                      # all gates, CPU
-python scripts/smoke_e2e.py       # 512-decision train+ckpt+metrics
-python scripts/train.py --agent cnn --decisions 300000 --workdir runs/cnn0
+pytest tests                                   # 19 tests: pixels-only, IS correction, resume, seeds
+python scripts/teacher_gate.py --policy random --scenarios dtc --episodes 30
+python scripts/jev_table.py                    # 4 Jev calls (~$0.0001), cached to experiments/configs/
+python scripts/teacher_gate.py --policy qwen --model Qwen/Qwen3-VL-8B-Instruct --nf4 \
+       --variant perception_jev --scenarios dtc --episodes 30
+python scripts/build_perception_teacher.py --scenario dtc --labels runs/phase0/*/labels
+python scripts/train.py --method reflexrl --scenario dtc --steps 1500000 --seed 0
+python scripts/final_eval.py                   # fresh unseen episodes
+python scripts/make_demo.py                    # benchmark + real-time + video
 ```
 
-Paid (Modal — CPU gates first, GPU after payment method is attached):
+Kaggle job definitions (one per experiment, free T4s) are in `kaggle/`.
 
-```bash
-modal run training/modal_cpu.py::run_tests         # 25 gates, ~$0.003
-modal run training/modal_cpu.py::budget_status     # spend ledger
-modal run training/modal_app.py::profile           # latency/FLOPs on L4
-modal run training/modal_app.py::train --tag pilot --total-decisions 150000
-modal run training/modal_app.py::evaluate --run-dir /runs/pilot_s0 --mode router
-```
+## Limitations
 
-Spend controls (four layers):
+- One scenario carries the main result; the held-out map shares its controls.
+- The perception vocabulary (monster left/centre/right/none) and Jev's option list were
+  written by hand. The models decide; the abstraction is human-chosen.
+- The online teacher during RL is a distilled copy of the Qwen+Jev teacher; live rounds
+  (Qwen queried on the student's own states, Jev deciding per state) are the
+  `--dagger` path.
+- 3 seeds per method. Enough to show the spread, not enough for tight confidence
+  intervals.
 
-1. `max_containers=4` on every function — hard concurrency ceiling.
-2. **Pre-launch gate**: persistent ledger on the runs volume
-   (`reflexrl.cloud_budget`) refuses any run whose estimate pushes
-   recorded spend past the **$20 hard cap**.
-3. **In-run wind-down**: a `BudgetWatchdog` is checked every training
-   iteration and every eval episode. It re-reads the ledger each check
-   (so concurrent runs' spend counts) and raises `BudgetExhausted` at
-   the cap — the run saves `ckpt_final.pt` + `done.json` with
-   `stopped_reason` and exits instead of burning past $20 on a bad
-   estimate.
-4. **Police + billing kill switch**: the deployed `reflexrl-cpu` app
-   runs `budget_police` every 5 min — when the ledger hits the cap it
-   calls `AppStop` on every reflexrl app (including itself last). And
-   the workspace spend limit in Modal dashboard should be set to $20
-   as the billing-level backstop none of the code layers can exceed.
+## Related work
 
-Every run writes `config.json`, `metrics.jsonl`, and `ckpt_*.pt` to a
-Modal volume; nothing lives only in a notebook.
-
-## Failure criteria (pre-registered)
-
-The hypothesis is reported as **failed** if: confidence routing matches
-ReflexRL; depth doesn't correlate with state difficulty; the local CNN
-dominates on every axis; or the policy can't learn in-budget. A negative
-result ships as a negative result.
-
-## Status
-
-Phase-0 gates: ✅ 25/25 pass on Modal CPU image ($0.003 spent of $20
-ledger). ⛔ GPU functions blocked until a payment method is attached to
-the Modal workspace — credits apply first once one is. Next after that:
-`profile` → pilot → matrix. See `configs/phases.json`.
+Kickstarting ([Schmitt et al., 2018](https://arxiv.org/abs/1803.03835)), Jump-Start RL
+([Uchendu et al., 2022](https://arxiv.org/abs/2204.02372)) and LLM policy teachers
+([Zheng et al., 2023](https://arxiv.org/abs/2311.13373)) all guide RL with a teacher and
+anneal its influence. What is different here: the teacher is a **vision-language model
+restricted to perception**, paired with a **structured decision model**, and every cost —
+including the environment steps spent collecting teacher labels — is charged to the
+method.
