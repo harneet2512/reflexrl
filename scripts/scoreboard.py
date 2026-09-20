@@ -74,6 +74,7 @@ def main() -> None:
         "ReflexRL (fixed schedule)": f"{A}/reflexrl-train-lane1*/**/fixed_s*/metrics.jsonl",
         "ReflexRL (live Qwen+Jev rounds)": f"{A}/reflexrl-live-teacher/**/reflexrl_live_s*/metrics.jsonl",
         "ReflexRL (action-cloned teacher)": f"{A}/reflexrl-ablation/**/reflexrl_actionclone_s*/metrics.jsonl",
+        "CONTROL: teacher decoupled from the frame": f"{A}/reflexrl-ablation/**/reflexrl_shuffled_s*/metrics.jsonl",
     }
     ppo = runs(collected["PPO from scratch"])
     if ppo and rand:
@@ -91,7 +92,8 @@ def main() -> None:
             extra = 0 if label == "PPO from scratch" else label_steps
             hits = [steps_to(c, target, extra) for _, c, _ in rs]
             fins = [f for _, _, f in rs]
-            med = np.median(hits) if all(h is not None for h in hits) else None
+            done = [h for h in hits if h is not None]
+            med = float(np.median(done)) if len(done) == len(hits) else None
             x = f"{base / med:.2f}x" if med else "-"
             hs = ", ".join(f"{int(h / 1000)}K" if h else "never" for h in hits)
             lines.append(f"| {label} | {np.mean(fins):.2f} ({', '.join(f'{f:.1f}' for f in fins)}) "

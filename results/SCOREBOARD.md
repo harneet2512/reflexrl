@@ -22,6 +22,7 @@ Teacher-label collection (3,662 env steps) is charged to every teacher-using met
 | ReflexRL (offline teacher) | 7.23 (7.3, 7.0, 7.3) | 304K, 304K, 304K | 2.95x |
 | ReflexRL (fixed schedule) | 7.38 (7.4) | 453K | 1.98x |
 | ReflexRL (live Qwen+Jev rounds) | 7.20 (7.1, 7.3) | 353K, 353K | 2.54x |
+| CONTROL: teacher decoupled from the frame | 6.09 (6.2, 6.0) | 803K, 903K | 1.05x |
 
 ## Held-out map (`defend_the_line`, 750K steps)
 

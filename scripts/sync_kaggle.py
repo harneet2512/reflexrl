@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -32,15 +33,24 @@ BIG = {".pt", ".mp4", ".npz"}
 def pull(job: str, tmp: Path) -> bool:
     dest = tmp / job
     dest.mkdir(parents=True, exist_ok=True)
+    env = {**os.environ, "PYTHONIOENCODING": "utf-8"}
     r = subprocess.run([str(KAGGLE), "kernels", "output", f"harneetb/{job}", "-p", str(dest)],
-                       capture_output=True, text=True)
+                       capture_output=True, text=True, encoding="utf-8",
+                       errors="replace", env=env)
     ok = any(dest.rglob("*"))
-    print(f"{job:<28} {'ok' if ok else 'no output'} {r.stderr.strip()[:60]}", flush=True)
+    note = (r.stderr or "").strip()[:60]
+    # The Kaggle CLI cannot encode the kernel log on a cp1252 Windows console, and
+    # PYTHONIOENCODING above does not suppress it. This is NOT cosmetic: when it
+    # happens the CLI writes a 0-byte <job>.log, so split_files refuses to let an
+    # empty download overwrite a good archived copy.
+    if "codec can't encode" in note:
+        note = "(kernel log not retrievable; archived copy kept)"
+    print(f"{job:<28} {'ok' if ok else 'no output'} {note}", flush=True)
     return ok
 
 
 def split_files(job_dir: Path, small_root: Path, backup_root: Path) -> dict:
-    counts = {"small": 0, "big": 0, "bytes_big": 0}
+    counts = {"small": 0, "big": 0, "bytes_big": 0, "kept_existing": 0}
     for f in job_dir.rglob("*"):
         if not f.is_file():
             continue
@@ -52,6 +62,14 @@ def split_files(job_dir: Path, small_root: Path, backup_root: Path) -> dict:
         else:
             out = small_root / job_dir.name / rel
             counts["small"] += 1
+        # An archive must never lose data to a re-sync. The Kaggle CLI returns an
+        # EMPTY kernel log when it cannot encode the log text (see pull), and a
+        # straight copy then silently replaced 20 archived logs with 0-byte files.
+        # A fresh empty file never overwrites a non-empty archived one.
+        if f.stat().st_size == 0 and out.exists() and out.stat().st_size > 0:
+            counts["kept_existing"] += 1
+            counts["small" if f.suffix not in BIG else "big"] -= 1
+            continue
         out.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(f, out)
     return counts
