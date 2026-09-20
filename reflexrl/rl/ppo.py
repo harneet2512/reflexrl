@@ -163,8 +163,7 @@ def train(cfg: PPOConfig, workdir: Path, teacher=None, schedule=None,
             if hasattr(teacher, "maybe_round"):  # live Qwen+Jev labelling round (DAgger)
                 info = teacher.maybe_round(step, policy)
                 if info is not None:
-                    log.write(json.dumps(info) + "
-")
+                    log.write(json.dumps(info) + "\n")
             p_now = schedule.p(step) if schedule else 0.0
             log.write(json.dumps({"kind": "eval", "step": step, "p_teacher": p_now,
                                   "teacher_steps": teacher_steps, **ev}) + "\n")
