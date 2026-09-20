@@ -11,15 +11,15 @@ deployment the VLM and the decision model are both gone; a 0.75M-parameter CNN p
 alone, with zero model calls.
 
 Latency is a *consequence* of that design, not the claim. "A VLM is too slow to play a
-shooter" is not a finding — everybody knows it. The findings are:
+shooter" is not a finding; everybody knows it. The findings are:
 
-1. **Knowledge transfers and it is worth 2.95x in sample efficiency** — and, more
-   robustly, 8x tighter seed-to-seed spread.
+1. **Knowledge transfers, and it is worth 2.95x in sample efficiency.** More robustly, it
+   is worth an 8x tighter seed-to-seed spread.
 2. **What you distil matters more than how well you distil it.** Two students, same
    3,662 labels, same teacher, near-identical fidelity: copying the teacher's *actions*
    gives 0.88 kills, copying its *percept* gives 2.53.
 3. **A 4.40-scoring teacher produces 7.34-scoring students.** The teacher is a
-   curriculum, not a ceiling — and it is switched off by 6-10% of training.
+   curriculum, not a ceiling, and it is switched off by 6-10% of training.
 4. **You can tell in advance whether a VLM can teach a task**, with a 20-minute
    perception probe, before spending a GPU-day on it.
 
@@ -37,7 +37,9 @@ shooter" is not a finding — everybody knows it. The findings are:
 | Held-out map transfer (`defend_the_line`) | done | 3/3 seeds reach 21.5 vs 0/3 for PPO |
 | Deployment benchmark (params, FLOPs, latency, cost, VRAM) | done | 751,526 params, 2.57 ms, 173x |
 | Real-time evaluation (latency converted to dropped tics) | done | reflex 7.25 vs teacher -0.38 |
-| 45-second demo video + split-screen still | done | `results/demo/reflexrl_demo.mp4` |
+| 45-second demo video | done | `results/demo/reflexrl_demo.mp4` |
+| Three README GIFs (teacher vs student, learning race, gameplay) | done | `scripts/make_gifs.py`, ~4 MB each, autoplay inline |
+| Positioning against 2025-2026 literature | done | LVLM2P, GameSense, Playing DOOM with 1.3M Parameters |
 | Test suite (pixels-only, IS correction, resume, seed hygiene, probe alignment) | done | 28 passing |
 | Full local archive of every Kaggle job | done | `archive/kaggle/`, ~1.4 GB mirror on `D:\reflexrl_backup` |
 | Public repo | done | https://github.com/harneet2512/reflexrl |
@@ -53,21 +55,35 @@ was being penalised for correctly seeing a person.
 
 | item | state |
 |---|---|
-| **Knowledge ablation** — teacher with the same action distribution but decoupled from the frame (`ShuffledTeacher`), 2 seeds x 1.5M | **running** on Kaggle (`harneetb/reflexrl-ablation`). Pre-registered prediction in `experiments/configs/teacher_knowledge_ablation.json`: if the VLM's *sight* is doing the work, X collapses toward 1.0 |
+| **Knowledge ablation**: teacher with the same action distribution but decoupled from the frame (`ShuffledTeacher`), 2 seeds x 1.5M | **running** on Kaggle (`harneetb/reflexrl-ablation`). Pre-registered prediction in `experiments/configs/teacher_knowledge_ablation.json`: if the VLM's *sight* is doing the work, X collapses toward 1.0 |
 
 This is the one result that converts "guidance helps" into "**the VLM's knowledge** is
 what helps". Everything else is already measured.
 
 ## Left, in priority order
 
-1. **Land the ablation** and add its row to §1 of the metrics (automatic — the report
-   script already globs for it).
+1. **Land the ablation** and add its row to section 1 of the metrics (automatic, since
+   the report script already globs for it).
 2. **README rewrite** so the opening claim is knowledge transfer, not latency.
 3. Refresh `results/SCOREBOARD.md`, sync the archive, push.
 
+## Known neighbours in the literature
+
+Checked 2026-09-20, because citing only 2018-2023 work made this look like it was
+engaging with a stale field.
+
+| work | overlap | why this is still distinct |
+|---|---|---|
+| **LVLM2P** (Lee et al., May 2025) | closest: distils a large VLM into an RL agent for sample efficiency, teacher active only during training | it has the VLM supply **actions**; finding 2 here is that action-teaching is the part that fails (0.88 vs 2.53 from the same labels) |
+| **GameSense** (Lu et al., Mar 2025) | same conclusion that VLMs should not drive the game directly | there the VLM *writes* the execution module; here RL trains it and a rule switches the teacher off |
+| **Playing DOOM with 1.3M Parameters** (Golchinfar et al., Apr 2026) | small specialised model beats LLMs at real-time ViZDoom | this is the *premise*, not a competing result. It is published confirmation that the latency framing was not worth leading with |
+
+Nothing found so far does perception-only VLM teaching with a typed decision layer and an
+adaptive handover, which is the combination this project tests.
+
 ## Optional, if there is appetite
 
-- A second task family beyond ViZDoom. The gate makes this cheap to *screen* — a
+- A second task family beyond ViZDoom. The gate makes this cheap to *screen*: a
   20-minute probe says yes/no before any training. The Valorant localisation result
   (0.747 vs 0.493 baseline) says the perception half already transfers to real footage.
 - More seeds. 3 is enough to show a spread, not enough for tight confidence intervals;

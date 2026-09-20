@@ -1,8 +1,8 @@
-# ReflexRL — complete metrics
+# ReflexRL: complete metrics
 
 Every measurement in the project, with the data behind it and the file it came from. Regenerate with `python scripts/metrics_report.py`; nothing here is typed by hand.
 
-**The question this project answers:** a vision-language model knows what a game scene contains but cannot play. Can that knowledge be *moved* into a small network that can — and can the move be measured?
+**The question this project answers:** a vision-language model knows what a game scene contains but cannot play. Can that knowledge be *moved* into a small network that can, and can the move be measured?
 
 ---
 
@@ -13,9 +13,9 @@ Every measurement in the project, with the data behind it and the file it came f
 | environment steps to reach the target score | **304K** | 900K | **2.95x fewer** |
 | score on 50 episodes nothing ever saw | **7.34** | 6.95 | **+6%** |
 | spread across seeds (lower = more reliable) | **0.22** | 1.88 | **9x tighter** |
-| seeds mastering a map never trained on | **3 of 3** | 0 of 3 | — |
+| seeds mastering a map never trained on | **3 of 3** | 0 of 3 | |
 
-The teacher that produced this scores **4.40**. Its students finish above **7.2** — the teacher is a curriculum, not a ceiling. And both the vision model and the decision model are **deleted after training**: what ships is 751,526 parameters making **0 model calls** per action, on a CPU core.
+The teacher that produced this scores **4.40**. Its students finish above **7.2**. The teacher is a curriculum, not a ceiling. Both the vision model and the decision model are **deleted after training**: what ships is 751,526 parameters making **0 model calls** per action, on a CPU core.
 
 ---
 
@@ -79,7 +79,7 @@ The teacher scores **4.40**. The students it guided finish above **7.2** and sto
 
 ## 2. Final scores on episodes nothing ever saw
 
-50 episodes from seeds 7,000,000+ — a stream disjoint from training (0-2011), from in-training evaluation (900,000+) and from teacher labelling (50,000+). No checkpoint, no handover decision and no hyper-parameter was chosen using these episodes.
+50 episodes from seeds 7,000,000+, a stream disjoint from training (0-2011), from in-training evaluation (900,000+) and from teacher labelling (50,000+). No checkpoint, no handover decision and no hyper-parameter was chosen using these episodes.
 
 | policy | kills | std err |
 |---|---|---|
@@ -96,7 +96,7 @@ The teacher scores **4.40**. The students it guided finish above **7.2** and sto
 | bc_ppo_s2 | 4.56 | ±0.17 |
 | distilled_perception_jev_teacher | 3.10 | ±0.25 |
 
-### Grouped by method — and the spread is the point
+### Grouped by method, where the spread is the point
 
 | method | mean | worst seed | best seed | spread |
 |---|---|---|---|---|
@@ -105,7 +105,7 @@ The teacher scores **4.40**. The students it guided finish above **7.2** and sto
 | **ReflexRL** | 7.34 | 7.20 | 7.42 | 0.22 |
 | ReflexRL (live teacher) | 7.24 | 7.22 | 7.26 | 0.04 |
 
-PPO has a 5.96 seed. BC -> PPO has a 4.56 seed. ReflexRL's three seeds land within 0.22 of each other. **Guidance buys reliability, not just speed** — and on a 3-seed budget that is the more honest claim.
+PPO has a 5.96 seed. BC -> PPO has a 4.56 seed. ReflexRL's three seeds land within 0.22 of each other. **Guidance buys reliability, not just speed**, and on a 3-seed budget that is the more honest claim.
 
 <sub>source: `results/final_eval.json`</sub>
 
@@ -124,7 +124,7 @@ Different layout and enemy placement, same controls, 750K steps, 3 seeds. The te
 
 <sub>source: `archive/kaggle/reflexrl-heldout-a/runs/train/defend_the_line/ppo_ft_s0/done.json`, `archive/kaggle/reflexrl-heldout-a/runs/train/defend_the_line/ppo_ft_s1/done.json`, `archive/kaggle/reflexrl-heldout-a/runs/train/defend_the_line/ppo_s0/done.json` and 9 more</sub>
 
-Zero-shot transfer is near random for every policy; what transfers is how fast the new map is re-learned. The last row is where the *adaptive* handover earns its keep: the arriving policy already outscores the 4.40 teacher, so the rule cuts teacher influence to zero at the first evaluation and guidance costs nothing. An earlier version that stepped down on a fixed schedule let that teacher override an 18-scoring student and made transfer **0.86x** — worse than no teacher. A fixed anneal cannot detect that.
+Zero-shot transfer is near random for every policy; what transfers is how fast the new map is re-learned. The last row is where the *adaptive* handover earns its keep: the arriving policy already outscores the 4.40 teacher, so the rule cuts teacher influence to zero at the first evaluation and guidance costs nothing. An earlier version that stepped down on a fixed schedule let that teacher override an 18-scoring student and made transfer **0.86x**, worse than no teacher. A fixed anneal cannot detect that.
 
 ---
 
@@ -137,13 +137,13 @@ Both students are the same small CNN, trained on the same 3,662 frames labelled 
 | action-cloned | chosen **action** | 0.655 | 0.88 | ±0.21 |
 | **perception-distilled** (+ Jev still deciding) | **percept** (monster left/centre/right/none) | 0.629 | **2.53** | ±0.39 |
 
-Fidelity is *lower* for the student that scores 2.9x higher. Copying the teacher's behaviour faithfully copies its mistakes and throws away the structure that made it good; copying what it *saw* and rebuilding the decision on top keeps the useful part. An action-cloned teacher at 0.88 kills is barely above random — a VLM's action choice is not worth learning, and its percept is.
+Fidelity is *lower* for the student that scores 2.9x higher. Copying the teacher's behaviour faithfully copies its mistakes and throws away the structure that made it good; copying what it *saw* and rebuilding the decision on top keeps the useful part. An action-cloned teacher at 0.88 kills is barely above random. A VLM's action choice is not worth learning, and its percept is.
 
 The perception student is recovered by least squares: the teacher's action distribution is pi_T = q . J for a known decision table J, so the percept q is inverted out of it, then fitted with mirror augmentation and inverse-frequency class weights. Training-set percept prior: left 15%, center 54%, right 11%, none 20%.
 
 <sub>source: `archive/kaggle/reflexrl-train-lane0/runs/teachers/defend_the_center/perception_teacher.json`, `archive/kaggle/reflexrl-train-lane1/runs/teachers/defend_the_center/teacher.json`</sub>
 
-This is the teacher that then guides RL — and note that it scores 2.53, well below the 4.40 of the live Qwen+Jev teacher it was distilled from. **Everything downstream is taught by a degraded copy, and the students still finish above 7.2.**
+This is the teacher that then guides RL, and note that it scores 2.53, well below the 4.40 of the live Qwen+Jev teacher it was distilled from. **Everything downstream is taught by a degraded copy, and the students still finish above 7.2.**
 
 ---
 
@@ -242,7 +242,7 @@ Decision latency is converted to dropped engine tics (1 tic = 28.57 ms), so a sl
 | reflex | 7.25 | ±0.45 | 1.7 | 0 |
 | qwen8b_jev_teacher | -0.38 | ±0.26 | 6190.9 | 217 |
 
-The teacher scores **below random** when it has to play in real time. This is the least interesting number in the document — everyone already knows a 6-second-per-frame model cannot play a shooter. It is included because it is the reason the knowledge has to be *moved* rather than queried.
+The teacher scores **below random** when it has to play in real time. This is the least interesting number in the document, since everyone already knows a 6-second-per-frame model cannot play a shooter. It is included because it is the reason the knowledge has to be *moved* rather than queried.
 
 <sub>source: `archive/kaggle/reflexrl-demo/results/demo/realtime.json`</sub>
 
@@ -259,9 +259,9 @@ A teacher is only worth using where it beats random, so every candidate scenario
 | `health_gathering_supreme` | 370.8 | 360.2 | 6.6e-01 | -0.11 | below bar, not used |
 | `deadly_corridor` | -82.0 | -70.4 | 2.6e-01 | +0.17 | below bar, not used |
 
-One scenario cleared the bar, and that scenario carries the main result. The others are not a mystery: all three require reporting **absence** — is there a medkit, is the corridor clear — and the perception probes in section 6 show precisely that this is what the model cannot do. The two agree, which is the useful part: **the probe predicts the gate**. A 20-minute perception probe tells you whether a VLM can teach a given task before you spend a GPU-day finding out.
+One scenario cleared the bar, and that scenario carries the main result. The others are not a mystery: all three require reporting **absence**: is there a medkit, is the corridor clear. The perception probes in section 6 show precisely that this is what the model cannot do. The two agree, which is the useful part: **the probe predicts the gate**. A 20-minute perception probe tells you whether a VLM can teach a given task before you spend a GPU-day finding out.
 
-Nothing in the pipeline is scenario-specific. Supply a teacher that clears the gate and the remaining machinery — perception distillation, guided PPO, adaptive handover — is unchanged.
+Nothing in the pipeline is scenario-specific. Supply a teacher that clears the gate and the remaining machinery (perception distillation, guided PPO, adaptive handover) is unchanged.
 
 <sub>source: `results/teacher_gate/qwen2b_fp32_cal_lane0.json`, `results/teacher_gate/qwen2b_fp32_cal_lane1.json`, `results/teacher_gate/random_gate.json`</sub>
 
@@ -276,7 +276,7 @@ Nothing in the pipeline is scenario-specific. Supply a teacher that clears the g
 | fp16 | 0.25 | 0.0002 |
 | fp32 | 1.00 | 1.0000 |
 
-The control is a red circle drawn on the left, centre or right of a blank image — a question no vision model should miss. In fp16 the model answered 'A' every time with 0.02% of its probability on the letters at all; renormalising over A/B/C/D hid the corruption and made it look like multiple-choice position bias. Every teacher number measured before this was discarded. The code now runs fp32 (4-bit weights with fp32 compute for the 8B) and refuses to emit a label when letter mass drops below 0.5.
+The control is a red circle drawn on the left, centre or right of a blank image, a question no vision model should miss. In fp16 the model answered 'A' every time with 0.02% of its probability on the letters at all; renormalising over A/B/C/D hid the corruption and made it look like multiple-choice position bias. Every teacher number measured before this was discarded. The code now runs fp32 (4-bit weights with fp32 compute for the 8B) and refuses to emit a label when letter mass drops below 0.5.
 
 <sub>source: `results/teacher_diagnosis/diagnose_fp16_vs_fp32.json`</sub>
 
@@ -315,5 +315,5 @@ Jobs: `reflexrl-bench-cpu`, `reflexrl-bench-gpu`, `reflexrl-debias-probe`, `refl
 | teacher labelling | 50,000+ | frames shown to Qwen |
 | **final reported scores** | **7,000,000+** | section 4 only |
 
-`tests/test_seed_hygiene.py` fails the build if any two of these overlap. `tests/test_core.py` asserts the policy receives pixels only — no depth buffer, no object labels, no game variables. `tests/test_probe_alignment.py` asserts probe frames and their oracle labels come from the same rollout (it exists because they once did not).
+`tests/test_seed_hygiene.py` fails the build if any two of these overlap. `tests/test_core.py` asserts the policy receives pixels only: no depth buffer, no object labels, no game variables. `tests/test_probe_alignment.py` asserts probe frames and their oracle labels come from the same rollout (it exists because they once did not).
 

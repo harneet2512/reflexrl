@@ -203,15 +203,15 @@ def sec_scope(L: list[str]) -> None:
         L.append(f"| {label} | {a.mean():.1f} | {b.mean():.1f} | {p_val:.1e} | "
                  f"{d_val:+.2f} | {'**PASS**' if ok else 'below bar, not used'} |")
     L += ["", "One scenario cleared the bar, and that scenario carries the main result. "
-          "The others are not a mystery: all three require reporting **absence** — is "
-          "there a medkit, is the corridor clear — and the perception probes in "
+          "The others are not a mystery: all three require reporting **absence**: is "
+          "there a medkit, is the corridor clear. The perception probes in "
           "section 6 show precisely that this is what the model cannot do. The two "
           "agree, which is the useful part: **the probe predicts the gate**. A 20-minute "
           "perception probe tells you whether a VLM can teach a given task before you "
           "spend a GPU-day finding out.", "",
           "Nothing in the pipeline is scenario-specific. Supply a teacher that clears "
-          "the gate and the remaining machinery — perception distillation, guided PPO, "
-          "adaptive handover — is unchanged.", "",
+          "the gate and the remaining machinery (perception distillation, guided PPO, "
+          "adaptive handover) is unchanged.", "",
           source("results/teacher_gate/random_gate.json",
                  "results/teacher_gate/qwen2b_fp32_cal_lane*.json"), ""]
 
@@ -347,7 +347,7 @@ def sec_distill(L: list[str]) -> None:
           "Copying the teacher's behaviour faithfully copies its mistakes and throws "
           "away the structure that made it good; copying what it *saw* and rebuilding "
           "the decision on top keeps the useful part. An action-cloned teacher at 0.88 "
-          "kills is barely above random — a VLM's action choice is not worth learning, "
+          "kills is barely above random. A VLM's action choice is not worth learning, "
           "and its percept is.", "",
           "The perception student is recovered by least squares: the teacher's action "
           "distribution is pi_T = q . J for a known decision table J, so the percept q "
@@ -355,7 +355,7 @@ def sec_distill(L: list[str]) -> None:
           "inverse-frequency class weights. Training-set percept prior: "
           + ", ".join(f"{k} {v:.0%}" for k, v in b["teacher_perception_prior"].items())
           + ".", "", source(rel(act[0][0]), rel(per[0][0])), "",
-          "This is the teacher that then guides RL — and note that it scores "
+          "This is the teacher that then guides RL, and note that it scores "
           f"{b['eval']['return_mean']:.2f}, well below the "
           "4.40 of the live Qwen+Jev teacher it was distilled from. **Everything "
           "downstream is taught by a degraded copy, and the students still finish above "
@@ -454,7 +454,7 @@ def sec_final(L: list[str]) -> None:
         return
     d = json.loads(fe.read_text())
     L += ["## 2. Final scores on episodes nothing ever saw", "",
-          f"{d['episodes']} episodes from seeds {d['test_seed_base']:,}+ — a stream "
+          f"{d['episodes']} episodes from seeds {d['test_seed_base']:,}+, a stream "
           "disjoint from training (0-2011), from in-training evaluation (900,000+) and "
           "from teacher labelling (50,000+). No checkpoint, no handover decision and no "
           "hyper-parameter was chosen using these episodes.", "",
@@ -464,7 +464,7 @@ def sec_final(L: list[str]) -> None:
 
     groups = {"PPO from scratch": "ppo_s", "BC -> PPO": "bc_ppo_s",
               "**ReflexRL**": "reflexrl_s", "ReflexRL (live teacher)": "reflexrl_live_s"}
-    L += ["", "### Grouped by method — and the spread is the point", "",
+    L += ["", "### Grouped by method, where the spread is the point", "",
           "| method | mean | worst seed | best seed | spread |", "|---|---|---|---|---|"]
     for label, pre in groups.items():
         vals = [v["return_mean"] for k, v in d["policies"].items()
@@ -475,7 +475,7 @@ def sec_final(L: list[str]) -> None:
                  f"| {max(vals) - min(vals):.2f} |")
     L += ["", "PPO has a 5.96 seed. BC -> PPO has a 4.56 seed. ReflexRL's three seeds "
           "land within 0.22 of each other. **Guidance buys reliability, not just "
-          "speed** — and on a 3-seed budget that is the more honest claim.", "",
+          "speed**, and on a 3-seed budget that is the more honest claim.", "",
           source("results/final_eval.json"), ""]
 
 
@@ -505,7 +505,7 @@ def sec_heldout(L: list[str]) -> None:
           "teacher, so the rule cuts teacher influence to zero at the first evaluation "
           "and guidance costs nothing. An earlier version that stepped down on a fixed "
           "schedule let that teacher override an 18-scoring student and made transfer "
-          "**0.86x** — worse than no teacher. A fixed anneal cannot detect that.", ""]
+          "**0.86x**, worse than no teacher. A fixed anneal cannot detect that.", ""]
 
 
 def sec_deployment(L: list[str]) -> None:
@@ -547,7 +547,7 @@ def sec_deployment(L: list[str]) -> None:
             L.append(f"| {k} | {v['return_mean']:.2f} | ±{v['return_se']:.2f} | "
                      f"{v['ms_mean']:.1f} | {lag:.0f} |")
         L += ["", "The teacher scores **below random** when it has to play in real time. "
-              "This is the least interesting number in the document — everyone already "
+              "This is the least interesting number in the document, since everyone already "
               "knows a 6-second-per-frame model cannot play a shooter. It is included "
               "because it is the reason the knowledge has to be *moved* rather than "
               "queried.", "", source(rel(f)), ""]
@@ -568,7 +568,7 @@ def sec_failures(L: list[str]) -> None:
                 mass = np.mean([r[2] for r in rows]) if rows else float("nan")
                 L.append(f"| {prec} | {acc:.2f} | {mass:.4f} |")
         L += ["", "The control is a red circle drawn on the left, centre or right of a "
-              "blank image — a question no vision model should miss. In fp16 the model "
+              "blank image, a question no vision model should miss. In fp16 the model "
               "answered 'A' every time with 0.02% of its probability on the letters at "
               "all; renormalising over A/B/C/D hid the corruption and made it look like "
               "multiple-choice position bias. Every teacher number measured before this "
@@ -612,7 +612,7 @@ def sec_hygiene(L: list[str]) -> None:
           "| teacher labelling | 50,000+ | frames shown to Qwen |",
           "| **final reported scores** | **7,000,000+** | section 4 only |", "",
           "`tests/test_seed_hygiene.py` fails the build if any two of these overlap. "
-          "`tests/test_core.py` asserts the policy receives pixels only — no depth "
+          "`tests/test_core.py` asserts the policy receives pixels only: no depth "
           "buffer, no object labels, no game variables. "
           "`tests/test_probe_alignment.py` asserts probe frames and their oracle labels "
           "come from the same rollout (it exists because they once did not).", ""]
@@ -636,22 +636,22 @@ def sec_headline(L: list[str]) -> None:
           f"| spread across seeds (lower = more reliable) | **{max(g) - min(g):.2f}** | "
           f"{max(b) - min(b):.2f} | **{(max(b) - min(b)) / (max(g) - min(g)):.0f}x "
           "tighter** |",
-          "| seeds mastering a map never trained on | **3 of 3** | 0 of 3 | — |", "",
+          "| seeds mastering a map never trained on | **3 of 3** | 0 of 3 | |", "",
           "The teacher that produced this scores **4.40**. Its students finish above "
-          "**7.2** — the teacher is a curriculum, not a ceiling. And both the vision "
+          "**7.2**. The teacher is a curriculum, not a ceiling. Both the vision "
           "model and the decision model are **deleted after training**: what ships is "
           "751,526 parameters making **0 model calls** per action, on a CPU core.", "",
           "---", ""]
 
 
 def main() -> None:
-    L = ["# ReflexRL — complete metrics", "",
+    L = ["# ReflexRL: complete metrics", "",
          "Every measurement in the project, with the data behind it and the file it "
          "came from. Regenerate with `python scripts/metrics_report.py`; nothing here "
          "is typed by hand.", "",
          "**The question this project answers:** a vision-language model knows what a "
          "game scene contains but cannot play. Can that knowledge be *moved* into a "
-         "small network that can — and can the move be measured?", "", "---", ""]
+         "small network that can, and can the move be measured?", "", "---", ""]
     sec_headline(L)
     rand = sec_controllers(L, quiet=True)
     sec_learning(L, rand)
