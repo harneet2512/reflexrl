@@ -143,10 +143,13 @@ def main() -> None:
         return ("This is a screenshot from the first-person shooter Valorant. Where is the "
                 f"nearest enemy player?\n{options}\nAnswer with a single letter.")
 
+    # image tokens grow with the square of the frame width, so the batch has to shrink
+    bs = 4 if args.width and args.width <= 320 else 1
+    print(f"batch size {bs}", flush=True)
     q = np.zeros((len(frames), 4))
     for perm in perms:
-        out = [teacher.choice_probs(frames[i:i + 4], question_for(perm), 4)
-               for i in range(0, len(frames), 4)]
+        out = [teacher.choice_probs(frames[i:i + bs], question_for(perm), 4)
+               for i in range(0, len(frames), bs)]
         q[:, perm] += np.concatenate(out)
     q /= len(perms)
     blank = [np.zeros_like(frames[0][0])]

@@ -20,7 +20,7 @@ print("mounted:", os.listdir(root), flush=True)
 for f in glob.glob(f"{root}/**/README*.txt", recursive=True):  # record the stated licence
     print(f"--- {f}\n{open(f).read()[:600]}", flush=True)
 rc = 0
-for width in (0, 640):  # full resolution, then a middle size; 320 already measured
+for width in (640, 320):  # 640 needs batch 1 on a T4; 320 matches the Doom pipeline
     rc |= sh(f"{sys.executable} -u scripts/real_frames_probe.py --root {root} --frames 150 "
              f"--perms 2 --width {width} --out /kaggle/working/real_frames")
 os.chdir("/kaggle/working")
