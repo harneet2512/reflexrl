@@ -124,13 +124,13 @@ every number: **[results/METRICS.md](results/METRICS.md)**. Rebuild with
 
 ### Sample efficiency (3 seeds × 1.5M steps, target R\* = 5.46 pre-registered)
 
-| method | steps to R\*, per seed | X | final, mean |
+| method | steps to R\*, per seed | X | final, 50 unseen episodes |
 |---|---|---|---|
 | PPO from scratch | 900K, 1400K, 600K | 1.00× | 6.95 |
 | BC → PPO (same teacher, same labels) | 604K, 704K, **never** | — | 6.80 |
 | **ReflexRL (guided, adaptive handover)** | **304K, 304K, 304K** | **2.95×** | **7.34** |
 | ReflexRL (live Qwen+Jev DAgger rounds) | 353K, 353K | 2.54× | 7.24 |
-| ReflexRL (fixed anneal) | 453K | 1.98× | 7.38 |
+| ReflexRL (fixed anneal, 1 seed) | 453K | 1.98× | not in the final-eval set |
 
 The 3,662 environment steps spent collecting teacher labels are charged to every
 teacher-using method before the comparison.

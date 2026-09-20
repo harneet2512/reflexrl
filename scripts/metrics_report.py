@@ -379,8 +379,8 @@ def sec_learning(L: list[str], rand: float | None) -> None:
           "median steps PPO needs / median steps the method needs. The "
           f"{label_steps:,} environment steps spent collecting teacher labels are "
           "added to every teacher-using method before the comparison.", "",
-          "| method | steps to R\\*, per seed | median | **X** | final, per seed | mean |",
-          "|---|---|---|---|---|---|"]
+          "| method | steps to R\\*, per seed | median | **X** | last in-training eval, "
+          "per seed | mean |", "|---|---|---|---|---|---|"]
     for label, pat in METHODS.items():
         rs = runs(pat)
         if not rs:
@@ -394,6 +394,10 @@ def sec_learning(L: list[str], rand: float | None) -> None:
                  f"{', '.join(f'{r.final:.2f}' for r in rs)} | "
                  f"{np.mean([r.final for r in rs]):.2f} |")
     L += ["", source(f"{A}/reflexrl-train-*/**/done.json"), "",
+          "The last two columns are the *in-training* evaluation (16 episodes, "
+          "validation seeds). They are not the reported result: section 2 re-runs every "
+          "finished checkpoint on 50 episodes from a seed stream nothing ever touched, "
+          "and those are the numbers that count.", "",
           "**BC -> PPO is the control that matters.** Identical teacher, identical "
           "labels, identical budget: imitate the teacher first, then run the same PPO. "
           "It does not reliably speed anything up and one seed never reaches the "

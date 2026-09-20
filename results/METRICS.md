@@ -23,7 +23,7 @@ The teacher that produced this scores **4.40**. Its students finish above **7.2*
 
 Target R\* = **5.46** kills, fixed before these runs as 80% of the way from random (0.57) to PPO's own final score (6.69); pre-registered in `experiments/configs/metrics_prereg.json`. X = median steps PPO needs / median steps the method needs. The 3,662 environment steps spent collecting teacher labels are added to every teacher-using method before the comparison.
 
-| method | steps to R\*, per seed | median | **X** | final, per seed | mean |
+| method | steps to R\*, per seed | median | **X** | last in-training eval, per seed | mean |
 |---|---|---|---|---|---|
 | PPO from scratch | 900K, 1400K, 600K | 900K | **1.00x** | 7.09, 5.47, 7.50 | 6.69 |
 | BC -> PPO (same teacher, imitate then RL) | 604K, 704K, never | never | - | 7.31, 8.12, 4.53 | 6.66 |
@@ -32,6 +32,8 @@ Target R\* = **5.46** kills, fixed before these runs as 80% of the way from rand
 | ReflexRL (fixed anneal, no adaptivity) | 453K | 453K | **1.98x** | 7.38 | 7.38 |
 
 <sub>source: `archive/kaggle/reflexrl-train-lane0/runs/train/defend_the_center/reflexrl_s0/done.json`, `archive/kaggle/reflexrl-train-lane0/runs/train/defend_the_center/reflexrl_s1/done.json`, `archive/kaggle/reflexrl-train-lane0/runs/train/defend_the_center/reflexrl_s2/done.json` and 7 more</sub>
+
+The last two columns are the *in-training* evaluation (16 episodes, validation seeds). They are not the reported result: section 2 re-runs every finished checkpoint on 50 episodes from a seed stream nothing ever touched, and those are the numbers that count.
 
 **BC -> PPO is the control that matters.** Identical teacher, identical labels, identical budget: imitate the teacher first, then run the same PPO. It does not reliably speed anything up and one seed never reaches the target at all. What produces X is *guiding exploration and then handing control back*, not having the teacher's answers in the weights.
 
