@@ -25,7 +25,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from reflexrl.rl.dagger import WHERE  # noqa: E402
 from reflexrl.runinfo import run_metadata  # noqa: E402
-from reflexrl.teacher.perception_jev import CLASSES  # noqa: E402
+from reflexrl.teacher.perception_jev import CLASSES, calibrate  # noqa: E402
 from reflexrl.teacher.prompts import LETTERS  # noqa: E402
 
 COPY = re.compile(r"( - Copy( \(\d+\))?)+", re.I)  # the dataset repeats frames as " - Copy (2)..."
@@ -136,22 +136,35 @@ def main() -> None:
 
     frames = [load(f) for f in chosen]
     print(f"frame size fed to the model: {frames[0][0].shape}", flush=True)
+    def question_for(perm) -> str:
+        options = "\n".join(
+            f"{LETTERS[k]}. {WHERE[CLASSES[i]].replace('not visible', 'no enemy is visible')}"
+            for k, i in enumerate(perm))
+        return ("This is a screenshot from the first-person shooter Valorant. Where is the "
+                f"nearest enemy player?\n{options}\nAnswer with a single letter.")
+
     q = np.zeros((len(frames), 4))
     for perm in perms:
-        options = "\n".join(f"{LETTERS[k]}. {WHERE[CLASSES[i]].replace('not visible', 'no enemy is visible')}"
-                            for k, i in enumerate(perm))
-        question = ("This is a screenshot from the first-person shooter Valorant. Where is the "
-                    f"nearest enemy player?\n{options}\nAnswer with a single letter.")
-        out = [teacher.choice_probs(frames[i:i + 4], question, 4) for i in range(0, len(frames), 4)]
+        out = [teacher.choice_probs(frames[i:i + 4], question_for(perm), 4)
+               for i in range(0, len(frames), 4)]
         q[:, perm] += np.concatenate(out)
     q /= len(perms)
+    blank = [np.zeros_like(frames[0][0])]
+    prior = np.zeros(4)
+    for perm in perms:
+        prior[perm] += teacher.choice_probs([blank], question_for(perm), 4)[0]
+    prior /= len(perms)
+    q_cal = calibrate(q, prior)
     pred = [CLASSES[i] for i in q.argmax(1)]
+    pred_cal = [CLASSES[i] for i in q_cal.argmax(1)]
     acc = float(np.mean([a == b for a, b in zip(pred, truth, strict=True)]))
+    acc_cal = float(np.mean([a == b for a, b in zip(pred_cal, truth, strict=True)]))
     major = max(counts.values()) / len(truth)
+    print(f"raw {acc:.3f} -> calibrated {acc_cal:.3f} (majority {major:.3f})", flush=True)
     # frames where the only visible character is a teammate are ambiguous for a
     # model that was only asked "where is the nearest enemy"
     keep = [i for i, (t, m) in enumerate(zip(truth, has_mate, strict=True)) if not (t == "none" and m)]
-    acc_clean = float(np.mean([pred[i] == truth[i] for i in keep])) if keep else float("nan")
+    acc_clean = float(np.mean([pred_cal[i] == truth[i] for i in keep])) if keep else float("nan")
     major_clean = (max(Counter(truth[i] for i in keep).values()) / len(keep)) if keep else float("nan")
 
     jev = JevClient(args.jev_table)
@@ -160,6 +173,7 @@ def main() -> None:
 
     res = {"meta": run_metadata(vars(args)), "n_frames": len(truth),
            "oracle_counts": dict(counts),
+           "perception_accuracy_calibrated": acc_cal,
            "perception_accuracy": acc, "majority_rate": major,
            "beats_majority_by": acc - major,
            "frames_with_teammate_only": int(sum(1 for t, m in zip(truth, has_mate, strict=True)

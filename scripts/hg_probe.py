@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts.debias_probe import CLASSES, collect, perception_probs  # noqa: E402
 from reflexrl.env.vizdoom_env import DoomEnv  # noqa: E402
 from reflexrl.runinfo import run_metadata  # noqa: E402
+from reflexrl.teacher.perception_jev import calibrate  # noqa: E402
 from reflexrl.teacher.prompts import LETTERS  # noqa: E402
 
 NEAR_BBOX_H = 24  # px at 180-high render: a medkit within a step or two
@@ -92,21 +93,32 @@ def main() -> None:
     perms4 = [np.arange(4)] + [rng.permutation(4) for _ in range(args.perms - 1)]
     perms3 = [np.arange(3)] + [rng.permutation(3) for _ in range(args.perms - 1)]
 
+    blank = [[np.zeros_like(frames[0][0]) for _ in frames[0]]]
     pos = perception_probs(teacher, frames, "medkit", perms4)
+    pos_prior = perception_probs(teacher, blank, "medkit", perms4)[0]
+    pos_cal = calibrate(pos, pos_prior)
     pos_pred = [CLASSES[i] for i in pos.argmax(1)]
+    pos_pred_cal = [CLASSES[i] for i in pos_cal.argmax(1)]
     pos_acc = float(np.mean([a == b for a, b in zip(pos_pred, pos_truth, strict=True)]))
+    pos_acc_cal = float(np.mean([a == b for a, b in zip(pos_pred_cal, pos_truth, strict=True)]))
     pos_major = max(pos_truth.count(c) for c in CLASSES) / len(pos_truth)
+    print(f"position: raw {pos_acc:.3f} -> calibrated {pos_acc_cal:.3f} (majority {pos_major:.3f})",
+          flush=True)
 
     dist, dkeys = distance_probs(teacher, frames, perms3)
+    dist_prior = distance_probs(teacher, blank, perms3)[0][0]
+    dist_cal = calibrate(dist, dist_prior)
     dist_pred = [dkeys[i] for i in dist.argmax(1)]
+    dist_pred_cal = [dkeys[i] for i in dist_cal.argmax(1)]
     dist_acc = float(np.mean([a == b for a, b in zip(dist_pred, dist_truth, strict=True)]))
+    dist_acc_cal = float(np.mean([a == b for a, b in zip(dist_pred_cal, dist_truth, strict=True)]))
     dist_major = max(dist_truth.count(c) for c in set(dist_truth)) / len(dist_truth)
 
     res = {"meta": run_metadata(vars(args)),
-           "position": {"accuracy": pos_acc, "majority_rate": pos_major,
+           "position": {"accuracy_calibrated": pos_acc_cal, "accuracy": pos_acc, "majority_rate": pos_major,
                         "counts": {c: pos_truth.count(c) for c in CLASSES},
                         "pass": pos_acc >= pos_major + 0.20},
-           "distance": {"accuracy": dist_acc, "majority_rate": dist_major,
+           "distance": {"accuracy_calibrated": dist_acc_cal, "accuracy": dist_acc, "majority_rate": dist_major,
                         "counts": {c: dist_truth.count(c) for c in set(dist_truth)}}}
     Path(args.out).mkdir(parents=True, exist_ok=True)
     (Path(args.out) / "hg_probe.json").write_text(json.dumps(res, indent=2))

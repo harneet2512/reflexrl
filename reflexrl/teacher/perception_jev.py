@@ -58,3 +58,13 @@ class PerceptionJevTeacher:
         self.qwen.samples += len(frames)
         self.perception_log.extend(q.round(4).tolist())
         return (q @ self.J).astype(np.float32)
+
+
+def calibrate(q: np.ndarray, prior: np.ndarray) -> np.ndarray:
+    """Divide out the model's answer prior (measured on a blank frame).
+
+    Vision-language models over-report that a target is present; contextual
+    calibration (Zhao et al., 2021) removes that bias without any labels.
+    """
+    out = q / np.clip(prior, 1e-6, None)
+    return out / out.sum(1, keepdims=True)
