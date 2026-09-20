@@ -51,6 +51,7 @@ class AdaptiveSchedule:
     teacher_return: float  # teacher's measured student-free return (its own play)
     horizon: int  # hard cap: p = 0 after this many env steps regardless
     min_steps_per_rung: int = 20_000
+    drop_ratio: float = 1.5  # student this far above the teacher -> stop guiding at once
     rung: int = 0
     _last_change: int = 0
     history: list = field(default_factory=list)
@@ -59,11 +60,22 @@ class AdaptiveSchedule:
         return 0.0 if step >= self.horizon else LADDER[self.rung]
 
     def on_eval(self, step: int, student_return: float) -> None:
-        ready = step - self._last_change >= self.min_steps_per_rung
-        if ready and student_return >= self.teacher_return and self.rung < len(LADDER) - 1:
+        """Hand over control as soon as the student matches the teacher.
+
+        A student that already outscores the teacher has nothing to gain from it
+        (and is actively dragged down by intervention), so a student far above the
+        teacher skips the ladder entirely. This is what a fixed schedule cannot do.
+        """
+        if student_return < self.teacher_return or self.rung >= len(LADDER) - 1:
+            return
+        if student_return >= self.drop_ratio * self.teacher_return:
+            self.rung = len(LADDER) - 1  # teacher has nothing left to teach
+        elif not self.history or step - self._last_change >= self.min_steps_per_rung:
             self.rung += 1
-            self._last_change = step
-            self.history.append((step, LADDER[self.rung], student_return))
+        else:
+            return
+        self._last_change = step
+        self.history.append((step, LADDER[self.rung], student_return))
 
 
 @dataclass

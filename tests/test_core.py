@@ -80,6 +80,16 @@ def test_adaptive_schedule_hands_over_only_when_student_matches_teacher():
     assert AdaptiveSchedule(teacher_return=1e9, horizon=100).p(100) == 0.0, "hard horizon"
 
 
+def test_student_far_above_teacher_stops_guidance_immediately():
+    """A pre-trained student must not be dragged down by a weaker teacher."""
+    s = AdaptiveSchedule(teacher_return=2.5, horizon=10**6, min_steps_per_rung=20_000)
+    s.on_eval(0, 18.0)  # already 7x the teacher at the first evaluation
+    assert s.p(0) == 0.0
+    slow = AdaptiveSchedule(teacher_return=2.5, horizon=10**6, min_steps_per_rung=20_000)
+    slow.on_eval(0, 2.6)  # only just matching: step down one rung, not to zero
+    assert slow.p(0) == 0.5
+
+
 def test_importance_weight_is_one_for_student_steps():
     probs_s = torch.tensor([[0.2, 0.3, 0.5]])
     a = torch.tensor([2])
