@@ -26,5 +26,18 @@
     "caching": "Jev is called once per perception class (4 calls), responses stored in experiments/configs/jev_table_dtc.json (spec section 8: cache teacher calls)",
     "gate": "DTC, 30 episodes (15+15 on 2xT4), same pass rule vs random, and the >= 3.0 bar for guided RL",
     "cost": "Jev ~$0.00002/call; Qwen-8B T4 time ~2-3 h"
+  },
+  "health_gathering_extension": {
+    "written": "2026-09-19, before any HG perception query with the 8B",
+    "why": "DTC worked because the VLM only had to say where the monster is; HG failed earlier with an ACTION teacher (2B). Test the same sees/decides split with a navigation-shaped vocabulary.",
+    "perception_questions": {
+      "medkit_position": "left / center / right / not visible (the DTC question, retargeted)",
+      "medkit_distance": "close (a step or two away) / far",
+      "wall_ahead": "yes / no (is the player about to walk into a wall)"
+    },
+    "jev_state": "the three perception distributions + the previous action, typed; Jev returns a choice over the 5 HG actions",
+    "probe_rule": "same as DTC: position accuracy must beat the majority-class rate by >= 0.20 on 150 oracle-labelled frames; otherwise HG is reported as a negative and no gate is run",
+    "quota_trims": "gate 15 episodes (not 30), 1 option ordering (not 4), 350-decision cap, 2 training seeds (not 3) - Kaggle weekly GPU quota",
+    "oracle": "labels buffer: nearest Medikit bbox (position from centre-x, distance from bbox height); wall-ahead has no clean oracle and is reported unvalidated"
   }
 }
