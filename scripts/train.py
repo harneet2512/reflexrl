@@ -64,6 +64,13 @@ def main() -> None:
     p.add_argument("--tag", default=None, help="run-name override, e.g. ppo_ft")
     p.add_argument("--teacher-kind", choices=["auto", "perception_jev", "action_clone"],
                    default="auto", help="which distillation of the teacher guides RL")
+    p.add_argument("--dagger", action="store_true",
+                   help="query Qwen+Jev live during training on the student's own states")
+    p.add_argument("--dagger-every", type=int, default=100_000)
+    p.add_argument("--dagger-steps", type=int, default=300)
+    p.add_argument("--dagger-rounds", type=int, default=4)
+    p.add_argument("--labels", default=None, help="label shards dir (required with --dagger)")
+    p.add_argument("--jev-table", default="experiments/configs/jev_table_dtc.json")
     args = p.parse_args()
 
     spec = get_scenario(args.scenario)
@@ -80,9 +87,30 @@ def main() -> None:
             if not isinstance(proxy, ActorCritic):
                 raise SystemExit("bc_ppo needs an action-cloned proxy (proxy.pt)")
             policy = proxy  # fine-tune the imitation network with plain PPO
+        elif args.dagger:
+            import numpy as np
+
+            from reflexrl.baselines.perception_bc import PerceptionNet
+            from reflexrl.rl.dagger import DaggerTeacher
+            from reflexrl.teacher.dataset import load_labels
+            from reflexrl.teacher.jev import JevClient
+            blob = torch.load(Path(args.teachers) / spec.name / "perception_jev.pt",
+                              map_location="cpu", weights_only=False)
+            net = PerceptionNet()
+            net.load_state_dict(blob["perception"])
+            jev = JevClient(args.jev_table,
+                            criteria={a: a.replace("_", " ").lower() for a in spec.action_names})
+            teacher = DaggerTeacher(net, np.asarray(blob["J"]), jev, args.jev_table, spec.name,
+                                    load_labels(Path(args.labels) / spec.name), args.device,
+                                    every=args.dagger_every, steps_per_round=args.dagger_steps,
+                                    max_rounds=args.dagger_rounds)
+            print(f"DAgger teacher: jev_live={jev.live}, labels={len(teacher.labels['obs'])}",
+                  flush=True)
+            cfg.intervene = cfg.distill = True
         else:
             teacher = ProxyTeacher(proxy, args.device)
             cfg.intervene = cfg.distill = True
+        if teacher is not None:
             schedule = (FixedSchedule(horizon) if args.method == "fixed" else
                         AdaptiveSchedule(teacher_return=tinfo["bc_eval"]["return_mean"],
                                          horizon=horizon))
