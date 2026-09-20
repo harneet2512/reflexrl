@@ -2,7 +2,13 @@
 
 ### A vision-language model knows what is in the frame. It cannot play. So move the knowledge, then delete the model.
 
-![Qwen3-VL-8B + Jev at 6.2 s per decision, beside the 0.75M-parameter policy it trained at 1.7 ms](results/demo/split_screen.png)
+![The Qwen3-VL-8B + Jev teacher at 6,191 ms per decision, beside the 0.75M-parameter policy it trained, at 1.7 ms. Same map, same seed, both in real time.](results/demo/teacher_vs_student.gif)
+
+**Left: the teacher.** 8.8B parameters, 6,191 ms per decision, frozen mid-thought while
+the game runs on — it finishes on **−0.38** kills, below random. **Right: the 751,526-parameter
+policy that teacher trained.** 1.7 ms per decision, **zero model calls**, **7.25** kills.
+
+Same map, same seed, both in real time.
 
 *45-second demo: [results/demo/reflexrl_demo.mp4](results/demo/reflexrl_demo.mp4)
 · full metrics with sources: [results/METRICS.md](results/METRICS.md)
@@ -124,6 +130,12 @@ every number: **[results/METRICS.md](results/METRICS.md)**. Rebuild with
 
 ### Sample efficiency (3 seeds × 1.5M steps, target R\* = 5.46 pre-registered)
 
+![ReflexRL and PPO from scratch racing to the same pre-registered target score; ReflexRL arrives at 305K environment steps, PPO at 900K](results/demo/learning_race.gif)
+
+Both runs end up in the same place. ReflexRL gets there on **2.95× fewer environment
+steps** — and the shaded bands are the other half of the story: the pink spread is PPO's
+seed-to-seed luck, the amber one is ReflexRL's.
+
 | method | steps to R\*, per seed | X | final, 50 unseen episodes |
 |---|---|---|---|
 | PPO from scratch | 900K, 1400K, 600K | 1.00× | 6.95 |
@@ -176,6 +188,11 @@ map is re-learned.
 
 The teacher scores below random once it has to play in real time. That is the reason the
 knowledge has to be *moved* rather than queried — not a result in itself.
+
+![The trained reflex policy playing defend_the_center at 1.7 ms per decision with zero model calls](results/demo/gameplay.gif)
+
+*The shipped artefact: 751,526 parameters, 1.7 ms per decision, no vision model and no
+decision model anywhere in the loop.*
 
 ## What failed, and why it is in the repo
 
