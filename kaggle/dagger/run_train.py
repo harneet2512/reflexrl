@@ -44,7 +44,7 @@ for lane_i, d in enumerate(lane_dirs):
     for shard in sorted(glob.glob(os.path.join(d, "shard_*.npz"))):
         z = dict(np.load(shard))
         z["episode"] = z["episode"] + 10_000 * lane_i
-        np.savez_compressed(os.path.join(dst, f"lane{lane_i}_{os.path.basename(shard)}"), **z)
+        np.savez_compressed(os.path.join(dst, f"shard_lane{lane_i}_{os.path.basename(shard)}"), **z)
 print("label dirs:", lane_dirs, flush=True)
 
 os.environ["REFLEXRL_DEADLINE"] = str(START + 11 * 3600)
