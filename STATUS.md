@@ -64,8 +64,10 @@ what helps". Everything else is already measured.
 
 1. **Land the ablation** and add its row to section 1 of the metrics (automatic, since
    the report script already globs for it).
-2. **README rewrite** so the opening claim is knowledge transfer, not latency.
-3. Refresh `results/SCOREBOARD.md`, sync the archive, push.
+2. Refresh `results/SCOREBOARD.md`, sync the archive, push.
+
+That is the whole list. The README rewrite, the metrics document, the GIFs and the
+literature positioning are done.
 
 ## Known neighbours in the literature
 
