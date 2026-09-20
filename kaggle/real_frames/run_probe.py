@@ -19,8 +19,10 @@ root = "/kaggle/input"  # the mount name varies; the probe discovers the dataset
 print("mounted:", os.listdir(root), flush=True)
 for f in glob.glob(f"{root}/**/README*.txt", recursive=True):  # record the stated licence
     print(f"--- {f}\n{open(f).read()[:600]}", flush=True)
-rc = sh(f"{sys.executable} -u scripts/real_frames_probe.py --root {root} --frames 150 --perms 2 "
-        "--out /kaggle/working/real_frames")
+rc = 0
+for width in (0, 640):  # full resolution, then a middle size; 320 already measured
+    rc |= sh(f"{sys.executable} -u scripts/real_frames_probe.py --root {root} --frames 150 "
+             f"--perms 2 --width {width} --out /kaggle/working/real_frames")
 os.chdir("/kaggle/working")
 shutil.rmtree(repo, ignore_errors=True)
 sys.exit(rc)

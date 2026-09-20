@@ -1,0 +1,112 @@
+{
+  "meta": {
+    "config": {
+      "root": "/kaggle/input",
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "frames": 150,
+      "perms": 2,
+      "jev_table": "experiments/configs/jev_table_dtc.json",
+      "out": "/kaggle/working/real_frames"
+    },
+    "git_commit": "unknown",
+    "host": "2975335633e3",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "python": "3.12.13",
+    "torch": "2.10.0+cu128",
+    "cuda_device": "Tesla T4",
+    "started_unix": 1789887094.123378
+  },
+  "n_frames": 150,
+  "oracle_counts": {
+    "none": 93,
+    "center": 54,
+    "left": 2,
+    "right": 1
+  },
+  "perception_accuracy": 0.31333333333333335,
+  "majority_rate": 0.62,
+  "beats_majority_by": -0.30666666666666664,
+  "confusion": {
+    "left": {
+      "left": 1,
+      "center": 1
+    },
+    "center": {
+      "right": 12,
+      "center": 39,
+      "left": 2,
+      "none": 1
+    },
+    "right": {
+      "right": 1
+    },
+    "none": {
+      "center": 38,
+      "right": 21,
+      "left": 28,
+      "none": 6
+    }
+  },
+  "example_decisions": [
+    {
+      "truth": "none",
+      "qwen": "center",
+      "jev_action": "FIRE"
+    },
+    {
+      "truth": "none",
+      "qwen": "right",
+      "jev_action": "TURN_RIGHT_FIRE"
+    },
+    {
+      "truth": "center",
+      "qwen": "right",
+      "jev_action": "TURN_RIGHT_FIRE"
+    },
+    {
+      "truth": "none",
+      "qwen": "left",
+      "jev_action": "TURN_LEFT_FIRE"
+    },
+    {
+      "truth": "center",
+      "qwen": "right",
+      "jev_action": "TURN_RIGHT_FIRE"
+    },
+    {
+      "truth": "none",
+      "qwen": "center",
+      "jev_action": "FIRE"
+    },
+    {
+      "truth": "center",
+      "qwen": "center",
+      "jev_action": "FIRE"
+    },
+    {
+      "truth": "none",
+      "qwen": "left",
+      "jev_action": "TURN_LEFT_FIRE"
+    },
+    {
+      "truth": "none",
+      "qwen": "center",
+      "jev_action": "FIRE"
+    },
+    {
+      "truth": "center",
+      "qwen": "left",
+      "jev_action": "TURN_LEFT_FIRE"
+    },
+    {
+      "truth": "center",
+      "qwen": "center",
+      "jev_action": "FIRE"
+    },
+    {
+      "truth": "center",
+      "qwen": "right",
+      "jev_action": "TURN_RIGHT_FIRE"
+    }
+  ]
+}
