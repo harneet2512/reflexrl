@@ -43,14 +43,19 @@ def dedup_key(p: Path) -> str:
     return COPY.sub("", p.stem).lower()
 
 
-def enemy_class_ids(root: Path) -> list[int]:
+def class_ids(root: Path) -> tuple[list[int], list[int]]:
+    """(enemy ids, other-player ids). Teammates are players too: a vision model
+    cannot know which team a character belongs to, so frames whose only players
+    are teammates are reported separately instead of being scored as 'nobody'."""
     for y in root.rglob("data.yaml"):
         names = re.findall(r"names:\s*\[(.*?)\]", y.read_text(), re.S)
         if names:
             items = [n.strip().strip("'\"") for n in names[0].split(",")]
             print("classes:", items, flush=True)
-            return [i for i, n in enumerate(items) if n.lower() == "enemy"]
-    return [1]
+            enemy = [i for i, n in enumerate(items) if n.lower() in ("enemy", "enemy head")]
+            mate = [i for i, n in enumerate(items) if "team" in n.lower()]
+            return enemy, mate
+    return [1], []
 
 
 def oracle(label_file: Path, enemy_ids: list[int]) -> tuple[str, float]:
@@ -79,7 +84,7 @@ def main() -> None:
     p.add_argument("--out", default="runs/real_frames")
     args = p.parse_args()
     root = Path(args.root)
-    enemy_ids = enemy_class_ids(root)
+    enemy_ids, mate_ids = class_ids(root)
 
     def is_yolo(f: Path) -> bool:
         try:
@@ -103,10 +108,12 @@ def main() -> None:
         raise SystemExit("no image/label pairs found under " + str(root))
     random.Random(0).shuffle(pairs)
 
-    truth, chosen = [], []
+    truth, chosen, has_mate = [], [], []
     for img, lab in pairs:
         cls, _ = oracle(lab, enemy_ids)
+        mate, _ = oracle(lab, mate_ids) if mate_ids else ("none", 0.0)
         truth.append(cls)
+        has_mate.append(mate != "none")
         chosen.append(img)
         if len(chosen) >= args.frames:
             break
@@ -141,6 +148,11 @@ def main() -> None:
     pred = [CLASSES[i] for i in q.argmax(1)]
     acc = float(np.mean([a == b for a, b in zip(pred, truth, strict=True)]))
     major = max(counts.values()) / len(truth)
+    # frames where the only visible character is a teammate are ambiguous for a
+    # model that was only asked "where is the nearest enemy"
+    keep = [i for i, (t, m) in enumerate(zip(truth, has_mate, strict=True)) if not (t == "none" and m)]
+    acc_clean = float(np.mean([pred[i] == truth[i] for i in keep])) if keep else float("nan")
+    major_clean = (max(Counter(truth[i] for i in keep).values()) / len(keep)) if keep else float("nan")
 
     jev = JevClient(args.jev_table)
     J = jev.table_probs(CLASSES)
@@ -150,6 +162,10 @@ def main() -> None:
            "oracle_counts": dict(counts),
            "perception_accuracy": acc, "majority_rate": major,
            "beats_majority_by": acc - major,
+           "frames_with_teammate_only": int(sum(1 for t, m in zip(truth, has_mate, strict=True)
+                                                if t == "none" and m)),
+           "accuracy_excluding_teammate_only": acc_clean,
+           "majority_excluding_teammate_only": major_clean,
            "confusion": {c: dict(Counter(p_ for t, p_ in zip(truth, pred, strict=True) if t == c))
                          for c in CLASSES},
            "example_decisions": [{"truth": t, "qwen": p_, "jev_action": a}

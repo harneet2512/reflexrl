@@ -26,13 +26,18 @@ from reflexrl.teacher.prompts import LETTERS  # noqa: E402
 NEAR_BBOX_H = 24  # px at 180-high render: a medkit within a step or two
 
 
-def distance_oracle(scenario: str, n: int, seed: int) -> list[str]:
-    """'close' / 'far' / 'none' for the nearest medkit, from the labels buffer."""
+def collect_with_oracles(scenario: str, n: int, seed: int):
+    """One rollout -> (frames, position labels, distance labels).
+
+    Frames and both label sets must come from the SAME states; an earlier version
+    generated distance labels from a second rollout, which made that metric
+    meaningless.
+    """
     rng = np.random.default_rng(seed)
     env = DoomEnv(scenario, seed=seed, keep_full_frames=True, eval_labels=True)
     env.reset()
-    out = []
-    while len(out) < n:
+    frames, pos, dist = [], [], []
+    while len(frames) < n:
         _, _, term, trunc, _ = env.step(int(rng.integers(env.action_space.n)))
         if term or trunc:
             env.reset()
@@ -40,9 +45,16 @@ def distance_oracle(scenario: str, n: int, seed: int) -> list[str]:
         if rng.random() < 0.25:
             objs = [x for x in env.game.get_state().labels if "medi" in x.object_name.lower()]
             near = max(objs, key=lambda x: x.height) if objs else None
-            out.append("none" if near is None else ("close" if near.height >= NEAR_BBOX_H else "far"))
+            frames.append(env.teacher_frames())
+            if near is None:
+                pos.append("none")
+                dist.append("none")
+            else:
+                cx = (near.x + near.width / 2) / env.game.get_screen_width()
+                pos.append("left" if cx < 0.4 else "right" if cx > 0.6 else "center")
+                dist.append("close" if near.height >= NEAR_BBOX_H else "far")
     env.close()
-    return out
+    return frames, pos, dist
 
 
 def batched(teacher, frames, question, n_opt, bs=4):
@@ -75,8 +87,7 @@ def main() -> None:
     from reflexrl.teacher.qwen import QwenTeacher
     teacher = QwenTeacher(args.model, dtype=torch.float32, load_4bit=args.nf4, device_map="auto")
 
-    frames, pos_truth, _ = collect("health_gathering", args.frames, seed=777)
-    dist_truth = distance_oracle("health_gathering", args.frames, seed=778)
+    frames, pos_truth, dist_truth = collect_with_oracles("health_gathering", args.frames, seed=777)
     rng = np.random.default_rng(0)
     perms4 = [np.arange(4)] + [rng.permutation(4) for _ in range(args.perms - 1)]
     perms3 = [np.arange(3)] + [rng.permutation(3) for _ in range(args.perms - 1)]
